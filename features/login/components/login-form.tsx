@@ -16,6 +16,7 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
 import { z } from "zod"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
 export function LoginForm({
   className,
@@ -52,61 +53,67 @@ export function LoginForm({
               </div>
               <span className="sr-only">Saher India.</span>
             </a>
-            <h1 className="text-xl font-bold">Welcome to <span className="text-primary">Saher</span> India.</h1>
           </div>
-          <Controller
-            name="email"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Email</FieldLabel>
-                <Input
-                  {...field}
-                  id={field.name}
-                  type="email"
-                  placeholder="user@example.com"
-                  aria-invalid={fieldState.invalid}
-                />
-                {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
-              </Field>
-            )}
-          />
-          <Controller
-            name="password"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Password</FieldLabel>
-
-                <InputGroup>
-                  <InputGroupInput
-                    {...field}
-                    id={field.name}
-                    type={visible ? "text" : "password"}
-                    placeholder="Enter password"
-                    aria-invalid={fieldState.invalid}
-                  />
-
-                  <InputGroupAddon align="inline-end">
-                    <InputGroupButton
-                      type="button"
-                      size="icon-xs"
-                      onClick={() => setVisible(prev => !prev)}
-                    >
-                      {visible ? <Eye /> : <EyeOffIcon />}
-                    </InputGroupButton>
-                  </InputGroupAddon>
-                </InputGroup>
-
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} />
+          <Card>
+            <CardHeader>
+              <h1 className="text-xl text-center font-bold">Welcome to <span className="text-primary">Saher</span> India.</h1>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <Controller
+                name="email"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>Email</FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      type="email"
+                      placeholder="user@example.com"
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+                  </Field>
                 )}
+              />
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>Password</FieldLabel>
+
+                    <InputGroup>
+                      <InputGroupInput
+                        {...field}
+                        id={field.name}
+                        type={visible ? "text" : "password"}
+                        placeholder="Enter password"
+                        aria-invalid={fieldState.invalid}
+                      />
+
+                      <InputGroupAddon align="inline-end">
+                        <InputGroupButton
+                          type="button"
+                          size="icon-xs"
+                          onClick={() => setVisible(prev => !prev)}
+                        >
+                          {visible ? <Eye /> : <EyeOffIcon />}
+                        </InputGroupButton>
+                      </InputGroupAddon>
+                    </InputGroup>
+
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Field>
+                <Button type="submit">Login</Button>
               </Field>
-            )}
-          />
-          <Field>
-            <Button type="submit">Login</Button>
-          </Field>
+            </CardContent>
+          </Card>
         </FieldGroup>
       </form>
     </div>
