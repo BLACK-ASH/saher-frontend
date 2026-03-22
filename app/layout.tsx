@@ -4,6 +4,7 @@ import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -38,6 +39,7 @@ export default function RootLayout({
             <main className="w-full h-full">
               <SidebarTrigger />
               {children}
+              <Toaster />
             </main>
           </SidebarProvider>
         </TooltipProvider>

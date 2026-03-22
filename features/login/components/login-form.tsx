@@ -16,6 +16,9 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
 import { z } from "zod"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { apiFetch } from "@/lib/api-wrapper"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
 
 export function LoginForm({
   className,
@@ -23,6 +26,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
 
   const [visible, setVisible] = useState<boolean>(false)
+  const router = useRouter()
 
   const loginFromSchema = z.object({
     email: z.email(),
@@ -31,12 +35,35 @@ export function LoginForm({
 
   const form = useForm<z.infer<typeof loginFromSchema>>({
     resolver: zodResolver(loginFromSchema),
+    defaultValues: {
+      email: "",
+      password: ""
+    }
   })
 
   const onLoginSubmit = async (data: z.infer<typeof loginFromSchema>) => {
-    console.log(data)
-    alert(JSON.stringify(data))
-  }
+    console.log(data);
+
+    try {
+      const res = await apiFetch<string>(
+        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/login`,
+        {
+          method: "POST",
+          body: JSON.stringify(data),
+        }
+      );
+
+      if (res.success) {
+        toast.success(res.message);
+        router.push('/')
+      }
+
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    }
+  };
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
