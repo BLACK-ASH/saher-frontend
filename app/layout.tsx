@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
+import Providers from "./provider";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -33,16 +34,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TooltipProvider>
-          <SidebarProvider>
-            <AppSidebar />
-            <main className="w-full h-full">
-              <SidebarTrigger />
-              {children}
-              <Toaster />
-            </main>
-          </SidebarProvider>
-        </TooltipProvider>
+        <Providers>
+          <TooltipProvider>
+            <SidebarProvider>
+              <AppSidebar />
+              <main className="w-full h-full">
+                <SidebarTrigger />
+                {children}
+                <Toaster />
+              </main>
+            </SidebarProvider>
+          </TooltipProvider>
+        </Providers>
       </body>
     </html>
   );

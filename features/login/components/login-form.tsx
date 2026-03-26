@@ -20,6 +20,7 @@ import { apiFetch } from "@/lib/api-wrapper"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
+import { useLogin } from "@/hooks/use-login"
 
 export function LoginForm({
   className,
@@ -27,6 +28,7 @@ export function LoginForm({
 }: React.ComponentProps<"div">) {
 
   const [visible, setVisible] = useState<boolean>(false)
+  const { mutate, isPending } = useLogin()
   const router = useRouter()
 
   const loginFromSchema = z.object({
@@ -43,27 +45,16 @@ export function LoginForm({
   })
 
   const onLoginSubmit = async (data: z.infer<typeof loginFromSchema>) => {
-    console.log(data);
-
-    try {
-      const res = await apiFetch<string>(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/login`,
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-        }
-      );
-
-      if (res.success) {
-        toast.success(res.message);
-        router.push('/')
-      }
-
-    } catch (error) {
-      if (error instanceof Error) {
-        toast.error(error.message);
-      }
-    }
+    console.log(data)
+    mutate(data, {
+      onSuccess: (res) => {
+        toast(res.message);
+        router.push("/");
+      },
+      onError: (err: Error) => {
+        toast(err.message);
+      },
+    });
   };
 
   return (

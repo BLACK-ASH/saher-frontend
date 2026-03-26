@@ -2,12 +2,14 @@ import {
   Sidebar,
   SidebarContent,
   SidebarFooter,
-  SidebarGroup,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
 import Image from "next/image"
+import { NavUser } from "./sidebar/nav-user"
+import { NavItem } from "./sidebar/nav-list"
+import Link from "next/link"
 
 export function AppSidebar() {
   return (
@@ -15,16 +17,19 @@ export function AppSidebar() {
       <SidebarHeader >
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center">
-            <Image src={"/saher-logo.png"} alt="saher-logo" width={35} height={35}/>
-            <span className="text-primary text-xl font-bold text-pretty">Saher</span>
+            <Image src={"/saher-logo.png"} alt="saher-logo" width={35} height={35} />
+            <Link href={"/"}>
+              <span className="text-primary text-xl font-bold text-pretty">Saher</span>
+            </Link>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup />
-        <SidebarGroup />
+        <NavItem />
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter >
+        <NavUser />
+      </SidebarFooter>
     </Sidebar>
   )
 }
