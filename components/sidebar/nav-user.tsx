@@ -1,4 +1,3 @@
-
 "use client";
 
 import { ChevronsUpDown, LogOut } from "lucide-react";
@@ -25,10 +24,11 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-import { useMe, User } from "@/hooks/use-me";
+import { useMe } from "@/hooks/use-me";
 import { useLogout } from "@/hooks/use-logout";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { imageUrl } from "@/lib/image-url";
 
 export function NavUser() {
 
@@ -47,8 +47,6 @@ export function NavUser() {
   if (error || !user) {
     return null;
   }
-  const avatarSrc = user.image?.src || "";
-  const fallback = user.name?.charAt(0).toUpperCase() || "U";
 
   return (
     <SidebarMenu>
@@ -60,9 +58,9 @@ export function NavUser() {
               className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
             >
               <Avatar className="h-8 w-8 rounded-lg">
-                <AvatarImage src={avatarSrc} alt={user.name} />
+                <AvatarImage src={imageUrl(user?.image.src)} alt={user.name} />
                 <AvatarFallback className="rounded-lg">
-                  {fallback}
+                  {user.name}
                 </AvatarFallback>
               </Avatar>
 
@@ -84,12 +82,11 @@ export function NavUser() {
             <DropdownMenuLabel className="p-0 font-normal">
               <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
                 <Avatar className="h-8 w-8 rounded-lg">
-                  <AvatarImage src={avatarSrc} alt={user.name} />
+                  <AvatarImage src={imageUrl(user?.image.src)} alt={user.name} />
                   <AvatarFallback className="rounded-lg">
-                    {fallback}
+                    {user.name}
                   </AvatarFallback>
                 </Avatar>
-
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-medium">{user.name}</span>
                   <span className="truncate text-xs">{user.email}</span>
@@ -100,10 +97,10 @@ export function NavUser() {
             <DropdownMenuSeparator />
 
             <DropdownMenuItem
-              onClick={() =>{
+              onClick={() => {
                 logout()
                 toast.warning("Logout Successfully.")
-                router.refresh()
+                router.push('/login')
               }}
               className="cursor-pointer"
             >

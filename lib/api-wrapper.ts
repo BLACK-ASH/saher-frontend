@@ -22,12 +22,14 @@ export async function apiFetch<T>(
 
   try {
     json = await res.json();
-  } catch {
+  } catch(error) {
+    console.error(error)
     throw new Error("Invalid server response");
   }
 
   // ❗ HTTP-level error
   if (!res.ok) {
+    console.error(json)
     throw new Error(json?.message || `HTTP ${res.status}`);
   }
 

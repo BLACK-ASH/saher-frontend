@@ -23,5 +23,7 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next|favicon.ico).*)"], // protect everything except static files
+  matcher: [
+    "/((?!_next|favicon.ico|.*\\.(?:png|jpg|jpeg|svg|gif|webp|ico)$).*)",
+  ],
 };

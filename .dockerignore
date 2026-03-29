@@ -1,0 +1,61 @@
+# 🔥 Dependencies (never copy local deps)
+
+node_modules
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+pnpm-debug.log
+
+# 🔥 Environment files (security)
+
+.env
+.env.*
+!.env.example
+
+# 🔥 Logs
+
+logs
+*.log
+
+# 🔥 OS / Editor junk
+
+.DS_Store
+Thumbs.db
+.vscode
+.idea
+
+# 🔥 Git
+
+.git
+.gitignore
+
+# 🔥 Build / cache
+
+dist
+build
+.next
+.cache
+coverage
+
+# 🔥 Docker files (optional but cleaner)
+
+docker-compose.yml
+docker-compose.*.yml
+
+# 🔥 Uploads (IMPORTANT 🚨)
+
+# Ignore uploads so they are NOT baked into image
+
+public/uploads
+public/*.tmp
+
+# 🔥 Tests
+
+**tests**
+*.spec.js
+*.test.js
+
+# 🔥 Misc
+
+*.md
+*.swp

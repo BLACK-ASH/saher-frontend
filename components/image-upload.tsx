@@ -5,14 +5,27 @@ import { useDropzone } from "react-dropzone";
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
 
+const fileSample = {
+  "id": "69c61d7869eaed473fefb9f8",
+  "fileName": "09e608b9-4c53-4d80-b57b-d946e141f59b.webp",
+  "url": "http://localhost:4000/uploads/images/09e608b9-4c53-4d80-b57b-d946e141f59b.webp",
+  "size": 74620,
+  "width": 1024,
+  "height": 576,
+  "mimetype": "image/webp"
+}
+
+export type ImageFile = typeof fileSample
+
 type ImageUploadProps = {
-  onUploadSuccess?: (data: { url: string; alt: string }) => void;
+  onUploadSuccess?: (data: { alt: string, file: ImageFile }) => void;
+  altName?:string
 };
 
-export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
+export default function ImageUpload({ onUploadSuccess,altName }: ImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [alt, setAlt] = useState("");
+  const [alt, setAlt] = useState(altName || "");
   const [error, setError] = useState("");
 
   const uploadImage = async (file: File) => {
@@ -30,7 +43,7 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
       formData.append("name", alt); // 👈 important
 
 
-      const response = await apiFetch<{ image: string, name: string, url: string }>(
+      const response = await apiFetch(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/upload/image`,
         {
           method: "POST",
@@ -40,8 +53,9 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
 
       if (response?.success) {
         onUploadSuccess?.({
-          url: response?.data?.url,
-          alt,
+          alt: alt,
+          //@ts-expect-error
+          file: response?.file
         });
         toast("Image Upload Successful.")
       }
@@ -76,6 +90,7 @@ export default function ImageUpload({ onUploadSuccess }: ImageUploadProps) {
       <div>
         <input
           type="text"
+          id="alt"
           placeholder="Enter image alt text (required)"
           value={alt}
           onChange={(e) => setAlt(e.target.value)}

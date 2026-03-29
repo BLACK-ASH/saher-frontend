@@ -16,7 +16,6 @@ import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "
 import { z } from "zod"
 import { Controller, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { apiFetch } from "@/lib/api-wrapper"
 import { toast } from "sonner"
 import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -33,7 +32,7 @@ export function LoginForm({
 
   const loginFromSchema = z.object({
     email: z.email(),
-    password: z.string().min(4, "Minimun 4 Characrters Required.")
+    password: z.string().min(4, "Minimun 4 Characters Required.")
   })
 
   const form = useForm<z.infer<typeof loginFromSchema>>({
@@ -45,14 +44,13 @@ export function LoginForm({
   })
 
   const onLoginSubmit = async (data: z.infer<typeof loginFromSchema>) => {
-    console.log(data)
     mutate(data, {
       onSuccess: (res) => {
-        toast(res.message);
+        toast.success(res.message);
         router.push("/");
       },
       onError: (err: Error) => {
-        toast(err.message);
+        toast.error(err.message);
       },
     });
   };
@@ -63,7 +61,7 @@ export function LoginForm({
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <a
-              href="#"
+              href="/"
               className="flex flex-col items-center gap-2 font-medium"
             >
               <div className="flex items-center justify-center rounded-md">
@@ -128,7 +126,7 @@ export function LoginForm({
                 )}
               />
               <Field>
-                <Button type="submit">Login</Button>
+                <Button disabled={isPending} type="submit">Login</Button>
               </Field>
             </CardContent>
           </Card>
