@@ -9,7 +9,7 @@ type Props = {
 
 export default function FormPreview({ data }: Props) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 my-4">
 
       {/* 🔹 USER DETAILS */}
       <Card>

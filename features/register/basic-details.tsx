@@ -36,7 +36,7 @@ const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
         <CardTitle>Basic User Information</CardTitle>
       </CardHeader>
       <CardContent className="flex max-md:flex-col flex-row ">
-        <FieldGroup className="w-1/2 m-2">
+        <FieldGroup className="w-1/2 m-2 max-md:w-full ">
           <Controller
             name="user.name"
             control={form.control}

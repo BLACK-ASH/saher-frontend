@@ -15,6 +15,7 @@ import FormPreview from "./form-preview";
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
 
 export default function RegisterUserForm() {
   const [step, setStep] = useState(1);
@@ -158,32 +159,15 @@ export default function RegisterUserForm() {
   };
 
   return (
-    <div className="w-2/3 mx-auto space-y-6">
+    <div className="w-full p-4 md:w-2/3 mx-auto space-y-6">
 
       <form
         onSubmit={form.handleSubmit(onSubmit, onError)}
         className="space-y-6 w-full"
       >
 
-        {
-          step < 5 ? (<Field className="w-full max-w-sm mx-auto">
-            <FieldLabel htmlFor="progress-upload">
-              <span>{stepName[step - 1]}</span>
-              <span className="ml-auto">{25 * step}%</span>
-            </FieldLabel>
-            <Progress value={step * 25} id="progress-upload" />
-          </Field>) : (<h1 className="text-2xl font-bold text-center">Preview</h1>)
-        }
-
-        {step === 1 && <BasicDetail form={form} />}
-        {step === 2 && <BankDetail form={form} />}
-        {step === 3 && <EmployeeDetail form={form} />}
-        {step === 4 && <UploadDocument form={form} />}
-        {step === 5 && <FormPreview data={form.getValues()} />}
-
         {/* 🔥 Navigation Buttons */}
-        <div className="flex justify-between">
-
+        <div className="flex justify-between gap-2">
           {step > 1 && (
             <Button
               type="button"
@@ -193,6 +177,16 @@ export default function RegisterUserForm() {
               Back
             </Button>
           )}
+
+          {
+            step < 5 ? (<Field className="w-full max-w-sm mx-auto">
+              <FieldLabel htmlFor="progress-upload">
+                <span>{stepName[step - 1]}</span>
+                <span className="ml-auto">{25 * (step - 1)}%</span>
+              </FieldLabel>
+              <Progress value={(step - 1) * 25} id="progress-upload" />
+            </Field>) : (<h1 className="text-2xl font-bold text-center">Preview</h1>)
+          }
 
           {step < 4 && (
             <Button type="button" onClick={nextStep}>
@@ -211,8 +205,15 @@ export default function RegisterUserForm() {
               Submit
             </Button>
           )}
-
         </div>
+
+        {/* <Separator /> */}
+
+        {step === 1 && <BasicDetail form={form} />}
+        {step === 2 && <BankDetail form={form} />}
+        {step === 3 && <EmployeeDetail form={form} />}
+        {step === 4 && <UploadDocument form={form} />}
+        {step === 5 && <FormPreview data={form.getValues()} />}
       </form>
     </div>
   );
