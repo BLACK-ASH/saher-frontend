@@ -1,7 +1,11 @@
+import AttendanceStatus from "@/features/home/attendance-status";
+
 export default function Page() {
   return (
-    <>
-      <h1>Home Page</h1>
-    </>
+    <section className="p-2 ">
+      <section className="grid grid-cols-3 gap-2">
+        <AttendanceStatus />
+      </section>
+    </section>
   );
 }
