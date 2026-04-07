@@ -8,7 +8,6 @@ import { User } from "@/hooks/use-me"
 import { imageUrl } from "@/lib/image-url"
 import { ColumnDef } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal } from "lucide-react"
-import path from "path"
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
