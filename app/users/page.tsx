@@ -1,6 +1,10 @@
+import UserTable from "@/features/users/page"
+
 const page = () => {
   return (
-    <div>Users Page</div>
+    <>
+      <UserTable />
+    </>
   )
 }
 

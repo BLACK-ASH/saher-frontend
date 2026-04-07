@@ -1,3 +1,5 @@
+import { toast } from "sonner";
+
 type ApiResponse<T> = {
   success: boolean;
   message: string;
@@ -24,17 +26,20 @@ export async function apiFetch<T>(
     json = await res.json();
   } catch(error) {
     console.error(error)
+    toast.error("Invalid Server response")
     throw new Error("Invalid server response");
   }
 
   // ❗ HTTP-level error
   if (!res.ok) {
     console.error(json)
+    toast.error(json.message)
     throw new Error(json?.message || `HTTP ${res.status}`);
   }
 
   // ❗ Backend-level error
   if (!json.success) {
+    toast.error(json.message)
     throw new Error(json.message);
   }
 
