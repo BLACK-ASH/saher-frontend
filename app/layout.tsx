@@ -6,6 +6,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./provider";
+import { SiteHeader } from "@/components/sidebar/sidebar-header";
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
@@ -39,7 +40,7 @@ export default function RootLayout({
             <SidebarProvider>
               <AppSidebar />
               <main className="w-full h-full">
-                <SidebarTrigger />
+                <SiteHeader/>
                 {children}
                 <Toaster />
               </main>

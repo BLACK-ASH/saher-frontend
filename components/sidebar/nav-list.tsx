@@ -1,28 +1,82 @@
+"use client"
 import Link from "next/link";
-import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar";
-import { Home, Plus } from "lucide-react";
+import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton } from "../ui/sidebar";
+import { useMe } from "@/hooks/use-me";
+import { CalendarCheck, ClockCheck, Home, Mailbox, User, UserPlus, Users } from "lucide-react";
 
-const navItems = [
+const userRoutes = [
   {
     label: "Home",
     url: "/",
     icon: Home
   },
   {
-    label: "Register",
-    url: "/register",
-    icon: Plus
+    label: "Profile",
+    url: "/profile",
+    icon: User
+  },
+  {
+    label: "Attendance",
+    url: "/attendance",
+    icon: ClockCheck
+  },
+  {
+    label: "Mails",
+    url: "/mail",
+    icon: Mailbox
+  },
+  {
+    label: "Workshop",
+    url: "/workshop",
+    icon: CalendarCheck
   },
 ]
 
+const adminRoutes = [
+  {
+    label: "Register",
+    url: "/register",
+    icon: UserPlus
+  },
+  {
+    label: "Users",
+    url: "/users",
+    icon: Users
+  },
+]
+
+const NavSkeleton = () => {
+  return (
+    <>
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+    </>
+  )
+}
+
 export function NavItem() {
+  const { data: user, isLoading, error } = useMe();
+  // 🔄 Loading state
+  if (isLoading) {
+    return <NavSkeleton />;
+  }
+
+  // ❌ Not logged in (extra safety)
+  if (error || !user) {
+    return null;
+  }
+
   return (
     <>
       <SidebarGroup>
-        <SidebarGroupLabel>Admin</SidebarGroupLabel>
+        <SidebarGroupLabel>User</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            {navItems.map((item) => {
+            {userRoutes.map((item) => {
               return (
                 <SidebarMenuItem key={item.label}>
                   <Link href={item.url} className="flex items-center justify-center gap-2">
@@ -37,6 +91,27 @@ export function NavItem() {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
+      {
+        user?.role !== "user" && <SidebarGroup>
+          <SidebarGroupLabel>Admin</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {adminRoutes.map((item) => {
+                return (
+                  <SidebarMenuItem key={item.label}>
+                    <Link href={item.url} className="flex items-center justify-center gap-2">
+                      <SidebarMenuButton tooltip={item.label}>
+                        {item.icon && <item.icon />}
+                        <span>{item.label}</span>
+                      </SidebarMenuButton>
+                    </Link>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      }
     </>
   )
 }
