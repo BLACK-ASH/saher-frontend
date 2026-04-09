@@ -20,7 +20,7 @@ const AttendanceStatus = (props: Props) => {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{user?.displayName}</CardTitle>
+        <CardTitle>{formatDate(data?.date as Date)}</CardTitle>
         <CardAction className="flex gap-2 items-center">
           <p>{status}</p>
           {data?.isLate && (
@@ -30,15 +30,12 @@ const AttendanceStatus = (props: Props) => {
       </CardHeader>
       {
         data && (
-          <CardContent className="grid grid-cols-2 gap-2">
-            <p>📅 Date: {formatDate(data?.date)}</p>
-
-            <p>⏱ Work Hours: {calculateWorkHours(data?.inTime, data?.outTime)}</p>
-
+          <CardContent className="space-y-2">
             <p>🟢 Check In: {formatTime(data?.inTime)}</p>
 
             <p>🔴 Check Out: {formatTime(data?.outTime)}</p>
 
+            <p>⏱ Work Hours: {calculateWorkHours(data?.inTime, data?.outTime)}</p>
           </CardContent>
         )
       }
