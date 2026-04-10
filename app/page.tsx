@@ -1,4 +1,4 @@
-import AttendanceStatus from "@/features/home/attendance-status";
+import AttendanceStatus from "@/features/attendance/attendance-status";
 
 export default function Page() {
   return (

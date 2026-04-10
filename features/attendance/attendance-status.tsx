@@ -3,19 +3,15 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { useAttendance } from "@/hooks/use-attendance"
-import { useMe } from "@/hooks/use-me"
 import { formatDate, formatTime, calculateWorkHours } from "@/utils/attendance"
+import { ArrowDownLeft, ArrowUpRight, ClockIcon } from "lucide-react"
 
-type Props = {
-}
 
-const AttendanceStatus = (props: Props) => {
-  const { data: user, error, isPending } = useMe()
+const AttendanceStatus = () => {
   const { data, status, isLoading, isCheckedIn, checkIn, isCheckedOut, checkOut, } = useAttendance()
   console.log(data)
 
   if (isLoading) return <p>Loading...</p>
-  if (isPending) return <p>Loading...</p>
 
   return (
     <Card>
@@ -24,18 +20,18 @@ const AttendanceStatus = (props: Props) => {
         <CardAction className="flex gap-2 items-center">
           <p>{status}</p>
           {data?.isLate && (
-            <Badge variant="destructive" className="p-4">LATE</Badge>
+            <Badge variant="outline-warn" className="p-4">LATE</Badge>
           )}
         </CardAction>
       </CardHeader>
       {
         data && (
-          <CardContent className="space-y-2">
-            <p>🟢 Check In: {formatTime(data?.inTime)}</p>
+          <CardContent className="space-y-2 h-full">
+            <p className="flex gap-2"><ArrowUpRight /> Check In: {formatTime(data?.inTime)}</p>
 
-            <p>🔴 Check Out: {formatTime(data?.outTime)}</p>
+            <p className="flex gap-2"><ArrowDownLeft /> Check Out: {formatTime(data?.outTime)}</p>
 
-            <p>⏱ Work Hours: {calculateWorkHours(data?.inTime, data?.outTime)}</p>
+            <p className="flex gap-2"><ClockIcon className="size-5" /> Work Hours: {calculateWorkHours(data?.inTime, data?.outTime)}</p>
           </CardContent>
         )
       }
