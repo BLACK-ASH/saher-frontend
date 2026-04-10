@@ -1,12 +1,13 @@
 // utils/attendance.ts
 
-export const formatTime = (dateString: string | null | Date) => {
-  if (!dateString) return "--"
+export const formatTime = (iso?: string | null | Date) => {
+  if (!iso) return ""
+  const date = new Date(iso)
 
-  return new Date(dateString).toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-  })
+  const hours = String(date.getHours()).padStart(2, "0")
+  const minutes = String(date.getMinutes()).padStart(2, "0")
+
+  return `${hours}:${minutes}`
 }
 
 export const formatDate = (dateString: string | null | Date) => {
@@ -17,6 +18,18 @@ export const formatDate = (dateString: string | null | Date) => {
     month: "short",
     year: "numeric",
   })
+}
+
+export const timeToDateString = (date: string | Date, time: string) => {
+  const d = new Date(date)
+
+  const year = d.getFullYear()
+  const month = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+
+  const iso = `${year}-${month}-${day}T${time}:00`
+
+  return new Date(iso).toISOString()
 }
 
 export const calculateWorkHours = (

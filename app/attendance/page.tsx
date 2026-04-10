@@ -8,7 +8,7 @@ const page = () => {
   return (
     <section className="p-3 gap-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <AttendanceStatus />
-      <AttendanceChart className="col-span-2 " />
+      <AttendanceChart className="md:col-span-2 " />
       <AttendanceTable />
       <AttendanceCorrection />
       <AttendanceCorrectionRequests />

@@ -2,6 +2,7 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Input } from "@/components/ui/input"
 import { useAttendance } from "@/hooks/use-attendance"
 import { formatDate, formatTime, calculateWorkHours } from "@/utils/attendance"
 import { ArrowDownLeft, ArrowUpRight, ClockIcon } from "lucide-react"
@@ -9,7 +10,6 @@ import { ArrowDownLeft, ArrowUpRight, ClockIcon } from "lucide-react"
 
 const AttendanceStatus = () => {
   const { data, status, isLoading, isCheckedIn, checkIn, isCheckedOut, checkOut, } = useAttendance()
-  console.log(data)
 
   if (isLoading) return <p>Loading...</p>
 
@@ -27,11 +27,44 @@ const AttendanceStatus = () => {
       {
         data && (
           <CardContent className="space-y-2 h-full">
-            <p className="flex gap-2"><ArrowUpRight /> Check In: {formatTime(data?.inTime)}</p>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <span className="flex items-center gap-2">
+                <ArrowUpRight />
+                Check In
+              </span>
+              <Input
+                type="time"
+                className="w-fit"
+                disabled
+                defaultValue={formatTime(data?.inTime)}
+              />
+            </div>
 
-            <p className="flex gap-2"><ArrowDownLeft /> Check Out: {formatTime(data?.outTime)}</p>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <span className="flex items-center gap-2">
+                <ArrowDownLeft />
+                Check Out
+              </span>
+              <Input
+                type="time"
+                className="w-fit"
+                disabled
+                defaultValue={formatTime(data?.outTime)}
+              />
+            </div>
 
-            <p className="flex gap-2"><ClockIcon className="size-5" /> Work Hours: {calculateWorkHours(data?.inTime, data?.outTime)}</p>
+            <div className="grid grid-cols-3 gap-2 items-center">
+              <span className="flex items-center gap-2">
+                <ClockIcon className="size-5"/>
+                Work Hours
+              </span>
+              <Input
+                type="text"
+                className="w-28"
+                disabled
+                value={calculateWorkHours(data?.inTime, data?.outTime)}
+              />
+            </div>
           </CardContent>
         )
       }

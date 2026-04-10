@@ -15,7 +15,6 @@ import FormPreview from "./form-preview";
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
 
 export default function RegisterUserForm() {
   const [step, setStep] = useState(1);

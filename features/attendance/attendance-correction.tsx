@@ -1,42 +1,243 @@
 "use client"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import z from "zod"
-import { attendanceSchema } from "./attendance-table"
+import ImageUpload from "@/components/image-upload"
+import { Button } from "@/components/ui/button"
+import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from "@/components/ui/input-group"
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useAttendanceCorrection } from "@/hooks/use-attendance-correction"
+import { formatTime, timeToDateString } from "@/utils/attendance"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { useSearchParams } from "next/navigation"
+import { useEffect } from "react"
+import { Controller, useForm } from "react-hook-form"
+import { toast } from "sonner"
+import z from "zod"
 
-const correctionStatus = ["pending", "reject", "approve"]
+export const attendanceStatusList = ["absent", "half-day", "present"]
 
-const user = z.object({
-  _id: z.string(),
-  role: z.enum(["user", "manager", "admin"]),
-  name: z.string(),
-})
-
-export const attendanceCorrectionSchema = z.object({
-  _id: z.string("Attendance Id Is Required."),
-  user: user,
-  manager: user,
-  attendance: z.string(),
-  previous: attendanceSchema.partial(),
-  changes: attendanceSchema.partial(),
-  status: z.enum(correctionStatus),
+export const attendanceCorrectionCreateSchema = z.object({
+  attendanceId: z.string(),
   message: z.string(),
-  reason: z.string(),
+  proof: z.string().optional(),
+  inTime: z.string(),
+  outTime: z.string(),
+  status: z.enum(attendanceStatusList),
 })
 
-export type AttendanceCorrectionType = z.infer<typeof attendanceCorrectionSchema>
+export type AttendanceCorrectionType = z.infer<typeof attendanceCorrectionCreateSchema>
 
-type Props = {}
 const AttendanceCorrection = () => {
-  const attendanceId = useSearchParams().get("attendanceId")
+  const attendanceId = useSearchParams().get("attendanceId") || ''
+  const { attendance, isLoading, submitCorrection } = useAttendanceCorrection(attendanceId)
+
+  const form = useForm<AttendanceCorrectionType>({
+    resolver: zodResolver(attendanceCorrectionCreateSchema),
+    defaultValues: {
+      attendanceId: attendanceId || "",
+      message: "",
+      proof: "",
+      inTime: formatTime(attendance?.inTime) || "",
+      outTime: formatTime(attendance?.outTime) || "",
+      status: "absent"
+    }
+  })
+
+  useEffect(() => {
+    if (attendance) {
+      form.reset({
+        attendanceId: attendance._id,
+        inTime: formatTime(attendance.inTime),   // ✅ MUST be HH:mm
+        outTime: formatTime(attendance.outTime), // ✅ MUST be HH:mm
+        status: attendance.status
+      })
+    }
+    console.log(form.getValues())
+  }, [attendance])
+
+  if (!attendance) return <div>Attendance Not Found</div>
+  if (isLoading) return <div>Loading ...</div>
+
+  const onSubmit = async (data: AttendanceCorrectionType) => {
+    const payload = { date: attendance.date, ...data }
+    payload.inTime = timeToDateString(attendance.date, payload.inTime)
+    payload.outTime = timeToDateString(attendance.date, payload.outTime)
+
+    const res = submitCorrection.mutate(payload, {
+      onSuccess: (res) => {
+        toast.success(res.message)
+      },
+      onError: (err: Error) => {
+        toast.error(err.message)
+      },
+    })
+    console.log(res)
+  }
+
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Correction</CardTitle>
+        <CardTitle>Attendance Correction</CardTitle>
+        <CardAction>{new Date(attendance.date).toLocaleDateString()}</CardAction>
       </CardHeader>
-      <CardContent>
-        {attendanceId}
+      <CardContent className="h-full">
+        <form className="space-y-2.5" id="attendance-correction-form" onSubmit={form.handleSubmit(onSubmit)}>
+          <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <Controller
+              name="inTime"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="attendance-correction-in-time">Check In</FieldLabel>
+                  <Input
+                    type="time"
+                    defaultValue={field.value || ""}
+                    {...field}
+                    id="attendance-correction-in-time"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="outTime"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="attendance-correction-out-time">Check Out</FieldLabel>
+                  <Input
+                    type="time"
+                    defaultValue={field.value || ""}
+                    {...field}
+                    id="attendance-correction-out-time"
+                    aria-invalid={fieldState.invalid}
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+
+          <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-2">
+            <Controller
+              name="status"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="role">Status</FieldLabel>
+                  <Select
+                    key={field.value}
+                    value={field.value}
+                    aria-invalid={fieldState.invalid}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="w-45">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        {
+                          attendanceStatusList.map((attendanceStatus) => {
+                            return (
+                              <SelectItem key={attendanceStatus} value={attendanceStatus}>{attendanceStatus.toLocaleUpperCase()}</SelectItem>
+                            )
+                          })
+                        }
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="proof"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="role">Proof</FieldLabel>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline">Upload Proof</Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-sm">
+                      <DialogHeader>
+                        <DialogTitle>Add Your Proof</DialogTitle>
+                        {/* <DialogDescription> */}
+                        {/*   Make changes to your profile here. Click save when you&apos;re */}
+                        {/*   done. */}
+                        {/* </DialogDescription> */}
+                      </DialogHeader>
+
+                      <ImageUpload
+                        altName={form.getValues("proof") + attendanceId}
+                        onUploadSuccess={(data) => form.setValue("proof", data.file.id)}
+                      />
+                    </DialogContent>
+                  </Dialog>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+          </FieldGroup>
+
+          <FieldGroup>
+            <Controller
+              name="message"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="attendance-correction-message">
+                    Message
+                  </FieldLabel>
+                  <InputGroup>
+                    <InputGroupTextarea
+                      {...field}
+                      id="attendance-correction-message"
+                      placeholder="I'm having an issue with the my mobile internet no i check in late."
+                      rows={6}
+                      className="min-h-24 resize-none"
+                      aria-invalid={fieldState.invalid}
+                    />
+                    <InputGroupAddon align="block-end">
+                      <InputGroupText className="tabular-nums">
+                        {field.value.length}/100 characters
+                      </InputGroupText>
+                    </InputGroupAddon>
+                  </InputGroup>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </form>
       </CardContent>
+      <CardFooter>
+        <Field orientation="horizontal">
+          <Button type="button" variant="outline" onClick={() => form.reset()}>
+            Reset
+          </Button>
+          <Button type="submit" form="attendance-correction-form">
+            Submit
+          </Button>
+        </Field>
+      </CardFooter>
+
     </Card>
   )
 }
