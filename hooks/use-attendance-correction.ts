@@ -1,35 +1,27 @@
-import { AttendanceCorrectionType } from "@/features/attendance/attendance-correction";
-import { apiFetch } from "@/lib/api-wrapper";
-import { getAttendanceById } from "@/services/attendance-correction.api";
+import { getAttendanceCorrection, submitAttendanceCorrection } from "@/services/attendance-correction.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
-export const useAttendanceCorrection = (id: string) => {
+type useAttendanceCorrectionProps = {
+  attendanceId?: string
+}
+
+export const useAttendanceCorrection = ({ attendanceId }: useAttendanceCorrectionProps = {}) => {
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["attendance", id],
-    queryFn: () => getAttendanceById(id),
-    enabled: !!id, // ✅ good practice
-  });
+  const allCorrections = useQuery({
+    queryKey: ["attendance", "correction"],
+    queryFn: getAttendanceCorrection
+  })
 
   const submitCorrection = useMutation({
-    mutationFn: async (payload: AttendanceCorrectionType & { date: string | Date }) => {
-      return await apiFetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/attendance/attendance-correction`,
-        {
-          method: "POST",
-          body: JSON.stringify(payload),
-        }
-      );
-    },
+    mutationFn: submitAttendanceCorrection,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["attendance", id] });
+      queryClient.invalidateQueries({ queryKey: ["attendance", "correction"] });
     },
   });
 
   return {
-    attendance: data,
-    isLoading,
+    allCorrections,
     submitCorrection,
   };
 };

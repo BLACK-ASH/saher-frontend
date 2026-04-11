@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useAttendance } from "@/hooks/use-attendance"
-import { formatDate, transformTime, calculateWorkHours } from "@/utils/attendance"
+import { formatDate, transformTime, calculateWorkHours } from "@/lib/utils/attendance"
 import { ArrowDownLeft, ArrowUpRight, ClockIcon } from "lucide-react"
 
 

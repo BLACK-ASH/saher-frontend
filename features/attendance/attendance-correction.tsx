@@ -7,8 +7,9 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from "@/components/ui/input-group"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useAttendance } from "@/hooks/use-attendance"
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction"
-import { transformTime, timeToDateString } from "@/utils/attendance"
+import { transformTime, timeToDateString } from "@/lib/utils/attendance"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
@@ -20,7 +21,7 @@ export const attendanceStatusList = ["absent", "half-day", "present"]
 
 export const attendanceCorrectionCreateSchema = z.object({
   attendanceId: z.string(),
-  message: z.string().min(10, "Message is Required. Atleast 10 Characters").max(100,"Max Limit Is 100 Characters."),
+  message: z.string().min(10, "Message is Required. Atleast 10 Characters").max(100, "Max Limit Is 100 Characters."),
   proof: z.string().optional(),
   inTime: z.string(),
   outTime: z.string(),
@@ -31,14 +32,16 @@ export type AttendanceCorrectionType = z.infer<typeof attendanceCorrectionCreate
 
 const AttendanceCorrection = () => {
   const attendanceId = useSearchParams().get("attendanceId") || ''
-  const { attendance, isLoading, submitCorrection } = useAttendanceCorrection(attendanceId)
+  const { submitCorrection } = useAttendanceCorrection({ attendanceId })
+  const { attendance: data } = useAttendance({ attendanceId })
+
+  const { data: attendance, isLoading } = data
 
   const form = useForm<AttendanceCorrectionType>({
     resolver: zodResolver(attendanceCorrectionCreateSchema),
     defaultValues: {
       attendanceId: attendanceId || "",
       message: "",
-      proof: "",
       inTime: transformTime(attendance?.inTime) || "",
       outTime: transformTime(attendance?.outTime) || "",
       status: "absent"
@@ -53,7 +56,6 @@ const AttendanceCorrection = () => {
         outTime: transformTime(attendance.outTime), // ✅ MUST be HH:mm
         status: attendance.status,
         message: "",
-        proof: "",
       })
     }
   }, [attendance])
@@ -65,6 +67,7 @@ const AttendanceCorrection = () => {
     const payload = { date: attendance.date, ...data }
     payload.inTime = timeToDateString(attendance.date, payload.inTime)
     payload.outTime = timeToDateString(attendance.date, payload.outTime)
+    console.log(payload)
 
     const res = submitCorrection.mutate(payload, {
       onSuccess: (res) => {

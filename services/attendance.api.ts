@@ -26,11 +26,20 @@ export const getAttendanceStatus = async () => {
   return res.data
 }
 
+export const getAttendanceById = async (id: string) => {
+  const res = await apiFetch<AttendanceResponse>(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/attendance/attendance/${id}`,
+    {
+      method: "GET",
+    }
+  );
+  return res.data
+}
+
 export const getAttendance = async (filter: "week" | "month") => {
   const res = await apiFetch<{ attendances: AttendanceResponse[], count: number }>(process.env.NEXT_PUBLIC_SERVER_URL + "/api/attendance/retrive?type=" + filter, {
     method: "GET",
   })
-  if (!res.success) toast.error(res.message)
   return res.data
 }
 

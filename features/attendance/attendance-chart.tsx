@@ -27,8 +27,8 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function AttendanceChart({ className, ...props }: React.ComponentProps<"div">) {
-  const { attendances } = useAttendance({ filter: "month" })
-  const { data, isLoading } = attendances
+  const { attendancesList } = useAttendance({ filter: "month" })
+  const { data, isLoading } = attendancesList
 
   const chartData = data?.attendances?.map((a) => ({
     date: a.date,

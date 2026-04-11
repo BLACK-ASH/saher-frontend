@@ -4,13 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
 import { useAttendance } from "@/hooks/use-attendance"
-import { formatHours, formatTime } from "@/utils/attendance"
+import { formatDate, formatHours, formatTime } from "@/lib/utils/attendance"
 import { usePathname, useRouter } from "next/navigation"
 
 
@@ -20,7 +21,7 @@ export function AttendanceTable() {
   const setId = (id: string) => {
     router.push(pathname + "?attendanceId=" + id)
   }
-  const { attendances: data } = useAttendance()
+  const { attendancesList: data } = useAttendance()
   const { data: attendances, isLoading } = data
 
   if (isLoading) return <p>Loading ...</p>
@@ -33,7 +34,6 @@ export function AttendanceTable() {
       </CardHeader>
       <CardContent>
         <Table>
-          {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
           <TableHeader>
             <TableRow>
               <TableHead className="w-25">Date</TableHead>
@@ -46,7 +46,7 @@ export function AttendanceTable() {
           <TableBody>
             {attendances?.attendances.map((attendance) => (
               <TableRow className="cursor-pointer" key={attendance._id} onClick={() => setId(attendance._id)} >
-                <TableCell className="font-medium">{attendance.date}</TableCell>
+                <TableCell className="font-medium">{formatDate(attendance.date)}</TableCell>
                 <TableCell className="text-center">{formatTime(attendance.inTime)}</TableCell>
                 <TableCell className="text-center">{formatTime(attendance.outTime)}</TableCell>
                 <TableCell className="text-center">{formatHours(attendance.workHours)}</TableCell>

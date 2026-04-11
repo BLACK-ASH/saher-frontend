@@ -1,11 +1,10 @@
-// hooks/useAttendance.ts
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   getAttendanceStatus,
   checkInApi,
   checkOutApi,
   getAttendance,
+  getAttendanceById,
 } from "@/services/attendance.api"
 
 export enum AttendanceStatus {
@@ -13,20 +12,28 @@ export enum AttendanceStatus {
   CHECKED_IN = "CHECKED_IN",
   CHECKED_OUT = "CHECKED_OUT",
 }
+
 type UseAttendanceProps = {
   filter?: "week" | "month"
+  attendanceId?: string
 }
 
-export const useAttendance = ({ filter = "week" }: UseAttendanceProps = {}) => {
+export const useAttendance = ({ filter = "week", attendanceId }: UseAttendanceProps = {}) => {
   const queryClient = useQueryClient()
 
   const today = useQuery({
-    queryKey: ["attendance", "me"],
+    queryKey: ["attendance", "today"],
     queryFn: getAttendanceStatus,
   })
 
-  const attendances = useQuery({
-    queryKey: ["attendance", "me", filter],
+  const attendance = useQuery({
+    queryKey: ["attendance", attendanceId],
+    queryFn: () => getAttendanceById(attendanceId!),
+    enabled: !!attendanceId, // ✅ good practice
+  });
+
+  const attendancesList = useQuery({
+    queryKey: ["attendance", "today", filter],
     queryFn: () => getAttendance(filter)
   })
 
@@ -34,14 +41,14 @@ export const useAttendance = ({ filter = "week" }: UseAttendanceProps = {}) => {
     mutationFn: checkInApi,
     onSuccess: (data) => {
       // 🔥 instant UI update (better than refetch)
-      queryClient.setQueryData(["attendance", "me"], data)
+      queryClient.setQueryData(["attendance", "today"], data)
     },
   })
 
   const checkOutMutation = useMutation({
     mutationFn: checkOutApi,
     onSuccess: (data) => {
-      queryClient.setQueryData(["attendance", "me"], data)
+      queryClient.setQueryData(["attendance", "today"], data)
     },
   })
 
@@ -61,7 +68,8 @@ export const useAttendance = ({ filter = "week" }: UseAttendanceProps = {}) => {
 
   return {
     today,
-    attendances,
+    attendance,
+    attendancesList,
 
     status,
     isCheckedIn,
