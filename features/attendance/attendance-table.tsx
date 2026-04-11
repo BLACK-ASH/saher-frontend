@@ -20,7 +20,12 @@ export function AttendanceTable() {
   const setId = (id: string) => {
     router.push(pathname + "?attendanceId=" + id)
   }
-  const { attendances } = useAttendance()
+  const { attendances: data } = useAttendance()
+  const { data: attendances, isLoading } = data
+
+  if (isLoading) return <p>Loading ...</p>
+
+
   return (
     <Card>
       <CardHeader>

@@ -1,6 +1,6 @@
 "use client"
 
-import { Bar, BarChart, CartesianGrid, Line, LineChart, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
 
 import {
   Card,
@@ -15,26 +15,9 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
+import { useAttendance } from "@/hooks/use-attendance"
 
 export const description = "A linear line chart"
-
-const chartData = [
-  { date: "01-01-2026", workHours: 9 },
-  { date: "02-01-2026", workHours: 8 },
-  { date: "03-01-2026", workHours: 8.5 },
-  { date: "04-01-2026", workHours: 7 },
-  { date: "05-01-2026", workHours: 7.7 },
-  { date: "06-01-2026", workHours: 8.7 },
-  { date: "07-01-2026", workHours: 9 },
-  { date: "08-01-2026", workHours: 8 },
-  { date: "09-01-2026", workHours: 8.5 },
-  { date: "10-01-2026", workHours: 7 },
-  { date: "11-01-2026", workHours: 7.7 },
-  { date: "12-01-2026", workHours: 8.7 },
-  { date: "13-01-2026", workHours: 9 },
-  { date: "14-01-2026", workHours: 8 },
-  { date: "15-01-2026", workHours: 8.5 },
-]
 
 const chartConfig = {
   desktop: {
@@ -44,6 +27,17 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function AttendanceChart({ className, ...props }: React.ComponentProps<"div">) {
+  const { attendances } = useAttendance({ filter: "month" })
+  const { data, isLoading } = attendances
+
+  const chartData = data?.attendances?.map((a) => ({
+    date: a.date,
+    workHours: a.workHours,
+  }))
+
+  if (isLoading) return <p>Loading ...</p>
+  if (!chartData) return <p>Chart Not Available.</p>
+
   return (
     <Card className={className} {...props}>
       <CardHeader>
@@ -68,7 +62,9 @@ export function AttendanceChart({ className, ...props }: React.ComponentProps<"d
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 2)}
+              tickFormatter={(value) =>
+                new Date(value).toLocaleDateString("en-IN", { day: "2-digit" })
+              }
             />
             <ChartTooltip
               cursor={false}

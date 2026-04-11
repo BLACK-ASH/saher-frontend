@@ -20,7 +20,7 @@ export const attendanceStatusList = ["absent", "half-day", "present"]
 
 export const attendanceCorrectionCreateSchema = z.object({
   attendanceId: z.string(),
-  message: z.string(),
+  message: z.string().min(10, "Message is Required. Atleast 10 Characters").max(100,"Max Limit Is 100 Characters."),
   proof: z.string().optional(),
   inTime: z.string(),
   outTime: z.string(),

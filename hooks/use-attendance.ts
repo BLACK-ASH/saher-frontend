@@ -61,7 +61,7 @@ export const useAttendance = ({ filter = "week" }: UseAttendanceProps = {}) => {
 
   return {
     today,
-    attendances: attendances.data,
+    attendances,
 
     status,
     isCheckedIn,
