@@ -5,6 +5,7 @@ import {
   getAttendanceStatus,
   checkInApi,
   checkOutApi,
+  getAttendance,
 } from "@/services/attendance.api"
 
 export enum AttendanceStatus {
@@ -12,13 +13,21 @@ export enum AttendanceStatus {
   CHECKED_IN = "CHECKED_IN",
   CHECKED_OUT = "CHECKED_OUT",
 }
+type UseAttendanceProps = {
+  filter?: "week" | "month"
+}
 
-export const useAttendance = () => {
+export const useAttendance = ({ filter = "week" }: UseAttendanceProps = {}) => {
   const queryClient = useQueryClient()
 
-  const { data, isLoading } = useQuery({
+  const today = useQuery({
     queryKey: ["attendance", "me"],
     queryFn: getAttendanceStatus,
+  })
+
+  const attendances = useQuery({
+    queryKey: ["attendance", "me", filter],
+    queryFn: () => getAttendance(filter)
   })
 
   const checkInMutation = useMutation({
@@ -39,20 +48,20 @@ export const useAttendance = () => {
   // 🔥 derive status
   let status = AttendanceStatus.NOT_CHECKED_IN
 
-  if (data?.inTime && !data?.outTime) {
+  if (today.data?.inTime && !today.data?.outTime) {
     status = AttendanceStatus.CHECKED_IN
   }
 
-  if (data?.inTime && data?.outTime) {
+  if (today.data?.inTime && today.data?.outTime) {
     status = AttendanceStatus.CHECKED_OUT
   }
 
-  const isCheckedIn: boolean = data?.inTime !== null
-  const isCheckedOut: boolean = data?.outTime !== null
+  const isCheckedIn: boolean = today.data?.inTime !== null
+  const isCheckedOut: boolean = today.data?.outTime !== null
 
   return {
-    data,
-    isLoading,
+    today,
+    attendances: attendances.data,
 
     status,
     isCheckedIn,

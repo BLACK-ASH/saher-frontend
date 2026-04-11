@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from "@/components/ui/input-group"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction"
-import { formatTime, timeToDateString } from "@/utils/attendance"
+import { transformTime, timeToDateString } from "@/utils/attendance"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
@@ -39,8 +39,8 @@ const AttendanceCorrection = () => {
       attendanceId: attendanceId || "",
       message: "",
       proof: "",
-      inTime: formatTime(attendance?.inTime) || "",
-      outTime: formatTime(attendance?.outTime) || "",
+      inTime: transformTime(attendance?.inTime) || "",
+      outTime: transformTime(attendance?.outTime) || "",
       status: "absent"
     }
   })
@@ -49,12 +49,13 @@ const AttendanceCorrection = () => {
     if (attendance) {
       form.reset({
         attendanceId: attendance._id,
-        inTime: formatTime(attendance.inTime),   // ✅ MUST be HH:mm
-        outTime: formatTime(attendance.outTime), // ✅ MUST be HH:mm
-        status: attendance.status
+        inTime: transformTime(attendance.inTime),   // ✅ MUST be HH:mm
+        outTime: transformTime(attendance.outTime), // ✅ MUST be HH:mm
+        status: attendance.status,
+        message: "",
+        proof: "",
       })
     }
-    console.log(form.getValues())
   }, [attendance])
 
   if (!attendance) return <div>Attendance Not Found</div>

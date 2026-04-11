@@ -4,19 +4,21 @@ import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useAttendance } from "@/hooks/use-attendance"
-import { formatDate, formatTime, calculateWorkHours } from "@/utils/attendance"
+import { formatDate, transformTime, calculateWorkHours } from "@/utils/attendance"
 import { ArrowDownLeft, ArrowUpRight, ClockIcon } from "lucide-react"
 
 
 const AttendanceStatus = () => {
-  const { data, status, isLoading, isCheckedIn, checkIn, isCheckedOut, checkOut, } = useAttendance()
+  const { today, status, isCheckedIn, checkIn, isCheckedOut, checkOut, } = useAttendance()
+  const { data, isLoading } = today
 
   if (isLoading) return <p>Loading...</p>
+  if (!data) return <p>Not Found</p>
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{formatDate(data?.date as Date)}</CardTitle>
+        <CardTitle>{formatDate(data?.date)}</CardTitle>
         <CardAction className="flex gap-2 items-center">
           <p>{status}</p>
           {data?.isLate && (
@@ -36,7 +38,7 @@ const AttendanceStatus = () => {
                 type="time"
                 className="w-fit"
                 disabled
-                defaultValue={formatTime(data?.inTime)}
+                defaultValue={transformTime(data?.inTime)}
               />
             </div>
 
@@ -49,13 +51,13 @@ const AttendanceStatus = () => {
                 type="time"
                 className="w-fit"
                 disabled
-                defaultValue={formatTime(data?.outTime)}
+                defaultValue={transformTime(data?.outTime)}
               />
             </div>
 
             <div className="grid grid-cols-3 gap-2 items-center">
               <span className="flex items-center gap-2">
-                <ClockIcon className="size-5"/>
+                <ClockIcon className="size-5" />
                 Work Hours
               </span>
               <Input

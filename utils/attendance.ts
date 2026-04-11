@@ -1,6 +1,6 @@
 // utils/attendance.ts
 
-export const formatTime = (iso?: string | null | Date) => {
+export const transformTime = (iso?: string | null | Date) => {
   if (!iso) return ""
   const date = new Date(iso)
 
@@ -18,6 +18,18 @@ export const formatDate = (dateString: string | null | Date) => {
     month: "short",
     year: "numeric",
   })
+}
+
+export const formatTime = (dateString: string | null | Date) => {
+  if (!dateString) return "--"
+
+  return new Date(dateString).toLocaleTimeString("en-IN")
+}
+
+export const formatHours = (hours: number) => {
+  const h = Math.floor(hours)
+  const m = Math.round((hours - h) * 60)
+  return `${h}h ${m}m`
 }
 
 export const timeToDateString = (date: string | Date, time: string) => {
