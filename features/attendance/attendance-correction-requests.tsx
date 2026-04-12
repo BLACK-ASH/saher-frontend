@@ -3,7 +3,7 @@ import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction"
-import { formatDate } from "@/lib/utils/attendance"
+import { formatDate } from "@/lib/utils/time"
 
 type Props = {}
 
@@ -20,7 +20,6 @@ const AttendanceCorrectionRequests = (props: Props) => {
   const { allCorrections } = useAttendanceCorrection()
   const { data: corrections, isLoading } = allCorrections
   if (isLoading) return <p>Loading...</p>
-  console.log(corrections);
 
   return (
     <Card>

@@ -16,6 +16,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart"
 import { useAttendance } from "@/hooks/use-attendance"
+import { getMonthYear } from "@/lib/utils/time"
 
 export const description = "A linear line chart"
 
@@ -30,7 +31,7 @@ export function AttendanceChart({ className, ...props }: React.ComponentProps<"d
   const { attendancesList } = useAttendance({ filter: "month" })
   const { data, isLoading } = attendancesList
 
-  const chartData = data?.attendances?.map((a) => ({
+  const chartData = data?.map((a) => ({
     date: a.date,
     workHours: a.workHours,
   }))
@@ -38,15 +39,17 @@ export function AttendanceChart({ className, ...props }: React.ComponentProps<"d
   if (isLoading) return <p>Loading ...</p>
   if (!chartData) return <p>Chart Not Available.</p>
 
+  const firstDay = new Date(chartData[0]?.date)
+
   return (
     <Card className={className} {...props}>
       <CardHeader>
         <CardTitle>This Month Work Hour</CardTitle>
-        <CardDescription>January 2024</CardDescription>
+        <CardDescription>{getMonthYear(firstDay)}</CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}
-          className="aspect-auto h-40 w-full"
+          className="aspect-auto h-[20vh] w-full"
         >
           <BarChart
             accessibilityLayer

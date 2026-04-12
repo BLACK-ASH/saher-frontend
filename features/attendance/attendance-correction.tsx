@@ -9,7 +9,7 @@ import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAttendance } from "@/hooks/use-attendance"
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction"
-import { transformTime, timeToDateString } from "@/lib/utils/attendance"
+import { transformTime, timeToDateString } from "@/lib/utils/time"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
@@ -177,10 +177,6 @@ const AttendanceCorrection = () => {
                     <DialogContent className="sm:max-w-sm">
                       <DialogHeader>
                         <DialogTitle>Add Your Proof</DialogTitle>
-                        {/* <DialogDescription> */}
-                        {/*   Make changes to your profile here. Click save when you&apos;re */}
-                        {/*   done. */}
-                        {/* </DialogDescription> */}
                       </DialogHeader>
 
                       <ImageUpload
@@ -211,7 +207,7 @@ const AttendanceCorrection = () => {
                     <InputGroupTextarea
                       {...field}
                       id="attendance-correction-message"
-                      placeholder="I'm having an issue with the my mobile internet no i check in late."
+                      placeholder="I'm having an issue with the my mobile internet so i check in late."
                       rows={6}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}

@@ -44,6 +44,13 @@ export const timeToDateString = (date: string | Date, time: string) => {
   return new Date(iso).toISOString()
 }
 
+export const getMonthYear = (date: string | Date) => {
+  return new Date(date).toLocaleString("en-IN", {
+    month: "long",
+    year: "numeric",
+  })
+}
+
 export const calculateWorkHours = (
   checkIn: string | null | Date,
   checkOut: string | null | Date

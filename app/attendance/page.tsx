@@ -3,14 +3,17 @@ import AttendanceCorrection from "@/features/attendance/attendance-correction"
 import AttendanceCorrectionRequests from "@/features/attendance/attendance-correction-requests"
 import { AttendanceTable } from "@/features/attendance/attendance-table"
 import AttendanceStatus from "@/features/attendance/attendance-status"
+import { Suspense } from "react"
 
 const page = () => {
   return (
     <section className="p-3 gap-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <AttendanceStatus />
-      <AttendanceChart className="md:col-span-2 " />
+      <AttendanceChart className="md:col-span-2" />
       <AttendanceTable />
-      <AttendanceCorrection />
+      <Suspense>
+        <AttendanceCorrection />
+      </Suspense>
       <AttendanceCorrectionRequests />
     </section>
   )

@@ -37,7 +37,7 @@ export const getAttendanceById = async (id: string) => {
 }
 
 export const getAttendance = async (filter: "week" | "month") => {
-  const res = await apiFetch<{ attendances: AttendanceResponse[], count: number }>(process.env.NEXT_PUBLIC_SERVER_URL + "/api/attendance/retrive?type=" + filter, {
+  const res = await apiFetch<AttendanceResponse[]>(process.env.NEXT_PUBLIC_SERVER_URL + "/api/attendance/retrive/current?type=" + filter, {
     method: "GET",
   })
   return res.data

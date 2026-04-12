@@ -4,16 +4,23 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
 import { useAttendance } from "@/hooks/use-attendance"
-import { formatDate, formatHours, formatTime } from "@/lib/utils/attendance"
+import { formatDate, formatHours, formatTime } from "@/lib/utils/time"
 import { usePathname, useRouter } from "next/navigation"
 
+const variant: Record<
+  "half-day" | "present" | "absent",
+  "outline-warn" | "outline-success" | "destructive"
+> = {
+  "half-day": "outline-warn",
+  present: "outline-success",
+  absent: "destructive",
+}
 
 export function AttendanceTable() {
   const router = useRouter()
@@ -25,7 +32,6 @@ export function AttendanceTable() {
   const { data: attendances, isLoading } = data
 
   if (isLoading) return <p>Loading ...</p>
-
 
   return (
     <Card>
@@ -44,24 +50,16 @@ export function AttendanceTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {attendances?.attendances.map((attendance) => (
+            {attendances?.map((attendance) => (
               <TableRow className="cursor-pointer" key={attendance._id} onClick={() => setId(attendance._id)} >
                 <TableCell className="font-medium">{formatDate(attendance.date)}</TableCell>
                 <TableCell className="text-center">{formatTime(attendance.inTime)}</TableCell>
                 <TableCell className="text-center">{formatTime(attendance.outTime)}</TableCell>
                 <TableCell className="text-center">{formatHours(attendance.workHours)}</TableCell>
-                <TableCell>
-                  {!attendance.isLate ?
-                    <Badge variant={"outline-success"}>On Time</Badge> : <Badge variant={"outline-warn"}>Late</Badge>
-                  }
-                </TableCell>
+                <TableCell className="font-medium"><Badge variant={variant[attendance.status]}>{attendance.status}</Badge></TableCell>
               </TableRow>
             ))}
           </TableBody>
-          {/* <TableFooter> */}
-          {/*   <TableRow> */}
-          {/*   </TableRow> */}
-          {/* </TableFooter> */}
         </Table>
       </CardContent>
     </Card>

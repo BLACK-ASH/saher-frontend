@@ -28,27 +28,29 @@ export const useAttendance = ({ filter = "week", attendanceId }: UseAttendancePr
 
   const attendance = useQuery({
     queryKey: ["attendance", attendanceId],
-    queryFn: () => getAttendanceById(attendanceId!),
-    enabled: !!attendanceId, // ✅ good practice
+    queryFn: () => getAttendanceById(attendanceId as string),
+    enabled: !!attendanceId, 
   });
 
   const attendancesList = useQuery({
-    queryKey: ["attendance", "today", filter],
+    queryKey: ["attendance", "list", filter],
     queryFn: () => getAttendance(filter)
   })
 
-  const checkInMutation = useMutation({
+  const checkIn = useMutation({
     mutationFn: checkInApi,
     onSuccess: (data) => {
       // 🔥 instant UI update (better than refetch)
       queryClient.setQueryData(["attendance", "today"], data)
+      queryClient.invalidateQueries({queryKey:["attendance"]})
     },
   })
 
-  const checkOutMutation = useMutation({
+  const checkOut = useMutation({
     mutationFn: checkOutApi,
     onSuccess: (data) => {
       queryClient.setQueryData(["attendance", "today"], data)
+      queryClient.invalidateQueries({queryKey:["attendance"]})
     },
   })
 
@@ -63,8 +65,8 @@ export const useAttendance = ({ filter = "week", attendanceId }: UseAttendancePr
     status = AttendanceStatus.CHECKED_OUT
   }
 
-  const isCheckedIn: boolean = today.data?.inTime !== null
-  const isCheckedOut: boolean = today.data?.outTime !== null
+  const isCheckedIn: boolean = !!today.data?.inTime
+  const isCheckedOut: boolean = !!today.data?.outTime
 
   return {
     today,
@@ -75,10 +77,7 @@ export const useAttendance = ({ filter = "week", attendanceId }: UseAttendancePr
     isCheckedIn,
     isCheckedOut,
 
-    checkIn: checkInMutation.mutate,
-    checkOut: checkOutMutation.mutate,
-
-    isCheckingIn: checkInMutation.isPending,
-    isCheckingOut: checkOutMutation.isPending,
+    checkIn,
+    checkOut,
   }
 }

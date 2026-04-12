@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { useAttendance } from "@/hooks/use-attendance"
-import { formatDate, transformTime, calculateWorkHours } from "@/lib/utils/attendance"
+import { formatDate, transformTime, calculateWorkHours } from "@/lib/utils/time"
 import { ArrowDownLeft, ArrowUpRight, ClockIcon } from "lucide-react"
 
 
@@ -31,7 +31,7 @@ const AttendanceStatus = () => {
           <CardContent className="space-y-2 h-full">
             <div className="grid grid-cols-3 gap-2 items-center">
               <span className="flex items-center gap-2">
-                <ArrowUpRight />
+                <ArrowDownLeft />
                 Check In
               </span>
               <Input
@@ -44,7 +44,7 @@ const AttendanceStatus = () => {
 
             <div className="grid grid-cols-3 gap-2 items-center">
               <span className="flex items-center gap-2">
-                <ArrowDownLeft />
+                <ArrowUpRight />
                 Check Out
               </span>
               <Input
@@ -71,8 +71,8 @@ const AttendanceStatus = () => {
         )
       }
       <CardFooter className="flex justify-between px-4 gap-2">
-        <Button disabled={isCheckedIn} onClick={() => checkIn()}>Check In</Button>
-        <Button disabled={!isCheckedIn || isCheckedOut} onClick={() => checkOut()}>Check Out</Button>
+        <Button disabled={isCheckedIn} onClick={() => checkIn.mutate()}>Check In</Button>
+        <Button disabled={!isCheckedIn || isCheckedOut} onClick={() => checkOut.mutate()}>Check Out</Button>
       </CardFooter>
     </Card>
   )
