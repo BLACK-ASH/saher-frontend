@@ -7,14 +7,18 @@ import { Suspense } from "react"
 
 const page = () => {
   return (
-    <section className="p-3 gap-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-      <AttendanceStatus />
-      <AttendanceChart className="md:col-span-2" />
-      <AttendanceTable />
-      <Suspense>
-        <AttendanceCorrection />
-      </Suspense>
-      <AttendanceCorrectionRequests />
+    <section>
+      <div className="p-3 gap-3 md:h-[32vh] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <AttendanceStatus />
+        <AttendanceChart className="md:col-span-2" />
+      </div>
+      <div className="p-3 gap-3 md:h-[60vh] grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <AttendanceTable />
+        <Suspense>
+          <AttendanceCorrection />
+        </Suspense>
+        <AttendanceCorrectionRequests />
+      </div>
     </section>
   )
 }

@@ -17,6 +17,8 @@ import {
 } from "@/components/ui/chart"
 import { useAttendance } from "@/hooks/use-attendance"
 import { getMonthYear } from "@/lib/utils/time"
+import { DefaultLoader } from "@/components/loading"
+import { NoData } from "@/components/no-data"
 
 export const description = "A linear line chart"
 
@@ -36,8 +38,8 @@ export function AttendanceChart({ className, ...props }: React.ComponentProps<"d
     workHours: a.workHours,
   }))
 
-  if (isLoading) return <p>Loading ...</p>
-  if (!chartData) return <p>Chart Not Available.</p>
+  if (isLoading) return <DefaultLoader className="col-span-2" />
+  if (!chartData) return <NoData className="col-span-2" title="No Chart To Show." description="Please Refresh or You Don't Have Any Attendance To Show This Chart." />
 
   const firstDay = new Date(chartData[0]?.date)
 

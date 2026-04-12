@@ -1,4 +1,6 @@
 "use client"
+import { DefaultLoader } from "@/components/loading"
+import { NoData } from "@/components/no-data"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,8 +14,8 @@ const AttendanceStatus = () => {
   const { today, status, isCheckedIn, checkIn, isCheckedOut, checkOut, } = useAttendance()
   const { data, isLoading } = today
 
-  if (isLoading) return <p>Loading...</p>
-  if (!data) return <p>Not Found</p>
+  if (isLoading) return <DefaultLoader />
+  if (!data) return <NoData title="No Attendance Created." description="Please Refresh or If You See This Please Contact The Developers." />
 
   return (
     <Card>

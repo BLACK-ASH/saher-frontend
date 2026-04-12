@@ -26,8 +26,13 @@ export const useMe = () => {
       const res = await apiFetch<User>(
         `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/me`
       );
+      // 🔥 IMPORTANT FIX
+      if (!res.success) {
+        return null; // 👈 treat as "not logged in"
+      }
       return res.data;
     },
+    retry: 3,
     staleTime: 1000 * 60,
   });
 };

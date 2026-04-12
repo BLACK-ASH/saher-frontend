@@ -1,5 +1,7 @@
 "use client"
 import ImageUpload from "@/components/image-upload"
+import { DefaultLoader } from "@/components/loading"
+import { NoData } from "@/components/no-data"
 import { Button } from "@/components/ui/button"
 import { Card, CardAction, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -60,14 +62,14 @@ const AttendanceCorrection = () => {
     }
   }, [attendance])
 
-  if (!attendance) return <div>Attendance Not Found</div>
-  if (isLoading) return <div>Loading ...</div>
+
+  if (isLoading) return <DefaultLoader />
+  if (!attendance) return <NoData title="No Attendance Selected." description="Please Refresh or You Haven't Selected Any Attendance or Attendance Dosen't Exist." />
 
   const onSubmit = async (data: AttendanceCorrectionType) => {
     const payload = { date: attendance.date, ...data }
     payload.inTime = timeToDateString(attendance.date, payload.inTime)
     payload.outTime = timeToDateString(attendance.date, payload.outTime)
-    console.log(payload)
 
     const res = submitCorrection.mutate(payload, {
       onSuccess: (res) => {

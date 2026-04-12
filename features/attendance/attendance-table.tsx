@@ -1,4 +1,6 @@
 "use client"
+import { DefaultLoader } from "@/components/loading"
+import { NoData } from "@/components/no-data"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import {
@@ -31,7 +33,8 @@ export function AttendanceTable() {
   const { attendancesList: data } = useAttendance()
   const { data: attendances, isLoading } = data
 
-  if (isLoading) return <p>Loading ...</p>
+  if (isLoading) return <DefaultLoader />
+  if (!data) return <NoData title="No Recent Attendances" description="Please Refresh or You Don't Have Any Recent Attendances." />
 
   return (
     <Card>

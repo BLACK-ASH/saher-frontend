@@ -1,4 +1,6 @@
 "use client"
+import { DefaultLoader } from "@/components/loading"
+import { NoData } from "@/components/no-data"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
@@ -19,7 +21,9 @@ const variant: Record<
 const AttendanceCorrectionRequests = (props: Props) => {
   const { allCorrections } = useAttendanceCorrection()
   const { data: corrections, isLoading } = allCorrections
-  if (isLoading) return <p>Loading...</p>
+
+  if (isLoading) return <DefaultLoader />
+  if (!corrections || corrections.length === 0) return <NoData title="No Attendance Correction Request." description="Please Refresh or You Haven't Created Any Attendance Correction Request." />
 
   return (
     <Card>
@@ -40,6 +44,7 @@ const AttendanceCorrectionRequests = (props: Props) => {
               corrections?.map((correction) => (
                 <TableRow className="cursor-pointer" key={correction._id}  >
                   <TableCell className="font-medium"><Badge variant={variant[correction.status]}>{correction.status}</Badge></TableCell>
+                  {/* NOTE: Change This Previous Might Be Null */}
                   <TableCell className="text-center">{formatDate(correction.previous.inTime)}</TableCell>
                   <TableCell className="text-center">details</TableCell>
                 </TableRow>
