@@ -11,7 +11,7 @@ import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAttendance } from "@/hooks/use-attendance"
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction"
-import { transformTime, timeToDateString } from "@/lib/utils/time"
+import { transformTime, timeToDateString, formatDate } from "@/lib/utils/time"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
@@ -86,7 +86,7 @@ const AttendanceCorrection = () => {
     <Card>
       <CardHeader>
         <CardTitle>Attendance Correction</CardTitle>
-        <CardAction>{new Date(attendance.date).toLocaleDateString()}</CardAction>
+        <CardAction>{formatDate(attendance.date)}</CardAction>
       </CardHeader>
       <CardContent className="h-full">
         <form className="space-y-2.5" id="attendance-correction-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -182,7 +182,7 @@ const AttendanceCorrection = () => {
                       </DialogHeader>
 
                       <ImageUpload
-                        altName={form.getValues("proof") + attendanceId}
+                        altName={attendanceId}
                         onUploadSuccess={(data) => form.setValue("proof", data.file.id)}
                       />
                     </DialogContent>

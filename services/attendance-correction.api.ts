@@ -15,11 +15,12 @@ const attendanceCorrectionSchema = z.object({
   _id: z.string(),
   user: userField,
   manager: userField,
-  attendance: z.string(),
+  attendance: z.object({ _id: z.string(), date: z.string() }),
   previous: record,
   changes: record.partial(),
   message: z.string(),
   reason: z.string(),
+  proof: z.object({ src: z.string(), alt: z.string() }).optional(),
   status: z.enum(["reject", "pending", "approve"])
 })
 
@@ -27,7 +28,7 @@ export type AttendanceCorrectionResponse = z.infer<typeof attendanceCorrectionSc
 type SubmitCorrectionPayload = AttendanceCorrectionType & { date: string }
 
 export const getAttendanceCorrection = async () => {
-  const res = await apiFetch<AttendanceCorrectionResponse[]>(process.env.NEXT_PUBLIC_SERVER_URL + "/api/attendance/attendance-correction", {
+  const res = await apiFetch<AttendanceCorrectionResponse[]>( "/api/attendance/attendance-correction", {
     method: "GET",
   })
   return res.data
@@ -35,7 +36,7 @@ export const getAttendanceCorrection = async () => {
 
 export const submitAttendanceCorrection = async (payload: SubmitCorrectionPayload) => {
   const res = await apiFetch<AttendanceCorrectionResponse>(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/attendance/attendance-correction`,
+    `/api/attendance/attendance-correction`,
     {
       method: "POST",
       body: JSON.stringify(payload),

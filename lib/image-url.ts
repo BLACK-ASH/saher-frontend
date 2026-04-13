@@ -1,4 +1,5 @@
-export const imageUrl = (url: string): string => {
-  if (process.env.NODE_ENV === "development") return process.env.NEXT_PUBLIC_SERVER_URL! + url
-  return url
+export const imageUrl = (url?: string): string => {
+  if (!url) return "/placeholder.png"
+  if (url.startsWith("http")) return url
+  return url // already "/uploads/..."
 }

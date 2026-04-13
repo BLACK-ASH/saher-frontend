@@ -10,7 +10,7 @@ const UserTable = () => {
     queryKey: ["users"],
     queryFn: async () => {
       const res = await apiFetch<User[]>(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/admin/user/get-all?fields=isActive`
+        `/api/admin/user/get-all?fields=isActive`
       );
       return res.data;
     },

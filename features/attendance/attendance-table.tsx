@@ -15,7 +15,7 @@ import { useAttendance } from "@/hooks/use-attendance"
 import { formatDate, formatHours, formatTime } from "@/lib/utils/time"
 import { usePathname, useRouter } from "next/navigation"
 
-const variant: Record<
+export const attendanceStatusVariant: Record<
   "half-day" | "present" | "absent",
   "outline-warn" | "outline-success" | "destructive"
 > = {
@@ -59,7 +59,7 @@ export function AttendanceTable() {
                 <TableCell className="text-center">{formatTime(attendance.inTime)}</TableCell>
                 <TableCell className="text-center">{formatTime(attendance.outTime)}</TableCell>
                 <TableCell className="text-center">{formatHours(attendance.workHours)}</TableCell>
-                <TableCell className="font-medium"><Badge variant={variant[attendance.status]}>{attendance.status}</Badge></TableCell>
+                <TableCell className="font-medium"><Badge variant={attendanceStatusVariant[attendance.status]}>{attendance.status}</Badge></TableCell>
               </TableRow>
             ))}
           </TableBody>

@@ -7,7 +7,7 @@ export const useLogout = () => {
   return useMutation({
     mutationFn: async () => {
       return await apiFetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/logout`,
+        `/api/auth/logout`,
         {
           method: "POST",
         }

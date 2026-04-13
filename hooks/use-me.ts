@@ -24,7 +24,7 @@ export const useMe = () => {
     queryKey: ["me"],
     queryFn: async () => {
       const res = await apiFetch<User>(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/me`
+        `/api/auth/me`
       );
       // 🔥 IMPORTANT FIX
       if (!res.success) {

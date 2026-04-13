@@ -119,7 +119,7 @@ export default function RegisterUserForm() {
     // 👉 handle API calls here (bank → user)
     try {
       const bankResponse = await apiFetch<{ _id: string }>(
-        process.env.NEXT_PUBLIC_SERVER_URL + "/api/admin/bank/register",
+        "/api/admin/bank/register",
         {
           method: "POST",
           body: JSON.stringify(data.bank),
@@ -131,7 +131,7 @@ export default function RegisterUserForm() {
       data.account.bankDetail = bankResponse.data?._id
 
       const response = await apiFetch(
-        process.env.NEXT_PUBLIC_SERVER_URL + "/api/admin/account/register",
+         "/api/admin/account/register",
         {
           method: "POST",
           body: JSON.stringify({ user: data.user, account: data.account }),

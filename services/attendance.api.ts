@@ -20,7 +20,7 @@ export const attendanceSchema = z.object({
 export type AttendanceResponse = z.infer<typeof attendanceSchema>
 
 export const getAttendanceStatus = async () => {
-  const res = await apiFetch<AttendanceResponse>(process.env.NEXT_PUBLIC_SERVER_URL + "/api/attendance/me", {
+  const res = await apiFetch<AttendanceResponse>("/api/attendance/me", {
     method: "GET",
   })
   return res.data
@@ -28,7 +28,7 @@ export const getAttendanceStatus = async () => {
 
 export const getAttendanceById = async (id: string) => {
   const res = await apiFetch<AttendanceResponse>(
-    `${process.env.NEXT_PUBLIC_SERVER_URL}/api/attendance/attendance/${id}`,
+    `/api/attendance/attendance/${id}`,
     {
       method: "GET",
     }
@@ -37,14 +37,14 @@ export const getAttendanceById = async (id: string) => {
 }
 
 export const getAttendance = async (filter: "week" | "month") => {
-  const res = await apiFetch<AttendanceResponse[]>(process.env.NEXT_PUBLIC_SERVER_URL + "/api/attendance/retrive/current?type=" + filter, {
+  const res = await apiFetch<AttendanceResponse[]>("/api/attendance/retrive/current?type=" + filter, {
     method: "GET",
   })
   return res.data
 }
 
 export const checkInApi = async () => {
-  const res = await apiFetch<AttendanceResponse>(process.env.NEXT_PUBLIC_SERVER_URL + "/api/attendance/check-in", {
+  const res = await apiFetch<AttendanceResponse>("/api/attendance/check-in", {
     method: "POST",
   })
   if (!res.success) toast.error(res.message)
@@ -52,7 +52,7 @@ export const checkInApi = async () => {
 }
 
 export const checkOutApi = async () => {
-  const res = await apiFetch<AttendanceResponse>(process.env.NEXT_PUBLIC_SERVER_URL + "/api/attendance/check-out", {
+  const res = await apiFetch<AttendanceResponse>("/api/attendance/check-out", {
     method: "POST",
   })
   if (!res.success) toast.error(res.message)

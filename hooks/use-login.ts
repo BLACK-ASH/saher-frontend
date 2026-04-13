@@ -7,7 +7,7 @@ export const useLogin = () => {
   return useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
       return await apiFetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/auth/login`,
+        `/api/auth/login`,
         {
           method: "POST",
           body: JSON.stringify(data),

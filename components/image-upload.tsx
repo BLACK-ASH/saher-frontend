@@ -44,7 +44,7 @@ export default function ImageUpload({ onUploadSuccess,altName }: ImageUploadProp
 
 
       const response = await apiFetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/upload/image`,
+        `/api/upload/image`,
         {
           method: "POST",
           body: formData
