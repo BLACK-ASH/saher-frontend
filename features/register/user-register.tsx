@@ -27,7 +27,7 @@ export default function RegisterUserForm() {
         name: "",
         displayName: "",
         email: "",
-        role: "",
+        role: "user",
         image: "",
       },
       account: {

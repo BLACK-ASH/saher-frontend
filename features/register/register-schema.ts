@@ -1,3 +1,4 @@
+import { resume } from "react-dom/server";
 import { z } from "zod";
 
 // 🔹 Common ObjectId validator
@@ -85,11 +86,19 @@ export const accountSchema = z.object({
   }),
 });
 
+const uploaded = z.object({
+  image: z.string(),
+  aadhar: z.string(),
+  pan: z.string(),
+  resume: z.string(),
+})
+
 // 🔹 Final Schema
 export const registerFormSchema = z.object({
   user: userSchema,
   bank: bankDetailSchema,
   account: accountSchema,
+  uploaded: uploaded.optional()
 });
 
 // 🔹 Type

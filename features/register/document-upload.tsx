@@ -4,7 +4,7 @@ import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/c
 import { Controller, UseFormReturn } from "react-hook-form"
 import { RegisterFormData } from "./register-schema"
 
-const UploadDocument = ({form}:{form:UseFormReturn<RegisterFormData>}) => {
+const UploadDocument = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
   return (
     <Card className="min-w-full sm:max-w-md">
       <CardHeader >
@@ -20,10 +20,13 @@ const UploadDocument = ({form}:{form:UseFormReturn<RegisterFormData>}) => {
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="aadhar">Aadhar Card</FieldLabel>
                 <ImageUpload
-                  altName={form.getValues("user.name")+" - aadhar"}
-                  onUploadSuccess={(data) => form.setValue("account.aadhar", data.file.id)}
+                  url={form.getValues("uploaded.aadhar")}
+                  altName={"aadhar" + form.getValues("user.name")}
+                  onUploadSuccess={(data) => {
+                    form.setValue("account.aadhar", data.file.id)
+                    form.setValue("uploaded.aadhar", data.file.url)
+                  }}
                 />
-                <FieldDescription>Image Must Must Be Provided With A Name</FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -37,10 +40,13 @@ const UploadDocument = ({form}:{form:UseFormReturn<RegisterFormData>}) => {
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="pan">Pan Card</FieldLabel>
                 <ImageUpload
-                  altName={form.getValues("user.name")+" - pan"}
-                  onUploadSuccess={(data) => form.setValue("account.pan", data.file.id)}
+                  url={form.getValues("uploaded.pan")}
+                  altName={"pan" + form.getValues("user.name")}
+                  onUploadSuccess={(data) => {
+                    form.setValue("account.pan", data.file.id)
+                    form.setValue("uploaded.pan", data.file.url)
+                  }}
                 />
-                <FieldDescription>Image Must Must Be Provided With A Name</FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -54,10 +60,13 @@ const UploadDocument = ({form}:{form:UseFormReturn<RegisterFormData>}) => {
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="resume">Resume</FieldLabel>
                 <ImageUpload
-                  altName={form.getValues("user.name")+" - resume"}
-                  onUploadSuccess={(data) => form.setValue("account.resume", data.file.id)}
+                  url={form.getValues("uploaded.resume")}
+                  altName={"resume" + form.getValues("user.name")}
+                  onUploadSuccess={(data) => {
+                    form.setValue("account.resume", data.file.id)
+                    form.setValue("uploaded.resume", data.file.url)
+                  }}
                 />
-                <FieldDescription>Image Must Must Be Provided With A Name</FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
