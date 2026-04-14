@@ -11,7 +11,7 @@ import { InputGroup, InputGroupAddon, InputGroupText, InputGroupTextarea } from 
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { useAttendance } from "@/hooks/use-attendance"
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction"
-import { transformTime, timeToDateString, formatDate } from "@/lib/utils/time"
+import { formatDate, timeToDateString, transformTime } from "@/lib/utils/time"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useSearchParams } from "next/navigation"
 import { useEffect } from "react"
@@ -25,6 +25,7 @@ export const attendanceCorrectionCreateSchema = z.object({
   attendanceId: z.string(),
   message: z.string().min(10, "Message is Required. Atleast 10 Characters").max(100, "Max Limit Is 100 Characters."),
   proof: z.string().optional(),
+  upload: z.string().optional(),
   inTime: z.string(),
   outTime: z.string(),
   status: z.enum(attendanceStatusList),
@@ -183,7 +184,11 @@ const AttendanceCorrection = () => {
 
                       <ImageUpload
                         altName={attendanceId}
-                        onUploadSuccess={(data) => form.setValue("proof", data.file.id)}
+                        url={form.getValues("upload")}
+                        onUploadSuccess={(data) => {
+                          form.setValue("proof", data.file.id)
+                          form.setValue("upload", data.file.url)
+                        }}
                       />
                     </DialogContent>
                   </Dialog>
