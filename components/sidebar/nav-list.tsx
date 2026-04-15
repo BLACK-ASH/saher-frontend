@@ -1,7 +1,7 @@
 "use client"
 import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton } from "../ui/sidebar";
 import { useMe } from "@/hooks/use-me";
-import { CalendarCheck, ClockCheck, Home, Mailbox, User, UserPlus, Users } from "lucide-react";
+import { CalendarCheck, ClockAlert, ClockCheck, Home, Mailbox, User, UserPlus, Users } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 const userRoutes = [
@@ -44,7 +44,12 @@ const adminRoutes = [
     label: "Users",
     url: "/users",
     icon: Users
-  }
+  },
+  {
+    label: "Attendance Correction",
+    url: "/attendance-correction",
+    icon: ClockAlert
+  },
 ]
 
 const NavSkeleton = () => {

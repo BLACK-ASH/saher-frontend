@@ -15,7 +15,7 @@ import { imageUrl } from "@/lib/image-url"
 
 type Props = {}
 
-const variant: Record<
+export const attendanceCorrectionStatusVariant: Record<
   "pending" | "approve" | "reject",
   "outline-warn" | "outline-success" | "destructive"
 > = {
@@ -49,7 +49,7 @@ const AttendanceCorrectionRequests = (props: Props) => {
             {
               corrections?.map((correction) => (
                 <TableRow className="cursor-pointer" key={correction._id}  >
-                  <TableCell className="font-medium"><Badge variant={variant[correction.status]}>{correction.status}</Badge></TableCell>
+                  <TableCell className="font-medium"><Badge variant={attendanceCorrectionStatusVariant[correction.status]}>{correction.status}</Badge></TableCell>
                   <TableCell className="text-center">{formatDate(correction.attendance.date)}</TableCell>
                   <TableCell className="text-center">
                     <Dialog>
