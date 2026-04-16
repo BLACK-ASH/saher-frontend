@@ -5,7 +5,7 @@ import { Suspense } from "react"
 
 const page = () => {
   return (
-    <section className="p-3 grid grid-cols-1 md:grid-cols-3 gap-2">
+    <section className="p-3 h-full grid grid-cols-1 md:grid-cols-3 gap-2">
       <AttendanceCorrectionChart />
       <AdminAttendanceCorrectionTable />
       <Suspense>

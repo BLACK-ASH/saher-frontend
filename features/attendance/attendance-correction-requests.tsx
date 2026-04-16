@@ -5,21 +5,19 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction"
-import { formatDate, formatTime } from "@/lib/utils/time"
-import { attendanceStatusVariant } from "./attendance-table"
-import { Textarea } from "@/components/ui/textarea"
-import Image from "next/image"
-import { imageUrl } from "@/lib/image-url"
+import { formatDate } from "@/lib/utils/time"
+import AttendanceComparision from "./attendance-comparision"
 
 type Props = {}
 
 export const attendanceCorrectionStatusVariant: Record<
-  "pending" | "approve" | "reject",
-  "outline-warn" | "outline-success" | "destructive"
+  "pending" | "on-hold" | "approve" | "reject",
+  "outline-warn" | "outline" | "outline-success" | "destructive"
 > = {
   pending: "outline-warn",
+  "on-hold": "outline",
   approve: "outline-success",
   reject: "destructive",
 }
@@ -60,85 +58,7 @@ const AttendanceCorrectionRequests = (props: Props) => {
                         <DialogHeader>
                           <DialogTitle>Attendance Correction Details</DialogTitle>
                         </DialogHeader>
-                        <Table>
-                          <TableCaption>{correction.reason}</TableCaption>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead className="font-bold">Field</TableHead>
-                              <TableHead className="font-bold">Previous</TableHead>
-                              <TableHead className="font-bold">Change</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {/* Check In */}
-                            {(correction?.previous?.inTime || correction?.changes?.inTime) && (
-                              <TableRow>
-                                <TableCell>Check In</TableCell>
-                                <TableCell>{formatTime(correction?.previous?.inTime)}</TableCell>
-                                <TableCell>{formatTime(correction?.changes?.inTime as unknown as string)}</TableCell>
-                              </TableRow>
-                            )}
-
-                            {/* Check Out */}
-                            {(correction?.previous?.outTime || correction?.changes?.outTime) && (
-                              <TableRow>
-                                <TableCell>Check Out</TableCell>
-                                <TableCell>{formatTime(correction?.previous?.outTime)}</TableCell>
-                                <TableCell>{formatTime(correction?.changes?.outTime as unknown as string)}</TableCell>
-                              </TableRow>
-                            )}
-
-                            {/* Status */}
-                            {(correction?.previous?.status || correction?.changes?.status) && (
-                              <TableRow>
-                                <TableCell>Status</TableCell>
-                                <TableCell><Badge className="px-3 py-1" variant={attendanceStatusVariant[correction?.previous.status]}>{correction.previous.status}</Badge></TableCell>
-                                <TableCell>
-                                  {correction?.changes?.status ? (
-                                    <Badge
-                                      className="px-3 py-1"
-                                      variant={attendanceStatusVariant[correction.changes.status]}
-                                    >
-                                      {correction.changes.status}
-                                    </Badge>
-                                  ) : (
-                                    "-"
-                                  )}
-                                </TableCell>
-                              </TableRow>
-                            )}
-
-                            {/* Status */}
-                            {(correction?.previous?.isLate !== undefined || correction?.changes?.isLate !== undefined) && (
-                              <TableRow>
-                                <TableCell>Late</TableCell>
-                                <TableCell>{
-                                  correction.previous.isLate ?
-                                    <Badge className="px-3 py-1" variant={"outline-warn"}>Late</Badge> :
-                                    <Badge className="px-3 py-1" variant={"outline-success"}>On Time</Badge>
-                                }</TableCell>
-
-                                <TableCell>{
-                                  correction.changes.isLate ?
-                                    <Badge className="px-3 py-1" variant={"outline-warn"}>Late</Badge> :
-                                    <Badge className="px-3 py-1" variant={"outline-success"}>On Time</Badge>
-                                }</TableCell>
-                              </TableRow>
-                            )}
-                          </TableBody>
-                        </Table>
-                        {
-                          correction?.proof && (
-                            <Image
-                              src={imageUrl(correction?.proof?.src)}
-                              alt={correction?.proof?.alt}
-                              width={400}
-                              height={300}
-                              className="rounded-md"
-                            />
-                          )
-                        }
-                        <Textarea disabled defaultValue={correction.message} />
+                        <AttendanceComparision correction={correction}/>
                       </DialogContent>
                     </Dialog>
                   </TableCell>

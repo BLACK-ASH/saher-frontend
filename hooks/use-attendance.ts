@@ -14,11 +14,12 @@ export enum AttendanceStatus {
 }
 
 type UseAttendanceProps = {
-  filter?: "week" | "month"
+  filter?: "week" | "month",
+  sort?: "asc" | "desc",
   attendanceId?: string
 }
 
-export const useAttendance = ({ filter = "week", attendanceId }: UseAttendanceProps = {}) => {
+export const useAttendance = ({ filter = "week", sort = "asc", attendanceId }: UseAttendanceProps = {}) => {
   const queryClient = useQueryClient()
 
   const today = useQuery({
@@ -29,12 +30,12 @@ export const useAttendance = ({ filter = "week", attendanceId }: UseAttendancePr
   const attendance = useQuery({
     queryKey: ["attendance", attendanceId],
     queryFn: () => getAttendanceById(attendanceId as string),
-    enabled: !!attendanceId, 
+    enabled: !!attendanceId,
   });
 
   const attendancesList = useQuery({
-    queryKey: ["attendance", "list", filter],
-    queryFn: () => getAttendance(filter)
+    queryKey: ["attendance", "list", filter,sort],
+    queryFn: () => getAttendance(filter, sort)
   })
 
   const checkIn = useMutation({
@@ -42,7 +43,7 @@ export const useAttendance = ({ filter = "week", attendanceId }: UseAttendancePr
     onSuccess: (data) => {
       // 🔥 instant UI update (better than refetch)
       queryClient.setQueryData(["attendance", "today"], data)
-      queryClient.invalidateQueries({queryKey:["attendance"]})
+      queryClient.invalidateQueries({ queryKey: ["attendance"] })
     },
   })
 
@@ -50,7 +51,7 @@ export const useAttendance = ({ filter = "week", attendanceId }: UseAttendancePr
     mutationFn: checkOutApi,
     onSuccess: (data) => {
       queryClient.setQueryData(["attendance", "today"], data)
-      queryClient.invalidateQueries({queryKey:["attendance"]})
+      queryClient.invalidateQueries({ queryKey: ["attendance"] })
     },
   })
 

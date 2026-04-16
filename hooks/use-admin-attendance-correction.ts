@@ -1,27 +1,36 @@
-import { getAttendanceCorrectionAll, getAttendanceCorrectionById, handleAttendanceCorrection } from "@/services/attendance-correction.api";
+import {
+  getAttendanceCorrectionAll,
+  getAttendanceCorrectionById,
+  handleAttendanceCorrection,
+} from "@/services/attendance-correction.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
 type useAttendanceCorrectionProps = {
-  correctionId?: string
-}
+  correctionId?: string;
+};
 
-export const useAdminAttendanceCorrection = ({ correctionId }: useAttendanceCorrectionProps = {}) => {
+export const useAdminAttendanceCorrection = ({
+  correctionId,
+}: useAttendanceCorrectionProps = {}) => {
   const queryClient = useQueryClient();
 
   const correction = useQuery({
     queryKey: ["attendance", "correction", correctionId],
-    queryFn: () => getAttendanceCorrectionById(correctionId as string)
-  })
+    queryFn: () => getAttendanceCorrectionById(correctionId as string),
+  });
 
   const allCorrections = useQuery({
     queryKey: ["attendance", "correction"],
-    queryFn: getAttendanceCorrectionAll
-  })
+    queryFn: getAttendanceCorrectionAll,
+  });
 
   const handleCorrection = useMutation({
-    mutationFn:handleAttendanceCorrection,
+    mutationFn: handleAttendanceCorrection,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["attendance", "correction", correctionId] });
+      queryClient.invalidateQueries({ queryKey: ["attendance", "correction"] });
+      queryClient.invalidateQueries({
+        queryKey: ["attendance", "correction", correctionId],
+      });
     },
   });
 
