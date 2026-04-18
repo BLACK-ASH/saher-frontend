@@ -18,7 +18,7 @@ import { useRouter } from "next/navigation";
 
 export default function RegisterUserForm() {
   const [step, setStep] = useState(1);
-  const router = useRouter()
+  const router = useRouter();
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
@@ -52,8 +52,8 @@ export default function RegisterUserForm() {
         bankName: "",
         branch: "",
         mobileNumber: "",
-        ifcs: ""
-      }
+        ifcs: "",
+      },
     },
   });
 
@@ -85,19 +85,15 @@ export default function RegisterUserForm() {
       "account.designation",
       "account.dateOfJoining",
     ],
-    4: [
-      "account.aadhar",
-      "account.pan",
-      "account.resume",
-    ]
+    4: ["account.aadhar", "account.pan", "account.resume"],
   };
 
   const stepName = [
     "Basic Infomation",
     "Bank Details",
     "Employee Details",
-    "Documents Uploads"
-  ]
+    "Documents Uploads",
+  ];
 
   // 🔹 Next Step
   const nextStep = async () => {
@@ -107,7 +103,7 @@ export default function RegisterUserForm() {
     if (!isValid) return;
 
     setStep((prev) => prev + 1);
-  }
+  };
 
   // 🔹 Previous Step
   const prevStep = () => {
@@ -118,37 +114,30 @@ export default function RegisterUserForm() {
   const onSubmit = async (data: RegisterFormData) => {
     // 👉 handle API calls here (bank → user)
     try {
-      const bankResponse = await apiFetch<{ _id: string }>(
-        "/api/admin/bank/register",
-        {
-          method: "POST",
-          body: JSON.stringify(data.bank),
-        }
-      )
+      const bankResponse = await apiFetch<{ _id: string }>("/api/admin/bank", {
+        method: "POST",
+        body: JSON.stringify(data.bank),
+      });
 
-      if (!bankResponse.success) return toast.error(bankResponse.message)
+      if (!bankResponse.success) return toast.error(bankResponse.message);
 
-      data.account.bankDetail = bankResponse.data?._id
+      data.account.bankDetail = bankResponse.data?._id;
 
-      const response = await apiFetch(
-         "/api/admin/account/register",
-        {
-          method: "POST",
-          body: JSON.stringify({ user: data.user, account: data.account }),
-        }
-      )
+      const response = await apiFetch("/api/admin/account", {
+        method: "POST",
+        body: JSON.stringify({ user: data.user, account: data.account }),
+      });
 
-      if (!response.success) return toast.error(response.message)
+      if (!response.success) return toast.error(response.message);
 
-      toast.success(response.message)
-      setStep(1)
-      form.reset()
-      router.refresh()
-    }
-    catch (err) {
-      console.log(err)
+      toast.success(response.message);
+      setStep(1);
+      form.reset();
+      router.refresh();
+    } catch (err) {
+      console.log(err);
       if (err instanceof Error) {
-        toast.error(err.message)
+        toast.error(err.message);
       }
     }
   };
@@ -159,33 +148,29 @@ export default function RegisterUserForm() {
 
   return (
     <div className="w-full p-4 md:w-2/3 mx-auto space-y-6">
-
       <form
         onSubmit={form.handleSubmit(onSubmit, onError)}
         className="space-y-6 w-full"
       >
-
         {/* 🔥 Navigation Buttons */}
         <div className="flex justify-between gap-2">
           {step > 1 && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={prevStep}
-            >
+            <Button type="button" variant="outline" onClick={prevStep}>
               Back
             </Button>
           )}
 
-          {
-            step < 5 ? (<Field className="w-full max-w-sm mx-auto">
+          {step < 5 ? (
+            <Field className="w-full max-w-sm mx-auto">
               <FieldLabel htmlFor="progress-upload">
                 <span>{stepName[step - 1]}</span>
                 <span className="ml-auto">{25 * (step - 1)}%</span>
               </FieldLabel>
               <Progress value={(step - 1) * 25} id="progress-upload" />
-            </Field>) : (<h1 className="text-2xl font-bold text-center">Preview</h1>)
-          }
+            </Field>
+          ) : (
+            <h1 className="text-2xl font-bold text-center">Preview</h1>
+          )}
 
           {step < 4 && (
             <Button type="button" onClick={nextStep}>
@@ -194,7 +179,11 @@ export default function RegisterUserForm() {
           )}
 
           {step === 4 && (
-            <Button type="button" onClick={() => setStep((prev) => prev + 1)} className="bg-amber-400 font-bold">
+            <Button
+              type="button"
+              onClick={() => setStep((prev) => prev + 1)}
+              className="bg-amber-400 font-bold"
+            >
               Preview
             </Button>
           )}
