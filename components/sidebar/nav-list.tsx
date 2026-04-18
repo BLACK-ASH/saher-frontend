@@ -1,27 +1,43 @@
-"use client"
-import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton } from "../ui/sidebar";
+"use client";
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+} from "../ui/sidebar";
 import { useMe } from "@/hooks/use-me";
-import { CalendarCheck, ClockAlert, ClockCheck, Home, Mailbox, User, UserPlus, Users } from "lucide-react";
+import {
+  CalendarCheck,
+  ClockAlert,
+  ClockCheck,
+  Home,
+  Mailbox,
+  User,
+  UserPlus,
+  Users,
+} from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
 const userRoutes = [
   {
     label: "Home",
     url: "/",
-    icon: Home
+    icon: Home,
   },
   {
     label: "Profile",
     url: "/profile",
-    icon: User
+    icon: User,
   },
   {
     label: "Attendance",
     url: "/attendance",
-    icon: ClockCheck
-  }
+    icon: ClockCheck,
+  },
   // NOTE: Add This In Future Update
-  ,
   // {
   //   label: "Mails",
   //   url: "/mail",
@@ -32,25 +48,25 @@ const userRoutes = [
   //   url: "/workshop",
   //   icon: CalendarCheck
   // },
-]
+];
 
 const adminRoutes = [
   {
     label: "Register",
     url: "/register",
-    icon: UserPlus
+    icon: UserPlus,
   },
   {
     label: "Users",
     url: "/users",
-    icon: Users
+    icon: Users,
   },
   {
     label: "Attendance Correction",
     url: "/attendance-correction",
-    icon: ClockAlert
+    icon: ClockAlert,
   },
-]
+];
 
 const NavSkeleton = () => {
   return (
@@ -62,25 +78,26 @@ const NavSkeleton = () => {
       <SidebarMenuSkeleton />
       <SidebarMenuSkeleton />
     </>
-  )
-}
+  );
+};
 
 export function NavItem() {
   const { data: user, isLoading, error } = useMe();
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useRouter();
+  const pathname = usePathname();
 
-  const isAuthPage = pathname === "/login"
-  if (isAuthPage) return null
+  const isAuthPage = pathname === "/login";
+  if (isAuthPage) return null;
 
   const isActive = (url: string) => {
-    if (url === "/") return pathname === "/"
-    return pathname.startsWith(url)
-  }
+    if (url === "/") return pathname === "/";
+
+    return pathname === url || pathname.startsWith(url + "/");
+  };
 
   const navigateLink = (url: string) => {
-    router.push(url)
-  }
+    router.push(url);
+  };
 
   // 🔄 Loading state
   if (isLoading) {
@@ -100,7 +117,11 @@ export function NavItem() {
           <SidebarMenu>
             {userRoutes.map((item) => (
               <SidebarMenuItem key={item.url}>
-                <SidebarMenuButton className={isActive(item.url) ? "bg-accent text-accent-foreground" : ""} onClick={() => navigateLink(item.url)} tooltip={item.label}>
+                <SidebarMenuButton
+                  isActive={isActive(item.url)}
+                  onClick={() => navigateLink(item.url)}
+                  tooltip={item.label}
+                >
                   {item.icon && <item.icon />}
                   <span>{item.label}</span>
                 </SidebarMenuButton>
@@ -109,14 +130,18 @@ export function NavItem() {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-      {
-        user?.role !== "user" && <SidebarGroup>
+      {user?.role !== "user" && (
+        <SidebarGroup>
           <SidebarGroupLabel>Admin</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {adminRoutes.map((item) => (
                 <SidebarMenuItem key={item.url}>
-                  <SidebarMenuButton className={isActive(item.url) ? "bg-accent text-accent-foreground" : ""} onClick={() => navigateLink(item.url)} tooltip={item.label}>
+                  <SidebarMenuButton
+                    isActive={isActive(item.url)}
+                    onClick={() => navigateLink(item.url)}
+                    tooltip={item.label}
+                  >
                     {item.icon && <item.icon />}
                     <span>{item.label}</span>
                   </SidebarMenuButton>
@@ -125,7 +150,7 @@ export function NavItem() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-      }
+      )}
     </>
-  )
+  );
 }

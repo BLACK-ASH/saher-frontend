@@ -6,6 +6,7 @@ import {
   Card,
   CardAction,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -153,7 +154,9 @@ const AttendanceCorrectionView = () => {
     <Card>
       <CardHeader>
         <CardTitle>Attendance Correction Details</CardTitle>
-        <CardAction>{formatDate(data.attendance.date)}</CardAction>
+        <CardDescription>
+          {correction.data?.user.name} - {formatDate(data.attendance.date)}
+        </CardDescription>
       </CardHeader>
       <CardContent className="h-full">
         <form className="space-y-2.5" id="attendance-correction-form">
