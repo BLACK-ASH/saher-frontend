@@ -2,6 +2,9 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { RegisterFormData } from "./register-schema";
+import Image from "next/image";
+import { Label } from "@/components/ui/label";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 type Props = {
   data: RegisterFormData;
@@ -16,12 +19,23 @@ export default function FormPreview({ data }: Props) {
         <CardHeader>
           <CardTitle>User Details</CardTitle>
         </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4 text-sm">
-          <PreviewItem label="Name" value={data.user.name} />
-          <PreviewItem label="Display Name" value={data.user?.displayName || " - "} />
-          <PreviewItem label="Email" value={data.user.email} />
-          <PreviewItem label="Role" value={data.user.role} />
-          <PreviewItem label="Image ID" value={data.user.image} />
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+          <div className="h-60">
+            <Label className="my-4">Profile Image</Label>
+            <AspectRatio ratio={1 / 1} className="rounded-full bg-muted size-48 overflow-hidden">
+              <Image
+                src={data.uploaded?.image ?? ""}
+                alt={data.user.image}
+                fill
+              />
+            </AspectRatio>
+          </div>
+          <div className="space-y-4">
+            <PreviewItem label="Name" value={data.user.name} />
+            <PreviewItem label="Display Name" value={data.user?.displayName || data.user.name} />
+            <PreviewItem label="Email" value={data.user.email} />
+            <PreviewItem label="Role" value={data.user.role} />
+          </div>
         </CardContent>
       </Card>
 
@@ -45,19 +59,6 @@ export default function FormPreview({ data }: Props) {
         </CardContent>
       </Card>
 
-      {/* 🔹 DOCUMENTS */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Documents</CardTitle>
-        </CardHeader>
-        <CardContent className="grid grid-cols-2 gap-4 text-sm">
-          <PreviewItem label="Aadhar ID" value={data.account.aadhar} />
-          <PreviewItem label="PAN ID" value={data.account.pan} />
-          <PreviewItem label="Resume ID" value={data.account.resume} />
-          <PreviewItem label="Bank ID" value={data.account.bankDetail || "Not created yet"} />
-        </CardContent>
-      </Card>
-
       {/* 🔹 BANK DETAILS */}
       <Card>
         <CardHeader>
@@ -71,6 +72,42 @@ export default function FormPreview({ data }: Props) {
           <PreviewItem label="IFSC" value={data.bank.ifcs} />
         </CardContent>
       </Card>
+      {/* 🔹 DOCUMENTS */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Documents</CardTitle>
+        </CardHeader>
+        <CardContent >
+          <Label className="my-4">Aadhar</Label>
+          <AspectRatio ratio={1 / 1}>
+            <Image
+              src={data.uploaded?.aadhar ?? ''}
+              alt={data.account?.aadhar}
+              className="object-contain"
+              fill
+            />
+          </AspectRatio>
+          <Label className="my-4">Pan</Label>
+          <AspectRatio ratio={1 / 1}>
+            <Image
+              src={data.uploaded?.pan ?? ''}
+              alt={data.account?.pan}
+              className="object-contain"
+              fill
+            />
+          </AspectRatio>
+          <Label className="my-4">Resume</Label>
+          <AspectRatio ratio={1 / 1}>
+            <Image
+              src={data.uploaded?.resume ?? ''}
+              alt={data.account?.resume}
+              className="object-contain"
+              fill
+            />
+          </AspectRatio>
+        </CardContent>
+      </Card>
+
 
     </div>
   );

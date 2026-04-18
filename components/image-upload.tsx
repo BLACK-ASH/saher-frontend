@@ -19,32 +19,26 @@ export type ImageFile = typeof fileSample
 
 type ImageUploadProps = {
   onUploadSuccess?: (data: { alt: string, file: ImageFile }) => void;
-  altName?:string
+  altName: string,
+  url?: string
 };
 
-export default function ImageUpload({ onUploadSuccess,altName }: ImageUploadProps) {
-  const [preview, setPreview] = useState<string | null>(null);
+export default function ImageUpload({ onUploadSuccess, altName = "upload", url }: ImageUploadProps) {
+  const [preview, setPreview] = useState<string | null>(url ? url : null);
   const [loading, setLoading] = useState(false);
-  const [alt, setAlt] = useState(altName || "");
   const [error, setError] = useState("");
 
   const uploadImage = async (file: File) => {
-    if (!alt.trim()) {
-      setError("Alt text is required");
-      return;
-    }
-
     try {
       setLoading(true);
       setError("");
 
       const formData = new FormData();
       formData.append("image", file);
-      formData.append("name", alt); // 👈 important
-
+      formData.append("name", altName.trim() ?? "user-upload");
 
       const response = await apiFetch(
-        `${process.env.NEXT_PUBLIC_SERVER_URL}/api/upload/image`,
+        `/api/upload/image`,
         {
           method: "POST",
           body: formData
@@ -53,7 +47,7 @@ export default function ImageUpload({ onUploadSuccess,altName }: ImageUploadProp
 
       if (response?.success) {
         onUploadSuccess?.({
-          alt: alt,
+          alt: altName,
           //@ts-expect-error
           file: response?.file
         });
@@ -75,7 +69,7 @@ export default function ImageUpload({ onUploadSuccess,altName }: ImageUploadProp
     setPreview(previewUrl);
 
     uploadImage(file);
-  }, [alt]);
+  }, [altName]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -85,20 +79,6 @@ export default function ImageUpload({ onUploadSuccess,altName }: ImageUploadProp
 
   return (
     <div className="w-full max-w-md mx-auto space-y-4">
-
-      {/* ALT INPUT */}
-      <div>
-        <input
-          type="text"
-          id="alt"
-          placeholder="Enter image alt text (required)"
-          value={alt}
-          onChange={(e) => setAlt(e.target.value)}
-          className="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-        />
-        {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-      </div>
-
       {/* DROPZONE */}
       <div
         {...getRootProps()}
@@ -119,7 +99,7 @@ export default function ImageUpload({ onUploadSuccess,altName }: ImageUploadProp
           <div className="flex flex-col items-center gap-4">
             <img
               src={preview}
-              alt={alt || "preview"}
+              alt={"preview"}
               className="w-40 h-40 object-cover rounded-xl shadow"
             />
             <p className="text-sm text-gray-500">
@@ -137,6 +117,7 @@ export default function ImageUpload({ onUploadSuccess,altName }: ImageUploadProp
           </div>
         )}
       </div>
+      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
     </div>
   );
 }

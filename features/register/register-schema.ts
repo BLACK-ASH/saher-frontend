@@ -11,12 +11,8 @@ export const bankDetailSchema = z.object({
   accountHolderName: z.string().min(2, "Account holder name is required"),
   bankName: z.string().min(2, "Bank name is required"),
   branch: z.string().min(2, "Branch is required"),
-  ifcs: z
-    .string()
-    .regex(/^[A-Za-z]{4}\d{7}$/, "Invalid IFSC code"),
-  mobileNumber: z
-    .string()
-    .regex(/^[6-9]\d{9}$/, "Invalid mobile number"),
+  ifcs: z.string().regex(/^[A-Za-z]{4}\d{7}$/, "Invalid IFSC code"),
+  mobileNumber: z.string().regex(/^[6-9]\d{9}$/, "Invalid mobile number"),
 });
 
 // 🔹 User Schema
@@ -40,21 +36,13 @@ export const accountSchema = z.object({
     message: "Gender is required",
   }),
 
-  dateOfBirth: z
-    .string()
-    .min(1, "Date of birth is required"),
+  dateOfBirth: z.string().min(1, "Date of birth is required"),
 
-  dateOfJoining: z
-    .string()
-    .min(1, "Date of joining is required"),
+  dateOfJoining: z.string().min(1, "Date of joining is required"),
 
-  employeeType: z
-    .string()
-    .min(1, "Employee type is required"),
+  employeeType: z.string().min(1, "Employee type is required"),
 
-  phoneNumber: z
-    .string()
-    .regex(/^[6-9]\d{9}$/, "Invalid phone number"),
+  phoneNumber: z.string().regex(/^[6-9]\d{9}$/, "Invalid phone number"),
 
   secondaryPhoneNumber: z
     .string()
@@ -85,11 +73,19 @@ export const accountSchema = z.object({
   }),
 });
 
+const uploaded = z.object({
+  image: z.string(),
+  aadhar: z.string(),
+  pan: z.string(),
+  resume: z.string(),
+});
+
 // 🔹 Final Schema
 export const registerFormSchema = z.object({
   user: userSchema,
   bank: bankDetailSchema,
   account: accountSchema,
+  uploaded: uploaded.optional(),
 });
 
 // 🔹 Type

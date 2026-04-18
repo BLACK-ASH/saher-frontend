@@ -15,20 +15,11 @@ import { useState } from "react"
 import { Separator } from "@/components/ui/separator"
 
 const roles = ["user", "manager", "admin"] as const
-type Role = typeof roles[number]
 
 const genders = ["male", "female", "other"] as const
-type Gender = typeof genders[number]
 
 const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
   const [open, setOpen] = useState(false)
-
-  const setRole = (role: Role) => {
-    form.setValue("user.role", role)
-  }
-  const setGender = (gender: Gender) => {
-    form.setValue("account.gender", gender)
-  }
 
   return (
     <Card className="min-w-full sm:max-w-md">
@@ -88,7 +79,7 @@ const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
                 <Select
                   {...field}
                   aria-invalid={fieldState.invalid}
-                  onValueChange={(role: Role) => setRole(role)}
+                  onValueChange={field.onChange}
                 >
                   <SelectTrigger className="w-45">
                     <SelectValue placeholder="Role" />
@@ -120,10 +111,13 @@ const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="email">Image</FieldLabel>
                 <ImageUpload
-                  altName={form.getValues("user.name")}
-                  onUploadSuccess={(data) => form.setValue("user.image", data.file.id)}
+                  altName={"user-" + form.getValues("user.name")}
+                  url={form.getValues("uploaded.image")}
+                  onUploadSuccess={(data) => {
+                    form.setValue("user.image", data.file.id)
+                    form.setValue("uploaded.image", data.file.url)
+                  }}
                 />
-                <FieldDescription>Image Must Must Be Provided With A Name</FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -142,7 +136,7 @@ const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
                 <Select
                   {...field}
                   aria-invalid={fieldState.invalid}
-                  onValueChange={(gender: Gender) => setGender(gender)}
+                  onValueChange={field.onChange}
                 >
                   <SelectTrigger className="w-45">
                     <SelectValue placeholder="Role" />

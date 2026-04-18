@@ -47,6 +47,7 @@ export function LoginForm({
     mutate(data, {
       onSuccess: (res) => {
         toast.success(res.message);
+        router.refresh()
         router.push("/");
       },
       onError: (err: Error) => {

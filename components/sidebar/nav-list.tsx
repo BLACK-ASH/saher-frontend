@@ -1,36 +1,85 @@
-"use client"
-import Link from "next/link";
-import { SidebarGroup, SidebarGroupContent, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSkeleton } from "../ui/sidebar";
+"use client";
+import {
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSkeleton,
+} from "../ui/sidebar";
 import { useMe } from "@/hooks/use-me";
-import { CalendarCheck, ClockCheck, Home, Mailbox, User, UserPlus, Users } from "lucide-react";
+import {
+  CalendarCheck,
+  ClockAlert,
+  ClockCheck,
+  Home,
+  Mailbox,
+  User,
+  UserPlus,
+  Users,
+} from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
 
 const userRoutes = [
   {
     label: "Home",
     url: "/",
-    icon: Home
+    icon: Home,
   },
   {
     label: "Profile",
     url: "/profile",
-    icon: User
+    icon: User,
   },
   {
     label: "Attendance",
     url: "/attendance",
-    icon: ClockCheck
+    icon: ClockCheck,
+  },
+  // NOTE: Add This In Future Update
+  // {
+  //   label: "Mails",
+  //   url: "/mail",
+  //   icon: Mailbox
+  // },
+  // {
+  //   label: "Workshop",
+  //   url: "/workshop",
+  //   icon: CalendarCheck
+  // },
+];
+
+const adminRoutes = [
+  {
+    label: "Register",
+    url: "/register",
+    icon: UserPlus,
   },
   {
-    label: "Mails",
-    url: "/mail",
-    icon: Mailbox
+    label: "Users",
+    url: "/users",
+    icon: Users,
   },
   {
-    label: "Workshop",
-    url: "/workshop",
-    icon: CalendarCheck
+    label: "Attendance Correction",
+    url: "/attendance-correction",
+    icon: ClockAlert,
   },
-]
+];
+
+const NavSkeleton = () => {
+  return (
+    <>
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+      <SidebarMenuSkeleton />
+    </>
+  );
+};
 
 const adminRoutes = [
   {
@@ -60,13 +109,29 @@ const NavSkeleton = () => {
 
 export function NavItem() {
   const { data: user, isLoading, error } = useMe();
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const isAuthPage = pathname === "/login";
+  if (isAuthPage) return null;
+
+  const isActive = (url: string) => {
+    if (url === "/") return pathname === "/";
+
+    return pathname === url || pathname.startsWith(url + "/");
+  };
+
+  const navigateLink = (url: string) => {
+    router.push(url);
+  };
+
   // 🔄 Loading state
   if (isLoading) {
     return <NavSkeleton />;
   }
 
   // ❌ Not logged in (extra safety)
-  if (error || !user) {
+  if (!user) {
     return null;
   }
 
@@ -76,42 +141,42 @@ export function NavItem() {
         <SidebarGroupLabel>User</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            {userRoutes.map((item) => {
-              return (
-                <SidebarMenuItem key={item.label}>
-                  <Link href={item.url} className="flex items-center justify-center gap-2">
-                    <SidebarMenuButton tooltip={item.label}>
-                      {item.icon && <item.icon />}
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </Link>
-                </SidebarMenuItem>
-              )
-            })}
+            {userRoutes.map((item) => (
+              <SidebarMenuItem key={item.url}>
+                <SidebarMenuButton
+                  isActive={isActive(item.url)}
+                  onClick={() => navigateLink(item.url)}
+                  tooltip={item.label}
+                >
+                  {item.icon && <item.icon />}
+                  <span>{item.label}</span>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-      {
-        user?.role !== "user" && <SidebarGroup>
+      {user?.role !== "user" && (
+        <SidebarGroup>
           <SidebarGroupLabel>Admin</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {adminRoutes.map((item) => {
-                return (
-                  <SidebarMenuItem key={item.label}>
-                    <Link href={item.url} className="flex items-center justify-center gap-2">
-                      <SidebarMenuButton tooltip={item.label}>
-                        {item.icon && <item.icon />}
-                        <span>{item.label}</span>
-                      </SidebarMenuButton>
-                    </Link>
-                  </SidebarMenuItem>
-                )
-              })}
+              {adminRoutes.map((item) => (
+                <SidebarMenuItem key={item.url}>
+                  <SidebarMenuButton
+                    isActive={isActive(item.url)}
+                    onClick={() => navigateLink(item.url)}
+                    tooltip={item.label}
+                  >
+                    {item.icon && <item.icon />}
+                    <span>{item.label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
-      }
+      )}
     </>
-  )
+  );
 }
