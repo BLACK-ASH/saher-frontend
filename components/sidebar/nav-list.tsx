@@ -81,32 +81,6 @@ const NavSkeleton = () => {
   );
 };
 
-const adminRoutes = [
-  {
-    label: "Register",
-    url: "/register",
-    icon: UserPlus
-  },
-  {
-    label: "Users",
-    url: "/users",
-    icon: Users
-  },
-]
-
-const NavSkeleton = () => {
-  return (
-    <>
-      <SidebarMenuSkeleton />
-      <SidebarMenuSkeleton />
-      <SidebarMenuSkeleton />
-      <SidebarMenuSkeleton />
-      <SidebarMenuSkeleton />
-      <SidebarMenuSkeleton />
-    </>
-  )
-}
-
 export function NavItem() {
   const { data: user, isLoading, error } = useMe();
   const router = useRouter();

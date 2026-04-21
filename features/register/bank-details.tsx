@@ -1,13 +1,24 @@
-"use client"
+"use client";
 
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Controller, UseFormReturn } from "react-hook-form"
-import { RegisterFormData } from "./register-schema"
-import { Input } from "@/components/ui/input"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Controller, UseFormReturn } from "react-hook-form";
+import { RegisterFormData } from "./register-schema";
+import { Input } from "@/components/ui/input";
 
 const BankDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
-
   /*
       "bank.accountHolderName",
       "bank.branch",
@@ -28,7 +39,9 @@ const BankDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="account-holder-name">Account Holder Name</FieldLabel>
+                <FieldLabel htmlFor="account-holder-name">
+                  Account Holder Name
+                </FieldLabel>
                 <Input
                   {...field}
                   id="account-holder-name"
@@ -36,7 +49,34 @@ const BankDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
                   placeholder="Enter Account Holder Name"
                   autoComplete="off"
                 />
-                <FieldDescription>Account Holder Name Must Be As Per Bank Passbook</FieldDescription>
+                <FieldDescription>
+                  Account Holder Name Must Be As Per Bank Passbook
+                </FieldDescription>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="bank.accountNumber"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="account-holder-name">
+                  Account Number
+                </FieldLabel>
+                <Input
+                  {...field}
+                  id="account-holder-name"
+                  aria-invalid={fieldState.invalid}
+                  placeholder="Enter Account Number"
+                  autoComplete="off"
+                />
+                <FieldDescription>
+                  Account Number Must Be As Per Bank Passbook
+                </FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -118,20 +158,20 @@ const BankDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
                   aria-invalid={fieldState.invalid}
                   autoComplete="off"
                 />
-                <FieldDescription>Account Holder Mobile Number As Per Bank</FieldDescription>
+                <FieldDescription>
+                  Account Holder Mobile Number As Per Bank
+                </FieldDescription>
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
               </Field>
             )}
           />
-
         </FieldGroup>
       </CardContent>
-      <CardFooter>
-      </CardFooter>
+      <CardFooter></CardFooter>
     </Card>
-  )
-}
+  );
+};
 
-export default BankDetail
+export default BankDetail;

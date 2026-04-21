@@ -1,27 +1,59 @@
-"use client"
+"use client";
 
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card"
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
-import { Controller, UseFormReturn } from "react-hook-form"
-import { RegisterFormData } from "./register-schema"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
-import { Calendar } from "@/components/ui/calendar"
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldDescription,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
+import { Controller, UseFormReturn } from "react-hook-form";
+import { RegisterFormData } from "./register-schema";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { Calendar } from "@/components/ui/calendar";
 
-const employeeType = ["volunteer","part-time","full-time"]
+const employeeType = ["volunteer", "part-time", "full-time"];
+const employeeShift = [
+  {
+    label: "9:00 AM - 1:00 PM",
+    value: "shift-1",
+  },
+  {
+    label: "1:00 AM - 6:00 PM",
+    value: "shift-2",
+  },
+];
 
-export type EmployeeType = typeof employeeType[number]
+export type EmployeeType = (typeof employeeType)[number];
 
-const EmployeeDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
-
-  const [open, setOpen] = useState(false)
-
-  const setEmployeeType = (type:EmployeeType)=>{
-    form.setValue("account.employeeType",type)
-  }
+const EmployeeDetail = ({
+  form,
+}: {
+  form: UseFormReturn<RegisterFormData>;
+}) => {
+  const [open, setOpen] = useState(false);
 
   return (
     <Card className="min-w-full sm:max-w-md">
@@ -59,20 +91,53 @@ const EmployeeDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
                 <Select
                   {...field}
                   aria-invalid={fieldState.invalid}
-                  onValueChange={(type:EmployeeType) => setEmployeeType(type)}
+                  onValueChange={field.onChange}
                 >
                   <SelectTrigger className="w-45">
                     <SelectValue placeholder="Role" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectGroup>
-                      {
-                        employeeType.map((type) => {
-                          return (
-                            <SelectItem key={type} value={type}>{type.toLocaleUpperCase()}</SelectItem>
-                          )
-                        })
-                      }
+                      {employeeType.map((type) => {
+                        return (
+                          <SelectItem key={type} value={type}>
+                            {type.toLocaleUpperCase()}
+                          </SelectItem>
+                        );
+                      })}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {fieldState.invalid && (
+                  <FieldError errors={[fieldState.error]} />
+                )}
+              </Field>
+            )}
+          />
+
+          <Controller
+            name="account.employeeShift"
+            control={form.control}
+            render={({ field, fieldState }) => (
+              <Field data-invalid={fieldState.invalid}>
+                <FieldLabel htmlFor="employee-type">Employee Shift</FieldLabel>
+                <Select
+                  {...field}
+                  aria-invalid={fieldState.invalid}
+                  onValueChange={field.onChange}
+                >
+                  <SelectTrigger className="w-45">
+                    <SelectValue placeholder="Role" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {employeeShift.map((type) => {
+                        return (
+                          <SelectItem key={type.value} value={type.value}>
+                            {type.label}
+                          </SelectItem>
+                        );
+                      })}
                     </SelectGroup>
                   </SelectContent>
                 </Select>
@@ -155,18 +220,26 @@ const EmployeeDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
                       id="doj"
                       className="justify-start font-normal"
                     >
-                      {field.value ? new Date(field.value).toDateString() : "Select Date"}
+                      {field.value
+                        ? new Date(field.value).toDateString()
+                        : "Select Date"}
                     </Button>
                   </PopoverTrigger>
-                  <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+                  <PopoverContent
+                    className="w-auto overflow-hidden p-0"
+                    align="start"
+                  >
                     <Calendar
                       mode="single"
                       selected={new Date()}
                       defaultMonth={new Date()}
                       captionLayout="dropdown"
                       onSelect={(date) => {
-                        form.setValue("account.dateOfJoining", date?.toDateString() || "")
-                        setOpen(false)
+                        form.setValue(
+                          "account.dateOfJoining",
+                          date?.toDateString() || "",
+                        );
+                        setOpen(false);
                       }}
                     />
                   </PopoverContent>
@@ -177,13 +250,11 @@ const EmployeeDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
               </Field>
             )}
           />
-
         </FieldGroup>
       </CardContent>
-      <CardFooter>
-      </CardFooter>
+      <CardFooter></CardFooter>
     </Card>
-  )
-}
+  );
+};
 
-export default EmployeeDetail
+export default EmployeeDetail;

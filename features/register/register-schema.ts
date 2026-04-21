@@ -8,70 +8,92 @@ const objectId = z
 
 // Bank Schema
 export const bankDetailSchema = z.object({
-  accountHolderName: z.string().min(2, "Account holder name is required"),
-  bankName: z.string().min(2, "Bank name is required"),
-  branch: z.string().min(2, "Branch is required"),
-  ifcs: z.string().regex(/^[A-Za-z]{4}\d{7}$/, "Invalid IFSC code"),
-  mobileNumber: z.string().regex(/^[6-9]\d{9}$/, "Invalid mobile number"),
+  accountHolderName: z.string("Account Holder Name Is Required"),
+  bankName: z.string("Bank Name Is Required."),
+  accountNumber: z.string("Bank Account Number Is Required."),
+  ifcs: z
+    .string("Bank IFCS Code Is Required.")
+    .trim()
+    .regex(/^[a-zA-Z]{4}0[a-zA-Z0-9]{6}$/, {
+      message: "Invalid IFCS Code According To Indian Banks.",
+    })
+    .transform((val) => val.toUpperCase()),
+  branch: z.string("Branch Name Is Required."),
+  mobileNumber: z
+    .string()
+    .trim()
+    .regex(/^(?:\+91[\s-]?|91[\s-]?)?[6-9]\d{9}$/, {
+      message: "Invalid Indian mobile number",
+    })
+    .transform((val) => val.replace(/^\+91[\s-]?|^91[\s-]?/, "")),
 });
 
 // 🔹 User Schema
-export const userSchema = z.object({
-  name: z.string().min(2, "Name is required"),
-  displayName: z.string().optional(),
-  email: z.email("Invalid email address"),
-  role: z.string().min(1, "Role is required"),
-  image: objectId.refine((val) => val !== "", {
-    message: "Profile image is required",
-  }),
-});
+export const userSchema = z
+  .object({
+    name: z
+      .string("Username Is Required.")
+      .trim()
+      .regex(/^[a-zA-Z0-9_-]+$/, {
+        message: "Only alphanumeric, underscore and hyphen allowed",
+      })
+      .min(2),
+    displayName: z.string().optional(),
+    image: objectId,
+    role: z.enum(["user", "manager", "admin"]),
+    email: z.email("Email Address Is Required."),
+  })
+  .refine((data) => /^[a-zA-Z]/.test(data.name) && !/[_-]$/.test(data.name), {
+    message: "Name must start with a letter and cannot end with _ or -",
+    path: ["name"],
+  });
 
 // 🔹 Account Schema
-export const accountSchema = z.object({
-  user: z.string().optional(),
-
-  employeeId: z.string().min(1, "Employee ID is required"),
-
-  gender: z.enum(["male", "female", "other"], {
-    message: "Gender is required",
-  }),
-
-  dateOfBirth: z.string().min(1, "Date of birth is required"),
-
-  dateOfJoining: z.string().min(1, "Date of joining is required"),
-
-  employeeType: z.string().min(1, "Employee type is required"),
-
-  phoneNumber: z.string().regex(/^[6-9]\d{9}$/, "Invalid phone number"),
-
-  secondaryPhoneNumber: z
-    .string()
-    .regex(/^[6-9]\d{9}$/, "Invalid secondary phone number")
-    .optional(),
-
-  address: z.string().min(5, "Address is required"),
-
-  department: z.string().min(1, "Department is required"),
-
-  designation: z.string().min(1, "Designation is required"),
-
-  salaryStructure: z.string().min(1, "Salary structure is required"),
-
-  // 🔥 ObjectId fields
-  bankDetail: z.string().optional(),
-
-  aadhar: objectId.refine((val) => val !== "", {
-    message: "Aadhar document is required",
-  }),
-
-  pan: objectId.refine((val) => val !== "", {
-    message: "PAN document is required",
-  }),
-
-  resume: objectId.refine((val) => val !== "", {
-    message: "Resume is required",
-  }),
-});
+const accountSchema = z
+  .object({
+    gender: z.enum(["male", "female", "other"]),
+    dateOfBirth: z.string("Date Of Birth Is Required."),
+    dateOfJoining: z.string("Date Of Joining Is Required."),
+    phoneNumber: z
+      .string()
+      .trim()
+      .regex(/^(?:\+91[\s-]?|91[\s-]?)?[6-9]\d{9}$/, {
+        message: "Invalid Indian Mobile Number",
+      }),
+    secondaryPhoneNumber: z
+      .string()
+      .trim()
+      .regex(/^(?:\+91[\s-]?|91[\s-]?)?[6-9]\d{9}$/, {
+        message: "Invalid Indian Mobile Number",
+      })
+      .optional(),
+    employeeId: z.string("Employee Id Is Required."),
+    department: z.string("Department Is Required."),
+    designation: z.string("Designation Is Required."),
+    employeeType: z.enum(
+      ["full-time", "part-time", "volunteer"],
+      "Employee Type Is Required.",
+    ),
+    employeeShift: z.enum(["shift-1", "shift-2"]).optional(),
+    salaryStructure: z.string("Salary Structure Is Required."),
+    address: z.string("Address Is Required."),
+    bank: z.string().optional(),
+    aadhar: objectId,
+    pan: objectId,
+    resume: objectId,
+  })
+  .refine(
+    (data) => {
+      if (data.employeeType === "part-time") {
+        return !!data.employeeShift;
+      }
+      return true;
+    },
+    {
+      message: "Employee Shift Is Required For Part Time Employee.",
+      path: ["employeeShift"],
+    },
+  );
 
 const uploaded = z.object({
   image: z.string(),

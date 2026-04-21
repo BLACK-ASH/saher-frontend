@@ -15,7 +15,6 @@ import FormPreview from "./form-preview";
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Separator } from "@/components/ui/separator";
 
 export default function RegisterUserForm() {
   const [step, setStep] = useState(1);
@@ -36,14 +35,13 @@ export default function RegisterUserForm() {
         gender: "other",
         dateOfBirth: "",
         dateOfJoining: "",
-        employeeType: "",
+        employeeType: "full-time",
         phoneNumber: "",
         secondaryPhoneNumber: "",
         address: "",
         department: "",
         designation: "",
         salaryStructure: "",
-        bankDetail: "",
         aadhar: "",
         pan: "",
         resume: "",
@@ -73,6 +71,7 @@ export default function RegisterUserForm() {
     ],
     2: [
       "bank.accountHolderName",
+      "bank.accountNumber",
       "bank.branch",
       "bank.bankName",
       "bank.ifcs",
@@ -81,6 +80,7 @@ export default function RegisterUserForm() {
     3: [
       "account.employeeId",
       "account.employeeType",
+      "account.employeeShift",
       "account.salaryStructure",
       "account.department",
       "account.designation",
@@ -114,19 +114,15 @@ export default function RegisterUserForm() {
   // 🔹 Final Submit
   const onSubmit = async (data: RegisterFormData) => {
     // 👉 handle API calls here (bank → user)
+
     try {
-      const bankResponse = await apiFetch<{ _id: string }>("/api/admin/bank", {
-        method: "POST",
-        body: JSON.stringify(data.bank),
-      });
-
-      if (!bankResponse.success) return toast.error(bankResponse.message);
-
-      data.account.bankDetail = bankResponse.data?._id;
-
       const response = await apiFetch("/api/admin/account", {
         method: "POST",
-        body: JSON.stringify({ user: data.user, account: data.account }),
+        body: JSON.stringify({
+          user: data.user,
+          account: data.account,
+          bank: data.bank,
+        }),
       });
 
       if (!response.success) return toast.error(response.message);

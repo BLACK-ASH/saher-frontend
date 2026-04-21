@@ -1,5 +1,5 @@
 "use client";
-import { User } from "@/hooks/use-me";
+import { UserT } from "@/hooks/use-me";
 import { apiFetch } from "@/lib/api-wrapper";
 import { useQuery } from "@tanstack/react-query";
 import { columns } from "./column";
@@ -9,7 +9,7 @@ const UserTable = () => {
   const { data: users = [], isLoading } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
-      const res = await apiFetch<User[]>(`/api/admin/users?fields=isActive`);
+      const res = await apiFetch<UserT[]>(`/api/admin/users?fields=isActive`);
       return res.data;
     },
     staleTime: 1000 * 60 * 60,

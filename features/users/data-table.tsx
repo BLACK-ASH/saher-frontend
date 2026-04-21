@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   ColumnDef,
@@ -11,7 +11,7 @@ import {
   getSortedRowModel,
   VisibilityState,
   useReactTable,
-} from "@tanstack/react-table"
+} from "@tanstack/react-table";
 
 import {
   Table,
@@ -20,30 +20,37 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table"
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
+} from "@/components/ui/table";
+import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { ChevronDown } from "lucide-react"
+} from "@/components/ui/dropdown-menu";
+import { ChevronDown } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 
 interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([])
-  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
 
   const table = useReactTable({
     data,
@@ -60,12 +67,13 @@ export function DataTable<TData, TValue>({
       columnFilters,
       columnVisibility,
     },
-  })
+  });
 
   return (
-    <div>
-      <div className="overflow-hidden rounded-md border">
-        <div className="flex items-center gap-2 mx-4 py-4">
+    <Card className="h-[80vh]">
+      <CardHeader>
+        <CardTitle>Manage Users</CardTitle>
+        <div className="flex items-center gap-2 mx-4 py-4 ">
           <Input
             placeholder="Filter name..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
@@ -76,16 +84,17 @@ export function DataTable<TData, TValue>({
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="ml-auto flex items-center gap-2">
+              <Button
+                variant="outline"
+                className="ml-auto flex items-center gap-2"
+              >
                 Columns <ChevronDown />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               {table
                 .getAllColumns()
-                .filter(
-                  (column) => column.getCanHide()
-                )
+                .filter((column) => column.getCanHide())
                 .map((column) => {
                   return (
                     <DropdownMenuCheckboxItem
@@ -98,11 +107,13 @@ export function DataTable<TData, TValue>({
                     >
                       {column.id}
                     </DropdownMenuCheckboxItem>
-                  )
+                  );
                 })}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
+      </CardHeader>
+      <CardContent>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -113,11 +124,11 @@ export function DataTable<TData, TValue>({
                       {header.isPlaceholder
                         ? null
                         : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
+                            header.column.columnDef.header,
+                            header.getContext(),
+                          )}
                     </TableHead>
-                  )
+                  );
                 })}
               </TableRow>
             ))}
@@ -131,20 +142,28 @@ export function DataTable<TData, TValue>({
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext(),
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="h-24 text-center">
+                <TableCell
+                  colSpan={columns.length}
+                  className="h-24 text-center"
+                >
                   No results.
                 </TableCell>
               </TableRow>
             )}
           </TableBody>
         </Table>
+      </CardContent>
+      <CardFooter>
         <div className="flex items-center justify-end space-x-2 py-4 mx-4">
           <Button
             variant="outline"
@@ -163,7 +182,7 @@ export function DataTable<TData, TValue>({
             Next
           </Button>
         </div>
-      </div>
-    </div>
-  )
+      </CardFooter>
+    </Card>
+  );
 }

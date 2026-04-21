@@ -1,34 +1,50 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { useQuery } from "@tanstack/react-query";
 
-export type User = {
-  _id: string;
-  name: string;
-  displayName: string;
-  email: string;
-  emailVerified: boolean;
-  role: string;
-  image: {
-    _id: string;
-    src: string;
+export type UserT = {
+  readonly name: string;
+  readonly displayName: string;
+  readonly image: {
+    id: string;
     alt: string;
+    src: string;
   };
-  isActive: boolean;
-  isBanned: boolean;
-  createdAt: string;
-  deletedAt: string | null;
+  readonly role: "user" | "manager" | "admin";
+  readonly email: string;
+  readonly id: string;
+  readonly emailVerified: boolean;
+  readonly isActive: boolean;
+  readonly isBanned: boolean;
+  readonly deletedAt?: Date | undefined;
+  readonly deleteBy?:
+    | {
+        name: string;
+        image: string;
+        role: "user" | "manager" | "admin";
+        email: string;
+        displayName: string | undefined;
+      }
+    | undefined;
+  readonly bannedAt?: Date | undefined;
+  readonly bannedBy?:
+    | {
+        name: string;
+        image: string;
+        role: "user" | "manager" | "admin";
+        email: string;
+        displayName: string | undefined;
+      }
+    | undefined;
 };
 
 export const useMe = () => {
   return useQuery({
     queryKey: ["me"],
     queryFn: async () => {
-      const res = await apiFetch<User>(
-        `/api/auth/me`
-      );
+      const res = await apiFetch<UserT>(`/api/auth/me`);
       // 🔥 IMPORTANT FIX
       if (!res.success) {
-        return null; // 👈 treat as "not logged in"
+        return null;
       }
       return res.data;
     },
