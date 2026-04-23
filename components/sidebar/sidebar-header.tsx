@@ -1,12 +1,26 @@
-"use client"
-import { Separator } from "@/components/ui/separator"
-import { SidebarTrigger } from "@/components/ui/sidebar"
-import { useMe } from "@/hooks/use-me"
-import { usePathname } from "next/navigation"
-import { Breadcrumb, BreadcrumbList, BreadcrumbItem, BreadcrumbLink, BreadcrumbSeparator } from "../ui/breadcrumb"
+"use client";
+import { Separator } from "@/components/ui/separator";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useMe } from "@/hooks/use-me";
+import { usePathname } from "next/navigation";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbSeparator,
+  BreadcrumbPage,
+} from "../ui/breadcrumb";
+import { Home } from "lucide-react";
 
 export function SiteHeader() {
-  const path = usePathname()
+  const path = usePathname();
+
+  const segments = path.split("/").filter(Boolean);
+
+  const last = segments.at(-1);
+  const parents = segments.slice(0, -1);
+
   const { data: user, isLoading, error } = useMe();
 
   return (
@@ -20,12 +34,28 @@ export function SiteHeader() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">home</BreadcrumbLink>
+              <BreadcrumbLink href="/">
+                <Home className="size-4" />
+              </BreadcrumbLink>
             </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbLink href={path}>{path.slice(1)}</BreadcrumbLink>
-            </BreadcrumbItem>
+
+            {parents.map((segment, index) => {
+              const href = "/" + segments.slice(0, index + 1).join("/");
+
+              return (
+                <BreadcrumbItem key={href}>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbLink href={href}>{segment}</BreadcrumbLink>
+                </BreadcrumbItem>
+              );
+            })}
+
+            {last && (
+              <BreadcrumbItem>
+                <BreadcrumbSeparator />
+                <BreadcrumbPage>{last}</BreadcrumbPage>
+              </BreadcrumbItem>
+            )}
           </BreadcrumbList>
         </Breadcrumb>
         <div className="ml-auto flex items-center gap-2">
@@ -33,6 +63,5 @@ export function SiteHeader() {
         </div>
       </div>
     </header>
-  )
+  );
 }
-

@@ -60,6 +60,7 @@ export default function RegisterUserForm() {
   const stepFields: Record<number, string[]> = {
     1: [
       "user.name",
+      "user.displayName",
       "user.email",
       "user.role",
       "user.image",

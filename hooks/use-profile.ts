@@ -33,7 +33,7 @@ export const useProfile = ({ userId }: { userId?: string }) => {
   return useQuery({
     queryKey: ["profile", "me"],
     queryFn: async () => {
-      const res = await apiFetch<AccountT>(`/api/admin/account/user`);
+      const res = await apiFetch<AccountT>(`/api/admin/user/me`);
       return res.data;
     },
     retry: 3,

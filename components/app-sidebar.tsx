@@ -5,21 +5,28 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Image from "next/image"
-import { NavUser } from "./sidebar/nav-user"
-import { NavItem } from "./sidebar/nav-list"
-import Link from "next/link"
+} from "@/components/ui/sidebar";
+import Image from "next/image";
+import { NavUser } from "./sidebar/nav-user";
+import { NavItem } from "./sidebar/nav-list";
+import Link from "next/link";
 
 export function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarHeader >
+      <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center">
-            <Image src={"/saher-logo.png"} alt="saher-logo" width={35} height={35} />
+            <Image
+              src={"/saher-logo.png"}
+              alt="saher-logo"
+              width={35}
+              height={35}
+            />
             <Link href={"/"}>
-              <span className="text-primary text-xl font-bold text-pretty">Saher</span>
+              <span className="text-primary text-xl font-bold text-pretty">
+                SAHER
+              </span>
             </Link>
           </SidebarMenuItem>
         </SidebarMenu>
@@ -27,9 +34,9 @@ export function AppSidebar() {
       <SidebarContent>
         <NavItem />
       </SidebarContent>
-      <SidebarFooter >
+      <SidebarFooter>
         <NavUser />
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
