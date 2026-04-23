@@ -7,15 +7,20 @@ export function proxy(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const isLoginPage = pathname.startsWith("/login");
+  // 🔓 Public routes
+  const publicRoutes = ["/login", "/forgot-password"];
 
-  // ❌ Not logged in at all
-  if (!access && !refresh && !isLoginPage) {
+  const isPublicRoute = publicRoutes.some((route) =>
+    pathname.startsWith(route),
+  );
+
+  // ❌ Not logged in → block private routes
+  if (!access && !refresh && !isPublicRoute) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // ✅ Already logged in → prevent going back to login
-  if ((access || refresh) && isLoginPage) {
+  // ✅ Logged in → block auth pages
+  if ((access || refresh) && isPublicRoute) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

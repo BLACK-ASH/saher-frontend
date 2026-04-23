@@ -13,16 +13,70 @@ import {
   MailCheck,
   Ban,
   Trash2,
+  Edit,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { apiFetch } from "@/lib/api-wrapper";
+import { toast } from "sonner";
+import { useRef, useState } from "react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function ProfilePage() {
   const { data: account, isLoading } = useProfile({});
+  const queryClient = useQueryClient();
+  const [display, setDisplay] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) return <DefaultLoader />;
   if (!account) return <NoData title="No Profile To Show" description="" />;
 
   const { user, bank } = account;
+
+  const handleChangeEmail = async () => {
+    console.log("Email Change Request Send.");
+    const res = await apiFetch(`/api/auth/change-email/request`, {
+      method: "POST",
+    });
+    if (!res.success) {
+      toast.error(res.message);
+    }
+    toast.success(res.message);
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+  };
+
+  const handleChangePassword = async () => {
+    console.log("Email Change Request Send.");
+    const res = await apiFetch(`/api/auth/change-password/request`, {
+      method: "POST",
+    });
+    if (!res.success) {
+      toast.error(res.message);
+    }
+    toast.success(res.message);
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+  };
+
+  const handleChangeName = async () => {
+    const payload = { displayName: nameRef.current?.value };
+    const res = await apiFetch(`/api/user`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.success) {
+      toast.error(res.message);
+    }
+    toast.success(res.message);
+    setDisplay(false);
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+  };
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
@@ -38,11 +92,43 @@ export default function ProfilePage() {
           </Avatar>
 
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {user.name}
-            </h1>
+            <div className="flex items-center">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {user.displayName}
+              </h1>
+              <Button
+                variant={"link"}
+                onClick={() => setDisplay((prev) => !prev)}
+              >
+                <Edit />
+              </Button>
+            </div>
 
-            <p className="text-muted-foreground text-sm">{user.email}</p>
+            {display && (
+              <InputGroup className="my-2">
+                <InputGroupInput
+                  placeholder="Enter New Name..."
+                  ref={nameRef}
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    variant="secondary"
+                    onClick={() => handleChangeName()}
+                  >
+                    Change
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
+            )}
+            <div className="flex items-center">
+              <p className="text-muted-foreground text-sm col-span-2">
+                {user.email}
+              </p>
+              <Button variant={"link"} onClick={() => handleChangeEmail()}>
+                {" "}
+                <Edit />
+              </Button>
+            </div>
 
             {/* 🔥 Better Badges */}
             <div className="flex flex-wrap gap-2 mt-3">
@@ -90,9 +176,12 @@ export default function ProfilePage() {
         </div>
 
         {/* meta */}
-        <div className="text-sm text-muted-foreground space-y-1">
+        <div className="text-sm text-muted-foreground space-y-2">
           <p>ID: {account.id}</p>
           <p>Employee ID: {account.employeeId}</p>
+          <Button variant={"outline"} onClick={() => handleChangePassword()}>
+            Change Password
+          </Button>
         </div>
       </div>
       <Separator />

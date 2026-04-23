@@ -6,16 +6,13 @@ export const useLogout = () => {
 
   return useMutation({
     mutationFn: async () => {
-      return await apiFetch(
-        `/api/auth/logout`,
-        {
-          method: "POST",
-        }
-      );
+      return await apiFetch(`/api/auth/logout`, {
+        method: "POST",
+      });
     },
     onSuccess: () => {
       // ❌ clear user cache
-      queryClient.removeQueries({ queryKey: ["me"] });
+      queryClient.removeQueries({ queryKey: ["user"] });
     },
   });
 };

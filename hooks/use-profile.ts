@@ -31,9 +31,9 @@ export type AccountT = {
 
 export const useProfile = ({ userId }: { userId?: string }) => {
   return useQuery({
-    queryKey: ["profile", "me"],
+    queryKey: ["user", "profile", "me"],
     queryFn: async () => {
-      const res = await apiFetch<AccountT>(`/api/admin/user/me`);
+      const res = await apiFetch<AccountT>(`/api/user`);
       return res.data;
     },
     retry: 3,

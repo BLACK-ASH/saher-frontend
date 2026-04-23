@@ -39,7 +39,7 @@ export type UserT = {
 
 export const useMe = () => {
   return useQuery({
-    queryKey: ["me"],
+    queryKey: ["user", "me"],
     queryFn: async () => {
       const res = await apiFetch<UserT>(`/api/auth/me`);
       // 🔥 IMPORTANT FIX
