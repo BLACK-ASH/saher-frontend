@@ -2,7 +2,7 @@ import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-wrapper";
 import z from "zod";
 import { dateField, userField } from "@/lib/common-zod-schema";
-import { AttendanceCorrectionType } from "@/features/attendance/attendance-correction";
+import { AttendanceCorrectionType } from "@/features/attendance/_attendance-correction";
 import { AttendanceCorrectionViewType } from "@/features/attendance-correction/attendance-correction-view";
 
 const record = z.object({
@@ -28,7 +28,9 @@ const attendanceCorrectionSchema = z.object({
 export type AttendanceCorrectionResponse = z.infer<
   typeof attendanceCorrectionSchema
 >;
-type SubmitCorrectionPayload = AttendanceCorrectionType & { date: string };
+type SubmitCorrectionPayload = Omit<AttendanceCorrectionType, "status"> & {
+  date: string;
+};
 
 export const getAttendanceCorrection = async () => {
   const res = await apiFetch<AttendanceCorrectionResponse[]>(

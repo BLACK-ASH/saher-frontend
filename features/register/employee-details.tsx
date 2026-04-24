@@ -252,7 +252,6 @@ const EmployeeDetail = ({
           />
         </FieldGroup>
       </CardContent>
-      <CardFooter></CardFooter>
     </Card>
   );
 };

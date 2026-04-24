@@ -169,7 +169,6 @@ const BankDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
           />
         </FieldGroup>
       </CardContent>
-      <CardFooter></CardFooter>
     </Card>
   );
 };

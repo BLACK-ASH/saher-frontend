@@ -47,7 +47,6 @@ import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
-import { attendanceStatusList } from "../attendance/attendance-correction";
 import { toast } from "sonner";
 import AttendanceComparision from "../attendance/attendance-comparision";
 
@@ -57,6 +56,8 @@ export const attendanceCorrectionStatusList = [
   "on-hold",
   "approve",
 ];
+
+const attendanceStatusList = ["absent", "half-day", "present"];
 
 export const attendanceCorrectionHandleSchema = z.object({
   changes: z.object({
