@@ -14,6 +14,7 @@ import {
   Ban,
   Trash2,
   Edit,
+  Key,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -179,7 +180,12 @@ export default function ProfilePage() {
         <div className="text-sm text-muted-foreground space-y-2">
           <p>ID: {account.id}</p>
           <p>Employee ID: {account.employeeId}</p>
-          <Button variant={"outline"} onClick={() => handleChangePassword()}>
+          <Button
+            variant={"outline"}
+            className="flex gap-2 items-center "
+            onClick={() => handleChangePassword()}
+          >
+            <Key />
             Change Password
           </Button>
         </div>
