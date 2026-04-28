@@ -34,6 +34,7 @@ import {
   InputGroupAddon,
   InputGroupText,
 } from "@/components/ui/input-group";
+import { AttendanceResponse } from "@/services/attendance.api";
 
 export const attendanceCorrectionCreateSchema = z.object({
   attendanceId: z.string(),
@@ -47,20 +48,23 @@ export const attendanceCorrectionCreateSchema = z.object({
   outTime: z.string(),
 });
 
+export type AttendanceCorrectionCreateT = z.infer<
+  typeof attendanceCorrectionCreateSchema
+>;
+
 export function AttendanceCorrectionSide({
-  attendanceId,
+  attendance,
 }: {
-  attendanceId: string;
+  attendance: AttendanceResponse;
 }) {
-  const { submitCorrection } = useAttendanceCorrection({ attendanceId });
-  const { attendance: data } = useAttendance({ attendanceId });
+  const { submitCorrection } = useAttendanceCorrection({
+    attendanceId: attendance.id,
+  });
 
-  const { data: attendance, isLoading } = data;
-
-  const form = useForm<z.infer<typeof attendanceCorrectionCreateSchema>>({
+  const form = useForm<AttendanceCorrectionCreateT>({
     resolver: zodResolver(attendanceCorrectionCreateSchema),
     defaultValues: {
-      attendanceId: attendanceId || "",
+      attendanceId: attendance.id || "",
       message: "",
       inTime: transformTime(attendance?.inTime) || "",
       outTime: transformTime(attendance?.outTime) || "",
@@ -70,7 +74,7 @@ export function AttendanceCorrectionSide({
   useEffect(() => {
     if (attendance) {
       form.reset({
-        attendanceId: attendance._id,
+        attendanceId: attendance.id,
         inTime: transformTime(attendance.inTime), // ✅ MUST be HH:mm
         outTime: transformTime(attendance.outTime), // ✅ MUST be HH:mm
         message: "",
@@ -78,17 +82,18 @@ export function AttendanceCorrectionSide({
     }
   }, [attendance]);
 
-  if (isLoading) return <DefaultLoader />;
   if (!attendance) return null;
 
-  const onSubmit = async (
-    data: z.infer<typeof attendanceCorrectionCreateSchema>,
-  ) => {
-    const payload = { date: attendance.date, ...data };
-    payload.inTime = timeToDateString(attendance.date, payload.inTime);
-    payload.outTime = timeToDateString(attendance.date, payload.outTime);
+  const onSubmit = async (data: AttendanceCorrectionCreateT) => {
+    const payload: AttendanceCorrectionCreateT = {
+      attendanceId: data.attendanceId,
+      inTime: timeToDateString(attendance.date, data.inTime),
+      outTime: timeToDateString(attendance.date, data.inTime),
+      message: data.message,
+      proof: data.proof,
+    };
 
-    const res = submitCorrection.mutate(payload, {
+    submitCorrection.mutate(payload, {
       onSuccess: (res) => {
         toast.success(res.message);
       },
@@ -105,7 +110,7 @@ export function AttendanceCorrectionSide({
           <Edit2 />
         </Button>
       </SheetTrigger>
-      <SheetContent>
+      <SheetContent className="overflow-scroll">
         <SheetHeader>
           <SheetTitle>Attendance Correction</SheetTitle>
           <SheetTitle>{formatDate(attendance.date)}</SheetTitle>
@@ -170,7 +175,7 @@ export function AttendanceCorrectionSide({
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="role">Proof</FieldLabel>
                   <ImageUpload
-                    altName={attendanceId}
+                    altName={attendance.id}
                     url={form.getValues("upload")}
                     onUploadSuccess={(data) => {
                       form.setValue("proof", data.file.id);

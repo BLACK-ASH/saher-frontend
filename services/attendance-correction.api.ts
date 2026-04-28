@@ -2,8 +2,8 @@ import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-wrapper";
 import z from "zod";
 import { dateField, userField } from "@/lib/common-zod-schema";
-import { AttendanceCorrectionType } from "@/features/attendance/_attendance-correction";
 import { AttendanceCorrectionViewType } from "@/features/attendance-correction/attendance-correction-view";
+import { AttendanceCorrectionCreateT } from "@/features/attendance/attendance-correction";
 
 const record = z.object({
   inTime: dateField,
@@ -13,28 +13,32 @@ const record = z.object({
 });
 
 const attendanceCorrectionSchema = z.object({
-  _id: z.string(),
+  id: z.string(),
   user: userField,
-  manager: userField,
-  attendance: z.object({ _id: z.string(), date: z.string() }),
+  manager: userField.optional(),
+  attendance: z.object({ id: z.string(), date: z.string() }),
   previous: record,
-  changes: record.partial(),
+  changes: z.object({
+    inTime: z.date(),
+    outTime: z.date(),
+    status: z.enum(["absent", "half-day", "present"]),
+    isLate: z.boolean(),
+  }),
   message: z.string(),
   reason: z.string(),
   proof: z.object({ src: z.string(), alt: z.string() }).optional(),
-  status: z.enum(["reject", "pending", "approve"]),
+  status: z.enum(["reject", "pending", "approve", "on-hold"]),
 });
 
 export type AttendanceCorrectionResponse = z.infer<
   typeof attendanceCorrectionSchema
 >;
-type SubmitCorrectionPayload = Omit<AttendanceCorrectionType, "status"> & {
-  date: string;
-};
+
+type SubmitCorrectionPayload = AttendanceCorrectionCreateT;
 
 export const getAttendanceCorrection = async () => {
   const res = await apiFetch<AttendanceCorrectionResponse[]>(
-    "/api/attendance/attendance-correction",
+    "/api/attendance/correction/me",
     {
       method: "GET",
     },
@@ -45,7 +49,7 @@ export const getAttendanceCorrection = async () => {
 export const getAttendanceCorrectionById = async (correctionId: string) => {
   if (correctionId.trim().length === 0) return null;
   const res = await apiFetch<AttendanceCorrectionResponse>(
-    "/api/attendance/attendance-correction/" + correctionId,
+    "/api/attendance/correction/" + correctionId,
     {
       method: "GET",
     },
@@ -55,7 +59,7 @@ export const getAttendanceCorrectionById = async (correctionId: string) => {
 
 export const getAttendanceCorrectionAll = async () => {
   const res = await apiFetch<AttendanceCorrectionResponse[]>(
-    "/api/attendance/attendance-correction-all",
+    "/api/attendance/admin/correction",
     {
       method: "GET",
     },
@@ -67,7 +71,7 @@ export const submitAttendanceCorrection = async (
   payload: SubmitCorrectionPayload,
 ) => {
   const res = await apiFetch<AttendanceCorrectionResponse>(
-    `/api/attendance/attendance-correction`,
+    `/api/attendance/correction`,
     {
       method: "POST",
       body: JSON.stringify(payload),
@@ -78,11 +82,15 @@ export const submitAttendanceCorrection = async (
   return res;
 };
 
-export const handleAttendanceCorrection = async (
-  payload: AttendanceCorrectionViewType & { id: string },
-) => {
+export const handleAttendanceCorrection = async ({
+  id,
+  payload,
+}: {
+  id: string;
+  payload: AttendanceCorrectionViewType;
+}) => {
   const res = await apiFetch<AttendanceCorrectionResponse>(
-    `/api/attendance/attendance-correction/${payload.id}`,
+    `/api/attendance/correction/${id}`,
     {
       method: "PUT",
       body: JSON.stringify(payload),

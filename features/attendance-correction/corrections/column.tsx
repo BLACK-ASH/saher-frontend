@@ -25,6 +25,8 @@ import { formatDate } from "@/lib/utils/time";
 import { AttendanceCorrectionResponse } from "@/services/attendance-correction.api";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import AttendanceCorrectionView from "../attendance-correction-view";
+import { core } from "zod";
 
 export const attendanceCorrectionColumns: ColumnDef<AttendanceCorrectionResponse>[] =
   [
@@ -114,12 +116,8 @@ export const attendanceCorrectionColumns: ColumnDef<AttendanceCorrectionResponse
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() =>
-                  navigator.clipboard.writeText(correction.user.name)
-                }
-              >
-                Copy Name
+              <DropdownMenuItem asChild>
+                <AttendanceCorrectionView correction={correction} />
               </DropdownMenuItem>
               <DropdownMenuSeparator />
             </DropdownMenuContent>

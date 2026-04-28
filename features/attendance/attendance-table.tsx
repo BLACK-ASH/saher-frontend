@@ -29,7 +29,7 @@ export function AttendanceTable() {
   const { data: attendances, isLoading } = data;
 
   if (isLoading) return <DefaultLoader />;
-  if (!data)
+  if (!attendances)
     return (
       <NoData
         title="No Recent Attendances"
@@ -56,7 +56,7 @@ export function AttendanceTable() {
           </TableHeader>
           <TableBody>
             {attendances?.map((attendance) => (
-              <TableRow className="cursor-pointer" key={attendance._id}>
+              <TableRow className="cursor-pointer" key={attendance.id}>
                 <TableCell className="font-medium">
                   {formatDate(attendance.date)}
                 </TableCell>
@@ -75,7 +75,7 @@ export function AttendanceTable() {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-center">
-                  <AttendanceCorrectionSide attendanceId={attendance._id} />
+                  <AttendanceCorrectionSide attendance={attendance} />
                 </TableCell>
               </TableRow>
             ))}
