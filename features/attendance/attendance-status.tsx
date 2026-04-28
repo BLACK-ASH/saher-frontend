@@ -17,6 +17,7 @@ import {
   formatDate,
   transformTime,
   calculateWorkHours,
+  formatHours,
 } from "@/lib/utils/time";
 import { ArrowDownLeft, ArrowUpRight, ClockIcon } from "lucide-react";
 
@@ -34,19 +35,12 @@ const AttendanceStatus = () => {
       />
     );
 
-  console.log(data);
-
   return (
     <Card>
       <CardHeader>
         <CardTitle>{formatDate(data?.date)}</CardTitle>
         <CardAction className="flex gap-2 items-center">
           <p>{status}</p>
-          {data?.isLate && (
-            <Badge variant="outline-warn" className="p-4">
-              LATE
-            </Badge>
-          )}
         </CardAction>
       </CardHeader>
       {data && (
@@ -86,7 +80,7 @@ const AttendanceStatus = () => {
               type="text"
               className="w-28"
               disabled
-              value={calculateWorkHours(data?.inTime, data?.outTime)}
+              value={formatHours(data.workHours)}
             />
           </div>
         </CardContent>

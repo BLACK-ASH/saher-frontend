@@ -12,8 +12,7 @@ export const useLogin = () => {
       });
     },
     onSuccess: () => {
-      // 🔥 refetch user after login
-      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: [] });
     },
   });
 };

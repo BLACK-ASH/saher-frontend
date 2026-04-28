@@ -1,5 +1,4 @@
 "use client";
-import { DefaultLoader } from "@/components/loading";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,7 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useAttendance } from "@/hooks/use-attendance";
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction";
 import { formatDate, timeToDateString, transformTime } from "@/lib/utils/time";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,9 +55,7 @@ export function AttendanceCorrectionSide({
 }: {
   attendance: AttendanceResponse;
 }) {
-  const { submitCorrection } = useAttendanceCorrection({
-    attendanceId: attendance.id,
-  });
+  const { submitCorrection } = useAttendanceCorrection();
 
   const form = useForm<AttendanceCorrectionCreateT>({
     resolver: zodResolver(attendanceCorrectionCreateSchema),

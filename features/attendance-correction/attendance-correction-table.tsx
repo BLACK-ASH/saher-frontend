@@ -6,7 +6,7 @@ import { attendanceCorrectionColumns } from "./corrections/column";
 import { AttendanceCorrectionDataTable } from "./corrections/data-table";
 
 const AdminAttendanceCorrectionTable = () => {
-  const { allCorrections } = useAdminAttendanceCorrection();
+  const { allCorrections } = useAdminAttendanceCorrection({});
   const { data: corrections, isLoading } = allCorrections;
 
   if (isLoading) return <DefaultLoader className="col-span-2" />;

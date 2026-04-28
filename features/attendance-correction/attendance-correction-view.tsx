@@ -96,7 +96,7 @@ const AttendanceCorrectionView = ({
 }: {
   correction: AttendanceCorrectionResponse;
 }) => {
-  const { handleCorrection } = useAdminAttendanceCorrection();
+  const { handleCorrection } = useAdminAttendanceCorrection({});
 
   const form = useForm<AttendanceCorrectionViewType>({
     resolver: zodResolver(attendanceCorrectionHandleSchema),

@@ -1,17 +1,26 @@
-import { getAttendanceCorrection, submitAttendanceCorrection } from "@/services/attendance-correction.api";
+import {
+  getAttendanceCorrection,
+  submitAttendanceCorrection,
+} from "@/services/attendance-correction.api";
 import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
 type useAttendanceCorrectionProps = {
-  attendanceId?: string
-}
+  sort?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+};
 
-export const useAttendanceCorrection = ({ attendanceId }: useAttendanceCorrectionProps = {}) => {
+export const useAttendanceCorrection = ({
+  sort = "desc",
+  page = 1,
+  limit = 10,
+}: useAttendanceCorrectionProps = {}) => {
   const queryClient = useQueryClient();
 
   const allCorrections = useQuery({
     queryKey: ["attendance", "correction"],
-    queryFn: getAttendanceCorrection
-  })
+    queryFn: () => getAttendanceCorrection({ sort, page, limit }),
+  });
 
   const submitCorrection = useMutation({
     mutationFn: submitAttendanceCorrection,

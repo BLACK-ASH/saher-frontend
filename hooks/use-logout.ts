@@ -11,8 +11,7 @@ export const useLogout = () => {
       });
     },
     onSuccess: () => {
-      // ❌ clear user cache
-      queryClient.removeQueries({ queryKey: ["user"] });
+      queryClient.removeQueries({ queryKey: [] });
     },
   });
 };

@@ -35,10 +35,19 @@ export type AttendanceCorrectionResponse = z.infer<
 >;
 
 type SubmitCorrectionPayload = AttendanceCorrectionCreateT;
+type DefaultProps = {
+  sort?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+};
 
-export const getAttendanceCorrection = async () => {
+export const getAttendanceCorrection = async ({
+  sort = "desc",
+  page = 1,
+  limit = 10,
+}: DefaultProps) => {
   const res = await apiFetch<AttendanceCorrectionResponse[]>(
-    "/api/attendance/correction/me",
+    `/api/attendance/correction/me?sort=${sort}&page=${page}&limit=${limit}`,
     {
       method: "GET",
     },
@@ -57,9 +66,13 @@ export const getAttendanceCorrectionById = async (correctionId: string) => {
   return res.data;
 };
 
-export const getAttendanceCorrectionAll = async () => {
+export const getAttendanceCorrectionAll = async ({
+  sort = "desc",
+  page = 1,
+  limit = 10,
+}: DefaultProps) => {
   const res = await apiFetch<AttendanceCorrectionResponse[]>(
-    "/api/attendance/admin/correction",
+    `/api/attendance/admin/correction?sort=${sort}&page=${page}&limit=${limit}`,
     {
       method: "GET",
     },

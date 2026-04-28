@@ -7,11 +7,17 @@ import { useQueryClient, useQuery, useMutation } from "@tanstack/react-query";
 
 type useAttendanceCorrectionProps = {
   correctionId?: string;
+  sort?: "asc" | "desc";
+  page?: number;
+  limit?: number;
 };
 
 export const useAdminAttendanceCorrection = ({
   correctionId,
-}: useAttendanceCorrectionProps = {}) => {
+  sort = "desc",
+  page = 1,
+  limit = 10,
+}: useAttendanceCorrectionProps) => {
   const queryClient = useQueryClient();
 
   const correction = useQuery({
@@ -21,7 +27,7 @@ export const useAdminAttendanceCorrection = ({
 
   const allCorrections = useQuery({
     queryKey: ["attendance", "correction"],
-    queryFn: getAttendanceCorrectionAll,
+    queryFn: () => getAttendanceCorrectionAll({ page, limit, sort }),
   });
 
   const handleCorrection = useMutation({

@@ -1,5 +1,5 @@
 import { apiFetch } from "@/lib/api-wrapper";
-import { dateField, userField } from "@/lib/common-zod-schema";
+import { userField } from "@/lib/common-zod-schema";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -13,6 +13,12 @@ export const attendanceSchema = z.object({
   isLate: z.boolean(),
   status: z.enum(["present", "half-day", "absent"]),
 });
+
+type DefaultProps = {
+  sort?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+};
 
 export type AttendanceResponse = z.infer<typeof attendanceSchema>;
 
@@ -33,12 +39,13 @@ export const getAttendanceById = async (id: string) => {
   return res.data;
 };
 
-export const getAttendance = async (
-  filter: "week" | "month",
-  sort: "asc" | "desc",
-) => {
+export const getAttendance = async ({
+  sort = "desc",
+  page = 1,
+  limit = 10,
+}: DefaultProps) => {
   const res = await apiFetch<AttendanceResponse[]>(
-    "/api/attendance/user/me?sort=" + sort,
+    `/api/attendance/user/me?sort=${sort}&page=${page}&limit=${limit}`,
     {
       method: "GET",
     },
