@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
@@ -19,14 +13,6 @@ import { RegisterFormData } from "./register-schema";
 import { Input } from "@/components/ui/input";
 
 const BankDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
-  /*
-      "bank.accountHolderName",
-      "bank.branch",
-      "bank.bankName",
-      "bank.ifcs",
-      "bank.mobileNumber",
-  */
-
   return (
     <Card className="min-w-full sm:max-w-md">
       <CardHeader>

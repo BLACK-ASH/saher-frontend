@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/card";
 import { apiFetch } from "@/lib/api-wrapper";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 
 export function ForgotPasswordForm({
   className,
@@ -132,7 +133,7 @@ export function ForgotPasswordForm({
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
-            <a
+            <Link
               href="/"
               className="flex flex-col items-center gap-2 font-medium"
             >
@@ -145,7 +146,7 @@ export function ForgotPasswordForm({
                 />
               </div>
               <span className="sr-only">SAHER India.</span>
-            </a>
+            </Link>
           </div>
           <Card>
             <CardHeader>

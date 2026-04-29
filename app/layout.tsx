@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Capriola, Geist, Geist_Mono, Inter } from "next/font/google";
+import { Capriola, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./provider";

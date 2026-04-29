@@ -1,7 +1,6 @@
-import { Skeleton } from "./ui/skeleton"
+import { Skeleton } from "./ui/skeleton";
 
-
-type DefaultLoaderProps = React.ComponentProps<"div"> & {}
+type DefaultLoaderProps = React.ComponentProps<"div"> & {};
 
 export function DefaultLoader({
   className,
@@ -10,7 +9,7 @@ export function DefaultLoader({
 }: DefaultLoaderProps) {
   return (
     <Skeleton className={className} {...props}>
+      {children}
     </Skeleton>
-  )
+  );
 }
-

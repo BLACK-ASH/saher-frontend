@@ -100,6 +100,7 @@ export default function RegisterUserForm() {
   // 🔹 Next Step
   const nextStep = async () => {
     const fields = stepFields[step];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const isValid = await form.trigger(fields as any);
 
     if (!isValid) return;
@@ -133,15 +134,16 @@ export default function RegisterUserForm() {
       form.reset();
       router.refresh();
     } catch (err) {
-      console.log(err);
+      console.error(err);
       if (err instanceof Error) {
         toast.error(err.message);
       }
     }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (err: any) => {
-    console.log("ERRORS:", err);
+    console.error("ERRORS:", err);
   };
 
   return (

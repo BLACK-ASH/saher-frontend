@@ -21,7 +21,6 @@ const AttendanceStatus = () => {
   const { data, isLoading } = today;
 
   if (isLoading) return <DefaultLoader />;
-  console.log(data);
   if (!data)
     return (
       <NoData

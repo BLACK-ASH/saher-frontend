@@ -23,8 +23,6 @@ import { useAttendanceCorrection } from "@/hooks/use-attendance-correction";
 import { formatDate } from "@/lib/utils/time";
 import AttendanceComparision from "./attendance-comparision";
 
-type Props = {};
-
 export const attendanceCorrectionStatusVariant: Record<
   "pending" | "on-hold" | "approve" | "reject",
   "outline-warn" | "outline" | "outline-success" | "destructive"
@@ -35,7 +33,7 @@ export const attendanceCorrectionStatusVariant: Record<
   reject: "destructive",
 };
 
-const AttendanceCorrectionRequests = (props: Props) => {
+const AttendanceCorrectionRequests = () => {
   const { allCorrections } = useAttendanceCorrection();
   const { data: corrections, isLoading } = allCorrections;
 

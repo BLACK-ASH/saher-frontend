@@ -4,13 +4,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -18,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import AttendanceComparision from "@/features/attendance/attendance-comparision";
 import { attendanceCorrectionStatusVariant } from "@/features/attendance/attendance-correction-requests";
 import { imageUrl } from "@/lib/image-url";
 import { formatDate } from "@/lib/utils/time";
@@ -26,7 +18,6 @@ import { AttendanceCorrectionResponse } from "@/services/attendance-correction.a
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
 import AttendanceCorrectionView from "../attendance-correction-view";
-import { core } from "zod";
 
 export const attendanceCorrectionColumns: ColumnDef<AttendanceCorrectionResponse>[] =
   [

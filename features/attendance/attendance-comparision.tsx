@@ -23,7 +23,6 @@ const AttendanceComparision = ({
 }) => {
   if (!correction)
     return <NoData title="No Correction Detail To Show" description="" />;
-  console.log(correction);
 
   return (
     <>

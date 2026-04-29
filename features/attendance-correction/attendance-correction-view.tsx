@@ -2,13 +2,6 @@
 import { NoData } from "@/components/no-data";
 import { Button } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Field,
   FieldError,
   FieldGroup,
@@ -39,8 +32,6 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Edit2, X } from "lucide-react";
-import Image from "next/image";
-import { AspectRatio } from "@/components/ui/aspect-ratio";
 import {
   Select,
   SelectContent,
@@ -185,8 +176,6 @@ const AttendanceCorrectionView = ({
     );
   };
 
-  console.log(correction);
-
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -227,7 +216,7 @@ const AttendanceCorrectionView = ({
                     </FieldLabel>
                     <Input
                       type="time"
-                      // @ts-expect-error
+                      // @ts-expect-error - value will be present
                       value={field.value as string}
                       {...field}
                       disabled={!isAdmin}
@@ -250,7 +239,7 @@ const AttendanceCorrectionView = ({
                     </FieldLabel>
                     <Input
                       type="time"
-                      // @ts-expect-error
+                      // @ts-expect-error - value will be present
                       value={field.value || ""}
                       {...field}
                       disabled={!isAdmin}
@@ -372,7 +361,10 @@ const AttendanceCorrectionView = ({
           <Button
             type="button"
             variant="destructive"
-            onClick={form.handleSubmit((data) => onSubmit(data, "reject"))}
+            onClick={form.handleSubmit(
+              (data) => onSubmit(data, "reject"),
+              (err) => console.error(err),
+            )}
           >
             Reject
           </Button>
@@ -382,7 +374,7 @@ const AttendanceCorrectionView = ({
             variant="secondary"
             onClick={form.handleSubmit(
               (data) => onSubmit(data, "on-hold"),
-              (err) => console.log(err),
+              (err) => console.error(err),
             )}
           >
             On Hold
@@ -390,7 +382,10 @@ const AttendanceCorrectionView = ({
 
           <Button
             type="button"
-            onClick={form.handleSubmit((data) => onSubmit(data, "approve"))}
+            onClick={form.handleSubmit(
+              (data) => onSubmit(data, "approve"),
+              (err) => console.error(err),
+            )}
           >
             Approve
           </Button>

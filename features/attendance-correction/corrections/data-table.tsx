@@ -31,8 +31,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { AttendanceCorrectionResponse } from "@/services/attendance-correction.api";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];

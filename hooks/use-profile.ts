@@ -29,7 +29,7 @@ export type AccountT = {
   readonly employeeShift?: "shift-1" | "shift-2" | undefined;
 };
 
-export const useProfile = ({ userId }: { userId?: string }) => {
+export const useProfile = () => {
   return useQuery({
     queryKey: ["user", "profile", "me"],
     queryFn: async () => {

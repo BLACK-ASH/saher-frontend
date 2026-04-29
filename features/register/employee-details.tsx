@@ -1,15 +1,8 @@
 "use client";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -41,7 +34,7 @@ const employeeShift = [
     value: "shift-1",
   },
   {
-    label: "1:00 AM - 6:00 PM",
+    label: "2:00 AM - 6:00 PM",
     value: "shift-2",
   },
 ];

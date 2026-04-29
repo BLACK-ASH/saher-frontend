@@ -7,12 +7,9 @@ import {
   CircleX,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { success } from "zod";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-type Props = {};
-
-const NotificationBox = (props: Props) => {
+const NotificationBox = () => {
   return (
     <Card>
       <CardHeader>

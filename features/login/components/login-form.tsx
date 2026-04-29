@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useLogin } from "@/hooks/use-login";
+import Link from "next/link";
 
 export function LoginForm({
   className,
@@ -65,7 +66,7 @@ export function LoginForm({
       <form onSubmit={form.handleSubmit(onLoginSubmit)}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
-            <a
+            <Link
               href="/"
               className="flex flex-col items-center gap-2 font-medium"
             >
@@ -78,7 +79,7 @@ export function LoginForm({
                 />
               </div>
               <span className="sr-only">SAHER India.</span>
-            </a>
+            </Link>
           </div>
           <Card>
             <CardHeader>

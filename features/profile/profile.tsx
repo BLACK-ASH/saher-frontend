@@ -42,7 +42,6 @@ export default function ProfilePage() {
   const { user, bank } = account;
 
   const handleChangeEmail = async () => {
-    console.log("Email Change Request Send.");
     const res = await apiFetch(`/api/auth/change-email/request`, {
       method: "POST",
     });
@@ -54,7 +53,6 @@ export default function ProfilePage() {
   };
 
   const handleChangePassword = async () => {
-    console.log("Email Change Request Send.");
     const res = await apiFetch(`/api/auth/change-password/request`, {
       method: "POST",
     });
@@ -350,32 +348,6 @@ function Field({
   );
 }
 
-function Status({ label, value }: { label: string; value: boolean }) {
-  return (
-    <div className="flex justify-between text-sm">
-      <span className="text-muted-foreground">{label}</span>
-      <span>{value ? "Yes" : "No"}</span>
-    </div>
-  );
-}
-
-function Meta({
-  label,
-  value,
-  danger,
-}: {
-  label: string;
-  value: string;
-  danger?: boolean;
-}) {
-  return (
-    <div className="flex justify-between text-sm">
-      <span className="text-muted-foreground">{label}</span>
-      <span className={danger ? "text-destructive" : ""}>{value}</span>
-    </div>
-  );
-}
-
 /* ================= HELPERS ================= */
 
 function formatDate(date?: Date) {
@@ -395,11 +367,13 @@ function StatusRow({
   negative,
   variant,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   label: string;
   value: boolean;
   positive: string;
   negative: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variant: any;
 }) {
   return (
@@ -420,6 +394,7 @@ function MetaRow({
   value,
   danger,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   label: string;
   value: string;
