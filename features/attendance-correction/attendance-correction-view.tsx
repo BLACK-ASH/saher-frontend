@@ -24,7 +24,7 @@ import {
 import { useAdminAttendanceCorrection } from "@/hooks/use-admin-attendance-correction";
 import { formatDate, timeToDateString, transformTime } from "@/lib/utils/time";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { toast } from "sonner";
@@ -38,7 +38,16 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Edit2 } from "lucide-react";
+import { Edit2, X } from "lucide-react";
+import Image from "next/image";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 export const attendanceCorrectionStatusList = [
   "reject",
@@ -96,6 +105,7 @@ const AttendanceCorrectionView = ({
 }: {
   correction: AttendanceCorrectionResponse;
 }) => {
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const { handleCorrection } = useAdminAttendanceCorrection({});
 
   const form = useForm<AttendanceCorrectionViewType>({
@@ -116,14 +126,14 @@ const AttendanceCorrectionView = ({
   useEffect(() => {
     if (correction) {
       form.reset({
-        isAdmin: false,
+        isAdmin,
         status: correction.status,
         reason: correction.reason ?? "",
         changes: {
           inTime: transformTime(correction?.changes?.inTime) ?? "",
           outTime: transformTime(correction?.changes?.outTime) ?? "",
-          status: correction?.changes?.status ?? "absent",
-          isLate: correction?.changes?.isLate ?? false,
+          status: correction?.changes?.status ?? correction.previous.status,
+          isLate: correction?.changes?.isLate ?? correction.previous.isLate,
         },
       });
     }
@@ -147,6 +157,7 @@ const AttendanceCorrectionView = ({
 
     const payload = {
       ...formData,
+      isAdmin,
       status,
       changes: {
         ...formData.changes,
@@ -174,6 +185,8 @@ const AttendanceCorrectionView = ({
     );
   };
 
+  console.log(correction);
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -181,113 +194,180 @@ const AttendanceCorrectionView = ({
           <Edit2 /> Details
         </Button>
       </SheetTrigger>
-      <SheetContent className="p-2 overflow-scroll">
+      <SheetContent className="p-2 min-w-1/2 overflow-scroll">
         <SheetHeader>
           <SheetTitle>Attendance Correction Details</SheetTitle>
-          <SheetTitle>{formatDate(correction.attendance.date)}</SheetTitle>
-          <SheetDescription>
-            {correction.user.name} - {formatDate(correction.attendance.date)}
+          <SheetDescription className="flex items-center justify-between px-4">
+            <p>
+              {correction.user.name} - {formatDate(correction.attendance.date)}
+            </p>
+            {isAdmin ? (
+              <X
+                className="size-4 text-base"
+                onClick={() => setIsAdmin(false)}
+              />
+            ) : (
+              <Edit2
+                className="size-4 text-base"
+                onClick={() => setIsAdmin(true)}
+              />
+            )}
           </SheetDescription>
         </SheetHeader>
-        <form className="space-y-2.5" id="attendance-correction-form">
-          <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <Controller
-              name="changes.inTime"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="attendance-correction-in-time">
-                    Check In
-                  </FieldLabel>
-                  <Input
-                    type="time"
-                    // @ts-expect-error
-                    value={field.value as string}
-                    {...field}
-                    id="attendance-correction-in-time"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-            <Controller
-              name="changes.outTime"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="attendance-correction-out-time">
-                    Check Out
-                  </FieldLabel>
-                  <Input
-                    type="time"
-                    // @ts-expect-error
-                    value={field.value || ""}
-                    {...field}
-                    id="attendance-correction-out-time"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-
-          <FieldGroup className="grid grid-cols-1 md:grid-cols-2 gap-2">
-            <Field>
-              <FieldLabel>Details</FieldLabel>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="outline">See Details</Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-sm">
-                  <DialogHeader>
-                    <DialogTitle>
-                      Attendance Comparision And Details{" "}
-                    </DialogTitle>
-                  </DialogHeader>
-                  <AttendanceComparision correction={correction} />
-                </DialogContent>
-              </Dialog>
-            </Field>
-          </FieldGroup>
-
-          <FieldGroup>
-            <Controller
-              name="reason"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="attendance-correction-message">
-                    Reason
-                  </FieldLabel>
-                  <InputGroup>
-                    <InputGroupTextarea
+        <div className="grid md:grid-cols-2 gap-2">
+          <form className="space-y-2.5" id="attendance-correction-form">
+            <FieldGroup>
+              <Controller
+                name="changes.inTime"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="attendance-correction-in-time">
+                      Check In
+                    </FieldLabel>
+                    <Input
+                      type="time"
+                      // @ts-expect-error
+                      value={field.value as string}
                       {...field}
-                      id="attendance-correction-message"
-                      placeholder="I'm having an issue with the my mobile internet so i check in late."
-                      rows={6}
-                      className="min-h-24 resize-none"
+                      disabled={!isAdmin}
+                      id="attendance-correction-in-time"
                       aria-invalid={fieldState.invalid}
                     />
-                    <InputGroupAddon align="block-end">
-                      <InputGroupText className="tabular-nums">
-                        {field.value?.length ?? 0}/100 characters
-                      </InputGroupText>
-                    </InputGroupAddon>
-                  </InputGroup>
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+              <Controller
+                name="changes.outTime"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="attendance-correction-out-time">
+                      Check Out
+                    </FieldLabel>
+                    <Input
+                      type="time"
+                      // @ts-expect-error
+                      value={field.value || ""}
+                      {...field}
+                      disabled={!isAdmin}
+                      id="attendance-correction-out-time"
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+
+            {isAdmin && (
+              <FieldGroup>
+                <Controller
+                  name="changes.isLate"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel>Late</FieldLabel>
+
+                      <Select
+                        value={field.value?.toString()} // 👈 boolean → string
+                        onValueChange={(val) => field.onChange(val === "true")} // 👈 string → boolean
+                      >
+                        <SelectTrigger className="w-full max-w-48">
+                          <SelectValue placeholder="Select Late Status" />
+                        </SelectTrigger>
+
+                        <SelectContent>
+                          <SelectItem value="true">Late</SelectItem>
+                          <SelectItem value="false">On Time</SelectItem>
+                        </SelectContent>
+                      </Select>
+
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
                   )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-        </form>
+                />
+                <Controller
+                  name="changes.status"
+                  control={form.control}
+                  render={({ field, fieldState }) => (
+                    <Field data-invalid={fieldState.invalid}>
+                      <FieldLabel htmlFor="attendance-correction-out-time">
+                        Status
+                      </FieldLabel>
+                      <Select
+                        {...field}
+                        aria-invalid={fieldState.invalid}
+                        onValueChange={field.onChange}
+                      >
+                        <SelectTrigger className="w-full max-w-48">
+                          <SelectValue placeholder="Select Attendance Status" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {attendanceStatusList.map((status) => {
+                            return (
+                              <SelectItem key={status} value={status}>
+                                {status}
+                              </SelectItem>
+                            );
+                          })}
+                        </SelectContent>
+                      </Select>
+                      {fieldState.invalid && (
+                        <FieldError errors={[fieldState.error]} />
+                      )}
+                    </Field>
+                  )}
+                />
+              </FieldGroup>
+            )}
+
+            <FieldGroup>
+              <Controller
+                name="reason"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="attendance-correction-message">
+                      Reason
+                    </FieldLabel>
+                    <InputGroup>
+                      <InputGroupTextarea
+                        {...field}
+                        id="attendance-correction-message"
+                        placeholder="I'm having an issue with the my mobile internet so i check in late."
+                        rows={6}
+                        className="min-h-24 resize-none"
+                        aria-invalid={fieldState.invalid}
+                      />
+                      <InputGroupAddon align="block-end">
+                        <InputGroupText className="tabular-nums">
+                          {field.value?.length ?? 0}/100 characters
+                        </InputGroupText>
+                      </InputGroupAddon>
+                    </InputGroup>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+          </form>
+          <div>
+            <Field>
+              <FieldLabel>Details</FieldLabel>
+              <AttendanceComparision correction={correction} />
+            </Field>
+          </div>
+        </div>
         <Field orientation="horizontal">
           <Button
             type="button"

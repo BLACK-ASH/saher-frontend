@@ -57,7 +57,7 @@ const AttendanceCorrectionRequests = (props: Props) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-start">Status</TableHead>
               <TableHead className="text-center">Date</TableHead>
               <TableHead className="text-center">View</TableHead>
             </TableRow>

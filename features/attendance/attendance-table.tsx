@@ -24,21 +24,25 @@ export const attendanceStatusVariant: Record<
   absent: "destructive",
 };
 
-export function AttendanceTable() {
+export function AttendanceTable({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
   const { attendancesList: data } = useAttendance({ sort: "desc" });
   const { data: attendances, isLoading } = data;
 
-  if (isLoading) return <DefaultLoader />;
+  if (isLoading) return <DefaultLoader className={className} />;
   if (!attendances)
     return (
       <NoData
+        className={className}
         title="No Recent Attendances"
         description="Please Refresh or You Don't Have Any Recent Attendances."
       />
     );
 
   return (
-    <Card>
+    <Card className={className}>
       <CardHeader>
         <CardTitle>Recent Attendances</CardTitle>
       </CardHeader>
@@ -46,12 +50,12 @@ export function AttendanceTable() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-25">Date</TableHead>
-              <TableHead>Check In</TableHead>
-              <TableHead>Check Out</TableHead>
-              <TableHead>Work Hours</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Action</TableHead>
+              <TableHead className="w-25 text-center">Date</TableHead>
+              <TableHead className="text-center">Check In</TableHead>
+              <TableHead className="text-center">Check Out</TableHead>
+              <TableHead className="text-center">Work Hours</TableHead>
+              <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-center">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
