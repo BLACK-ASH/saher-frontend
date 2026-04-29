@@ -11,6 +11,7 @@ import {
   Clock,
   AlertCircle,
 } from "lucide-react";
+import NotificationBox from "@/features/profile/notification";
 
 export default function Page() {
   return (
@@ -32,16 +33,12 @@ export default function Page() {
       </div>
 
       {/* ===== ATTENDANCE (PRIMARY) ===== */}
-      <AttendanceStatus />
 
-      {/* ===== STATS ===== */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard title="Days Present" value="18" icon={Calendar} />
-        <StatCard title="Leaves Taken" value="2" icon={FileText} />
-        <StatCard title="Late Entries" value="3" icon={Clock} />
-        <StatCard title="Pending Requests" value="1" icon={AlertCircle} />
+      <div className="grid lg:grid-cols-2 gap-6">
+        <AttendanceStatus />
+        {/* ALERTS */}
+        <NotificationBox />
       </div>
-
       {/* ===== QUICK ACTIONS ===== */}
       <div className="space-y-4">
         <h2 className="text-base font-semibold">Quick Actions</h2>
@@ -52,40 +49,6 @@ export default function Page() {
           <ActionCard icon={Calendar} label="Apply Leave" />
           <ActionCard icon={CreditCard} label="Bank Details" />
         </div>
-      </div>
-
-      {/* ===== MAIN GRID ===== */}
-      <div className="grid lg:grid-cols-2 gap-6">
-        {/* ACTIVITY */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Recent Activity
-            </CardTitle>
-          </CardHeader>
-
-          <CardContent className="space-y-4 text-sm">
-            <ActivityItem text="Checked in at 9:02 AM" />
-            <ActivityItem text="Profile updated" />
-            <ActivityItem text="Leave request submitted" />
-            <ActivityItem text="Attendance corrected" />
-          </CardContent>
-        </Card>
-
-        {/* ALERTS */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-sm font-medium text-muted-foreground">
-              Alerts & Tasks
-            </CardTitle>
-          </CardHeader>
-
-          <CardContent className="space-y-4 text-sm">
-            <AlertItem text="1 pending approval request" />
-            <AlertItem text="Update your bank details" />
-            <AlertItem text="Incomplete profile information" />
-          </CardContent>
-        </Card>
       </div>
     </div>
   );

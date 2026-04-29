@@ -84,7 +84,7 @@ export function AttendanceCorrectionSide({
     const payload: AttendanceCorrectionCreateT = {
       attendanceId: data.attendanceId,
       inTime: timeToDateString(attendance.date, data.inTime),
-      outTime: timeToDateString(attendance.date, data.inTime),
+      outTime: timeToDateString(attendance.date, data.outTime),
       message: data.message,
       proof: data.proof,
     };

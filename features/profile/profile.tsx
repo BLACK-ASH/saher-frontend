@@ -28,6 +28,7 @@ import {
   InputGroupInput,
 } from "@/components/ui/input-group";
 import { useQueryClient } from "@tanstack/react-query";
+import NotificationBox from "./notification";
 
 export default function ProfilePage() {
   const { data: account, isLoading } = useProfile({});
@@ -83,7 +84,7 @@ export default function ProfilePage() {
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
       {/* ================= HEADER ================= */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 flex-col md:flex-row">
           {/* 🔥 Bigger Avatar */}
           <Avatar className="size-40 border ">
             <AvatarImage src={user.image?.src} />
@@ -178,7 +179,6 @@ export default function ProfilePage() {
 
         {/* meta */}
         <div className="text-sm text-muted-foreground space-y-2">
-          <p>ID: {account.id}</p>
           <p>Employee ID: {account.employeeId}</p>
           <Button
             variant={"outline"}
@@ -193,9 +193,9 @@ export default function ProfilePage() {
       <Separator />
 
       {/* ================= CONTENT ================= */}
-      <div className="grid lg:grid-cols-[1fr_280px] gap-10">
+      <div className="flex flex-col-reverse md:flex-row gap-4">
         {/* LEFT */}
-        <div className="space-y-10">
+        <div className="space-y-10 flex-2 ">
           <Section title="Personal Information">
             <Grid>
               <Field label="Full Name" value={user.name} />
@@ -247,13 +247,11 @@ export default function ProfilePage() {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="space-y-6">
-          <div className="sticky top-6">
+        <div className="space-y-6 flex-1">
+          <div className="sticky top-6 space-y-4">
             <Card className="border-muted/60">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Account Status
-                </CardTitle>
+                <CardTitle>Account Status</CardTitle>
               </CardHeader>
 
               <CardContent className="space-y-5">
@@ -306,6 +304,7 @@ export default function ProfilePage() {
                 )}
               </CardContent>
             </Card>
+            <NotificationBox />
           </div>
         </div>
       </div>

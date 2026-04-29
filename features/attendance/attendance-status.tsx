@@ -1,7 +1,6 @@
 "use client";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,12 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAttendance } from "@/hooks/use-attendance";
-import {
-  formatDate,
-  transformTime,
-  calculateWorkHours,
-  formatHours,
-} from "@/lib/utils/time";
+import { formatDate, transformTime, formatHours } from "@/lib/utils/time";
 import { ArrowDownLeft, ArrowUpRight, ClockIcon } from "lucide-react";
 
 const AttendanceStatus = () => {
@@ -27,6 +21,7 @@ const AttendanceStatus = () => {
   const { data, isLoading } = today;
 
   if (isLoading) return <DefaultLoader />;
+  console.log(data);
   if (!data)
     return (
       <NoData
