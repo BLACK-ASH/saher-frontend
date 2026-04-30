@@ -6,17 +6,13 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: async (data: { email: string; password: string }) => {
-      return await apiFetch(
-        `/api/auth/login`,
-        {
-          method: "POST",
-          body: JSON.stringify(data),
-        }
-      );
+      return await apiFetch(`/api/auth/login`, {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
     },
     onSuccess: () => {
-      // 🔥 refetch user after login
-      queryClient.invalidateQueries({ queryKey: ["me"] });
+      queryClient.invalidateQueries({ queryKey: [] });
     },
   });
 };

@@ -4,26 +4,32 @@ import { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
+import Image from "next/image";
+import { AspectRatio } from "./ui/aspect-ratio";
 
 const fileSample = {
-  "id": "69c61d7869eaed473fefb9f8",
-  "fileName": "09e608b9-4c53-4d80-b57b-d946e141f59b.webp",
-  "url": "http://localhost:4000/uploads/images/09e608b9-4c53-4d80-b57b-d946e141f59b.webp",
-  "size": 74620,
-  "width": 1024,
-  "height": 576,
-  "mimetype": "image/webp"
-}
-
-export type ImageFile = typeof fileSample
-
-type ImageUploadProps = {
-  onUploadSuccess?: (data: { alt: string, file: ImageFile }) => void;
-  altName: string,
-  url?: string
+  id: "69c61d7869eaed473fefb9f8",
+  fileName: "09e608b9-4c53-4d80-b57b-d946e141f59b.webp",
+  url: "http://localhost:4000/uploads/images/09e608b9-4c53-4d80-b57b-d946e141f59b.webp",
+  size: 74620,
+  width: 1024,
+  height: 576,
+  mimetype: "image/webp",
 };
 
-export default function ImageUpload({ onUploadSuccess, altName = "upload", url }: ImageUploadProps) {
+export type ImageFile = typeof fileSample;
+
+type ImageUploadProps = {
+  onUploadSuccess?: (data: { alt: string; file: ImageFile }) => void;
+  altName: string;
+  url?: string;
+};
+
+export default function ImageUpload({
+  onUploadSuccess,
+  altName = "upload",
+  url,
+}: ImageUploadProps) {
   const [preview, setPreview] = useState<string | null>(url ? url : null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -37,21 +43,18 @@ export default function ImageUpload({ onUploadSuccess, altName = "upload", url }
       formData.append("image", file);
       formData.append("name", altName.trim() ?? "user-upload");
 
-      const response = await apiFetch(
-        `/api/upload/image`,
-        {
-          method: "POST",
-          body: formData
-        }
-      )
+      const response = await apiFetch(`/api/upload/image`, {
+        method: "POST",
+        body: formData,
+      });
 
       if (response?.success) {
         onUploadSuccess?.({
           alt: altName,
-          //@ts-expect-error
-          file: response?.file
+          //@ts-expect-error - it will be present
+          file: response?.file,
         });
-        toast("Image Upload Successful.")
+        toast("Image Upload Successful.");
       }
     } catch (err) {
       console.error(err);
@@ -69,7 +72,7 @@ export default function ImageUpload({ onUploadSuccess, altName = "upload", url }
     setPreview(previewUrl);
 
     uploadImage(file);
-  }, [altName]);
+  }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -97,11 +100,9 @@ export default function ImageUpload({ onUploadSuccess, altName = "upload", url }
 
         {preview ? (
           <div className="flex flex-col items-center gap-4">
-            <img
-              src={preview}
-              alt={"preview"}
-              className="w-40 h-40 object-cover rounded-xl shadow"
-            />
+            <AspectRatio ratio={1 / 1}>
+              <Image src={preview} alt={"preview"} fill />
+            </AspectRatio>
             <p className="text-sm text-gray-500">
               {loading ? "Uploading..." : "Click or drag to replace"}
             </p>

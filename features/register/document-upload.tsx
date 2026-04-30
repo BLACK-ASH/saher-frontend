@@ -1,6 +1,6 @@
 import ImageUpload from "@/components/image-upload"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
+import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field"
 import { Controller, UseFormReturn } from "react-hook-form"
 import { RegisterFormData } from "./register-schema"
 

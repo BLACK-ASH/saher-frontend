@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts"
+import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 
 import {
   Card,
@@ -8,40 +8,50 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card"
+} from "@/components/ui/card";
 import {
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
-} from "@/components/ui/chart"
-import { useAttendance } from "@/hooks/use-attendance"
-import { getMonthYear } from "@/lib/utils/time"
-import { DefaultLoader } from "@/components/loading"
-import { NoData } from "@/components/no-data"
+} from "@/components/ui/chart";
+import { useAttendance } from "@/hooks/use-attendance";
+import { getMonthYear } from "@/lib/utils/time";
+import { DefaultLoader } from "@/components/loading";
+import { NoData } from "@/components/no-data";
 
-export const description = "A linear line chart"
+export const description = "A linear line chart";
 
 const chartConfig = {
   desktop: {
     label: "Desktop",
     color: "var(--chart-1)",
   },
-} satisfies ChartConfig
+} satisfies ChartConfig;
 
-export function AttendanceChart({ className, ...props }: React.ComponentProps<"div">) {
-  const { attendancesList } = useAttendance({ filter: "month" })
-  const { data, isLoading } = attendancesList
+export function AttendanceChart({
+  className,
+  ...props
+}: React.ComponentProps<"div">) {
+  const { attendancesList } = useAttendance();
+  const { data, isLoading } = attendancesList;
 
   const chartData = data?.map((a) => ({
     date: a.date,
     workHours: a.workHours,
-  }))
+  }));
 
-  if (isLoading) return <DefaultLoader className="col-span-2" />
-  if (!chartData) return <NoData className="col-span-2" title="No Chart To Show." description="Please Refresh or You Don't Have Any Attendance To Show This Chart." />
+  if (isLoading) return <DefaultLoader className="col-span-2" />;
+  if (!chartData)
+    return (
+      <NoData
+        className="col-span-2"
+        title="No Chart To Show."
+        description="Please Refresh or You Don't Have Any Attendance To Show This Chart."
+      />
+    );
 
-  const firstDay = new Date(chartData[0]?.date)
+  const firstDay = new Date(chartData[0]?.date);
 
   return (
     <Card className={className} {...props}>
@@ -50,7 +60,8 @@ export function AttendanceChart({ className, ...props }: React.ComponentProps<"d
         <CardDescription>{getMonthYear(firstDay)}</CardDescription>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}
+        <ChartContainer
+          config={chartConfig}
           className="aspect-auto h-[20vh] w-full"
         >
           <BarChart
@@ -80,6 +91,5 @@ export function AttendanceChart({ className, ...props }: React.ComponentProps<"d
         </ChartContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
-

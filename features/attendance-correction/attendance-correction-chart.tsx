@@ -38,7 +38,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export function AttendanceCorrectionChart() {
-  const { allCorrections } = useAdminAttendanceCorrection();
+  const { allCorrections } = useAdminAttendanceCorrection({});
   const { data, isLoading } = allCorrections;
 
   if (isLoading) return <DefaultLoader className="col-span-2" />;

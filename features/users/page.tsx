@@ -3,7 +3,9 @@ import { UserT } from "@/hooks/use-me";
 import { apiFetch } from "@/lib/api-wrapper";
 import { useQuery } from "@tanstack/react-query";
 import { columns } from "./column";
-import { DataTable } from "./data-table";
+import { UserDataTable } from "./data-table";
+import { DefaultLoader } from "@/components/loading";
+import { NoData } from "@/components/no-data";
 
 const UserTable = () => {
   const { data: users = [], isLoading } = useQuery({
@@ -15,13 +17,9 @@ const UserTable = () => {
     staleTime: 1000 * 60 * 60,
   });
 
-  console.log(users);
-
-  return (
-    <div className="container mx-auto p-2 py-10">
-      <DataTable columns={columns} data={users} />
-    </div>
-  );
+  if (isLoading) return <DefaultLoader />;
+  if (!users) return <NoData title="No User To Show" description="" />;
+  return <UserDataTable columns={columns} data={users} />;
 };
 
 export default UserTable;

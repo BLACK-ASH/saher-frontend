@@ -31,8 +31,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown } from "lucide-react";
-import { usePathname, useRouter } from "next/navigation";
-import { AttendanceCorrectionResponse } from "@/services/attendance-correction.api";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -46,12 +44,6 @@ export function AttendanceCorrectionDataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-
-  const router = useRouter();
-  const pathname = usePathname();
-  const setId = (id: string) => {
-    router.push(pathname + "?correctionId=" + id);
-  };
 
   const table = useReactTable({
     data,
@@ -72,7 +64,7 @@ export function AttendanceCorrectionDataTable<TData, TValue>({
 
   return (
     <div>
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden">
         <div className="flex items-center gap-2 mx-4 py-4">
           <Input
             placeholder="Filter name..."
@@ -139,14 +131,7 @@ export function AttendanceCorrectionDataTable<TData, TValue>({
                   data-state={row.getIsSelected() && "selected"}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell
-                      key={cell.id}
-                      onClick={() =>
-                        setId(
-                          (row?.original as AttendanceCorrectionResponse)?._id,
-                        )
-                      }
-                    >
+                    <TableCell key={cell.id}>
                       {flexRender(
                         cell.column.columnDef.cell,
                         cell.getContext(),

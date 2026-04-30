@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
@@ -38,7 +32,6 @@ import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
 const roles = ["user", "manager", "admin"] as const;
-
 const genders = ["male", "female", "other"] as const;
 
 const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
@@ -311,7 +304,6 @@ const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
           />
         </FieldGroup>
       </CardContent>
-      <CardFooter></CardFooter>
     </Card>
   );
 };

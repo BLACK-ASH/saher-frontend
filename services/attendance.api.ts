@@ -1,18 +1,24 @@
 import { apiFetch } from "@/lib/api-wrapper";
-import { dateField, userField } from "@/lib/common-zod-schema";
+import { userField } from "@/lib/common-zod-schema";
 import { toast } from "sonner";
 import z from "zod";
 
 export const attendanceSchema = z.object({
-  _id: z.string("Attendance Id Is Required."),
+  id: z.string("Attendance Id Is Required."),
   user: userField,
-  inTime: dateField,
-  outTime: dateField,
+  inTime: z.coerce.date().nullable(),
+  outTime: z.coerce.date().nullable(),
   workHours: z.number(),
   date: z.string(),
   isLate: z.boolean(),
   status: z.enum(["present", "half-day", "absent"]),
 });
+
+type DefaultProps = {
+  sort?: "asc" | "desc";
+  page?: number;
+  limit?: number;
+};
 
 export type AttendanceResponse = z.infer<typeof attendanceSchema>;
 
@@ -25,7 +31,7 @@ export const getAttendanceStatus = async () => {
 
 export const getAttendanceById = async (id: string) => {
   const res = await apiFetch<AttendanceResponse>(
-    `/api/attendance/attendance/${id}`,
+    `/api/attendance/record/${id}`,
     {
       method: "GET",
     },
@@ -33,12 +39,13 @@ export const getAttendanceById = async (id: string) => {
   return res.data;
 };
 
-export const getAttendance = async (
-  filter: "week" | "month",
-  sort: "asc" | "desc",
-) => {
+export const getAttendance = async ({
+  sort = "desc",
+  page = 1,
+  limit = 10,
+}: DefaultProps) => {
   const res = await apiFetch<AttendanceResponse[]>(
-    "/api/attendance/retrive/current?type=" + filter + "&sort=" + sort,
+    `/api/attendance/user/me?sort=${sort}&page=${page}&limit=${limit}`,
     {
       method: "GET",
     },

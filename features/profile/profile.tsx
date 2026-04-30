@@ -13,22 +13,76 @@ import {
   MailCheck,
   Ban,
   Trash2,
+  Edit,
+  Key,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { apiFetch } from "@/lib/api-wrapper";
+import { toast } from "sonner";
+import { useRef, useState } from "react";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group";
+import { useQueryClient } from "@tanstack/react-query";
+import NotificationBox from "./notification";
 
 export default function ProfilePage() {
   const { data: account, isLoading } = useProfile({});
+  const queryClient = useQueryClient();
+  const [display, setDisplay] = useState(false);
+  const nameRef = useRef<HTMLInputElement>(null);
 
   if (isLoading) return <DefaultLoader />;
   if (!account) return <NoData title="No Profile To Show" description="" />;
 
   const { user, bank } = account;
 
+  const handleChangeEmail = async () => {
+    const res = await apiFetch(`/api/auth/change-email/request`, {
+      method: "POST",
+    });
+    if (!res.success) {
+      toast.error(res.message);
+    }
+    toast.success(res.message);
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+  };
+
+  const handleChangePassword = async () => {
+    const res = await apiFetch(`/api/auth/change-password/request`, {
+      method: "POST",
+    });
+    if (!res.success) {
+      toast.error(res.message);
+    }
+    toast.success(res.message);
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+  };
+
+  const handleChangeName = async () => {
+    const payload = { displayName: nameRef.current?.value };
+    const res = await apiFetch(`/api/user`, {
+      method: "PUT",
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.success) {
+      toast.error(res.message);
+    }
+    toast.success(res.message);
+    setDisplay(false);
+    queryClient.invalidateQueries({ queryKey: ["user"] });
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
       {/* ================= HEADER ================= */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-6 flex-col md:flex-row">
           {/* 🔥 Bigger Avatar */}
           <Avatar className="size-40 border ">
             <AvatarImage src={user.image?.src} />
@@ -38,11 +92,43 @@ export default function ProfilePage() {
           </Avatar>
 
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">
-              {user.name}
-            </h1>
+            <div className="flex items-center">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                {user.displayName}
+              </h1>
+              <Button
+                variant={"link"}
+                onClick={() => setDisplay((prev) => !prev)}
+              >
+                <Edit />
+              </Button>
+            </div>
 
-            <p className="text-muted-foreground text-sm">{user.email}</p>
+            {display && (
+              <InputGroup className="my-2">
+                <InputGroupInput
+                  placeholder="Enter New Name..."
+                  ref={nameRef}
+                />
+                <InputGroupAddon align="inline-end">
+                  <InputGroupButton
+                    variant="secondary"
+                    onClick={() => handleChangeName()}
+                  >
+                    Change
+                  </InputGroupButton>
+                </InputGroupAddon>
+              </InputGroup>
+            )}
+            <div className="flex items-center">
+              <p className="text-muted-foreground text-sm col-span-2">
+                {user.email}
+              </p>
+              <Button variant={"link"} onClick={() => handleChangeEmail()}>
+                {" "}
+                <Edit />
+              </Button>
+            </div>
 
             {/* 🔥 Better Badges */}
             <div className="flex flex-wrap gap-2 mt-3">
@@ -90,17 +176,24 @@ export default function ProfilePage() {
         </div>
 
         {/* meta */}
-        <div className="text-sm text-muted-foreground space-y-1">
-          <p>ID: {account.id}</p>
+        <div className="text-sm text-muted-foreground space-y-2">
           <p>Employee ID: {account.employeeId}</p>
+          <Button
+            variant={"outline"}
+            className="flex gap-2 items-center "
+            onClick={() => handleChangePassword()}
+          >
+            <Key />
+            Change Password
+          </Button>
         </div>
       </div>
       <Separator />
 
       {/* ================= CONTENT ================= */}
-      <div className="grid lg:grid-cols-[1fr_280px] gap-10">
+      <div className="flex flex-col-reverse md:flex-row gap-4">
         {/* LEFT */}
-        <div className="space-y-10">
+        <div className="space-y-10 flex-2 ">
           <Section title="Personal Information">
             <Grid>
               <Field label="Full Name" value={user.name} />
@@ -152,13 +245,11 @@ export default function ProfilePage() {
         </div>
 
         {/* RIGHT SIDE */}
-        <div className="space-y-6">
-          <div className="sticky top-6">
+        <div className="space-y-6 flex-1">
+          <div className="sticky top-6 space-y-4">
             <Card className="border-muted/60">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
-                  Account Status
-                </CardTitle>
+                <CardTitle>Account Status</CardTitle>
               </CardHeader>
 
               <CardContent className="space-y-5">
@@ -211,6 +302,7 @@ export default function ProfilePage() {
                 )}
               </CardContent>
             </Card>
+            <NotificationBox />
           </div>
         </div>
       </div>
@@ -256,32 +348,6 @@ function Field({
   );
 }
 
-function Status({ label, value }: { label: string; value: boolean }) {
-  return (
-    <div className="flex justify-between text-sm">
-      <span className="text-muted-foreground">{label}</span>
-      <span>{value ? "Yes" : "No"}</span>
-    </div>
-  );
-}
-
-function Meta({
-  label,
-  value,
-  danger,
-}: {
-  label: string;
-  value: string;
-  danger?: boolean;
-}) {
-  return (
-    <div className="flex justify-between text-sm">
-      <span className="text-muted-foreground">{label}</span>
-      <span className={danger ? "text-destructive" : ""}>{value}</span>
-    </div>
-  );
-}
-
 /* ================= HELPERS ================= */
 
 function formatDate(date?: Date) {
@@ -301,11 +367,13 @@ function StatusRow({
   negative,
   variant,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   label: string;
   value: boolean;
   positive: string;
   negative: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   variant: any;
 }) {
   return (
@@ -326,6 +394,7 @@ function MetaRow({
   value,
   danger,
 }: {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon: any;
   label: string;
   value: string;
