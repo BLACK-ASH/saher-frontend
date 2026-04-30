@@ -9,7 +9,7 @@ import { NoData } from "@/components/no-data";
 
 const UserTable = () => {
   const { data: users = [], isLoading } = useQuery({
-    queryKey: ["users"],
+    queryKey: ["user", "list"],
     queryFn: async () => {
       const res = await apiFetch<UserT[]>(`/api/admin/users?fields=isActive`);
       return res.data;
