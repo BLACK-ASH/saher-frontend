@@ -31,7 +31,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import NotificationBox from "./notification";
 
 export default function ProfilePage() {
-  const { data: account, isLoading } = useProfile({});
+  const { data: account, isLoading } = useProfile();
   const queryClient = useQueryClient();
   const [display, setDisplay] = useState(false);
   const nameRef = useRef<HTMLInputElement>(null);
