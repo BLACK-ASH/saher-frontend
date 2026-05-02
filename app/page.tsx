@@ -18,10 +18,6 @@ export default function Page() {
             Here’s what’s happening today
           </p>
         </div>
-
-        <div className="text-sm text-muted-foreground">
-          {new Date().toLocaleDateString()}
-        </div>
       </div>
 
       {/* ===== ATTENDANCE (PRIMARY) ===== */}

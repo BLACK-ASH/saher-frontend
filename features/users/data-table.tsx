@@ -30,7 +30,7 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown, Loader } from "lucide-react";
+import { ChevronDown, RotateCw } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -41,6 +41,7 @@ interface DataTableProps<TData, TValue> {
 export function UserDataTable<TData, TValue>({
   columns,
   data,
+  refetch,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -66,18 +67,19 @@ export function UserDataTable<TData, TValue>({
   return (
     <div className="p-4">
       <h1>Manage Users</h1>
-      <div className="flex items-center gap-2 mx-4 py-4 ">
+      <div className="flex flex-wrap items-center gap-2 md:mx-4 py-4 justify-between">
         <Input
           placeholder="Filter name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
-          className="max-w-sm"
+          className="max-w-md"
         />
         <div className="flex gap-2">
-          <Button>
-            <Loader />
+          <Button className="flex gap-2" onClick={() => refetch()}>
+            <RotateCw />
+            <span className="">Refresh</span>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
