@@ -1,0 +1,27 @@
+name: Deploy Dev
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    concurrency:
+      group: deploy-dev
+      cancel-in-progress: true
+
+    steps:
+      - name: Dev Deploy app
+        run: |
+          cd /home/deploy/saher/saher-frontend
+          git fetch origin
+          git reset --hard origin/main
+
+          cd /home/deploy/saher
+          docker compose up -d --build frontend
+      - name: Verify containers
+        run: docker ps

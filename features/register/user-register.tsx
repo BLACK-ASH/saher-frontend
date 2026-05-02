@@ -15,10 +15,12 @@ import FormPreview from "./form-preview";
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function RegisterUserForm() {
   const [step, setStep] = useState(1);
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerFormSchema),
@@ -128,10 +130,10 @@ export default function RegisterUserForm() {
       });
 
       if (!response.success) return toast.error(response.message);
-
       toast.success(response.message);
       setStep(1);
       form.reset();
+      queryClient.invalidateQueries({ queryKey: ["user", "list"] });
       router.refresh();
     } catch (err) {
       console.error(err);
