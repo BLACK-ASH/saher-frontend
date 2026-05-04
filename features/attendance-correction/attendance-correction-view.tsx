@@ -179,8 +179,8 @@ const AttendanceCorrectionView = ({
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button className="flex gap-2" variant="ghost">
-          <Edit2 /> Details
+        <Button className="flex gap-2 cursor-pointer" variant="ghost">
+          Details
         </Button>
       </SheetTrigger>
       <SheetContent className="p-2 min-w-1/2 overflow-scroll">

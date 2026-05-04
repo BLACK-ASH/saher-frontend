@@ -26,7 +26,7 @@ export const useAdminAttendanceCorrection = ({
   });
 
   const allCorrections = useQuery({
-    queryKey: ["attendance", "correction"],
+    queryKey: ["attendance", "correction", limit, page, sort],
     queryFn: () => getAttendanceCorrectionAll({ page, limit, sort }),
   });
 

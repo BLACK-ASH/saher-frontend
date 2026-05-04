@@ -77,7 +77,7 @@ export const getAttendanceCorrectionAll = async ({
       method: "GET",
     },
   );
-  return res.data;
+  return { data: res.data, meta: res.meta };
 };
 
 export const submitAttendanceCorrection = async (

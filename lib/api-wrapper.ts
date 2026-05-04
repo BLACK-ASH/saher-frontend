@@ -1,16 +1,24 @@
 import { toast } from "sonner";
 
+export type MetaResponse = {
+  page: number;
+  limit: number;
+  count: number;
+  total: number;
+};
+
 type ApiResponse<T> = {
   success: boolean;
   message: string;
   data: T;
+  meta?: MetaResponse;
 };
 
 export async function apiFetch<T>(
   url: string,
-  options: RequestInit = {}
+  options: RequestInit = {},
 ): Promise<ApiResponse<T>> {
- const isFormData = options.body instanceof FormData;
+  const isFormData = options.body instanceof FormData;
   const res = await fetch(url, {
     ...options,
     credentials: "include",
@@ -24,22 +32,22 @@ export async function apiFetch<T>(
 
   try {
     json = await res.json();
-  } catch(error) {
-    console.error(error)
-    toast.error("Invalid Server response")
+  } catch (error) {
+    console.error(error);
+    toast.error("Invalid Server response");
     throw new Error("Invalid server response");
   }
 
   // ❗ HTTP-level error
   if (!res.ok) {
-    console.error(json)
-    toast.error(json.message)
+    console.error(json);
+    toast.error(json.message);
     throw new Error(json?.message || `HTTP ${res.status}`);
   }
 
   // ❗ Backend-level error
   if (!json.success) {
-    toast.error(json.message)
+    toast.error(json.message);
     throw new Error(json.message);
   }
 

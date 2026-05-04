@@ -6,9 +6,6 @@ import {
   SortingState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
   VisibilityState,
   useReactTable,
 } from "@tanstack/react-table";
@@ -30,79 +27,111 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, RotateCw } from "lucide-react";
+import { useAdminAttendanceCorrection } from "@/hooks/use-admin-attendance-correction";
+import { DefaultLoader } from "@/components/loading";
+import { NoData } from "@/components/no-data";
+import { CardTitle } from "@/components/ui/card";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
-  data: TData[];
 }
 
 export function AttendanceCorrectionDataTable<TData, TValue>({
   columns,
-  data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [pagination, setPagination] = useState({
+    pageIndex: 0,
+    pageSize: 12,
+  });
+  const { allCorrections } = useAdminAttendanceCorrection({
+    page: pagination.pageIndex + 1,
+    limit: pagination.pageSize,
+  });
+  const {
+    data: corrections,
+    isLoading,
+    refetch,
+    isRefetching,
+  } = allCorrections;
 
   const table = useReactTable({
-    data,
+    data: corrections?.data as TData[],
     columns,
-    onSortingChange: setSorting,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
+
     state: {
+      pagination,
       sorting,
       columnFilters,
-      columnVisibility,
     },
+
+    onPaginationChange: setPagination,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+
+    manualPagination: true,
+    manualSorting: true,
+    manualFiltering: true,
+    pageCount: corrections?.meta?.total,
+    getCoreRowModel: getCoreRowModel(),
   });
+
+  if (isLoading) return <DefaultLoader className="col-span-2" />;
+  if (!corrections)
+    return (
+      <NoData
+        className="col-span-2"
+        title="No Chart To Show."
+        description="Please Refresh or You Don't Have Any Attendance To Show This Chart."
+      />
+    );
 
   return (
     <div>
       <div className="overflow-hidden">
-        <div className="flex items-center gap-2 mx-4 py-4">
-          <Input
-            placeholder="Filter name..."
-            value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
-            }
-            className="max-w-sm"
-          />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="ml-auto flex items-center gap-2"
-              >
-                Columns <ChevronDown />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {table
-                .getAllColumns()
-                .filter((column) => column.getCanHide())
-                .map((column) => {
-                  return (
-                    <DropdownMenuCheckboxItem
-                      key={column.id}
-                      className="capitalize"
-                      checked={column.getIsVisible()}
-                      onCheckedChange={(value) =>
-                        column.toggleVisibility(!!value)
-                      }
-                    >
-                      {column.id}
-                    </DropdownMenuCheckboxItem>
-                  );
-                })}
-            </DropdownMenuContent>
-          </DropdownMenu>
+        <div className="flex flex-wrap justify-between items-center gap-2 mx-4 py-4">
+          <CardTitle>Attendance Corrections</CardTitle>
+          <div className="flex gap-2">
+            <Button
+              className="flex gap-2"
+              disabled={isRefetching}
+              onClick={() => refetch()}
+            >
+              <RotateCw className={isRefetching ? "animate-spin cursor-not-allowed" : ""} />
+              <span className="">Refresh</span>
+            </Button>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="ml-auto flex items-center gap-2"
+                >
+                  Columns <ChevronDown />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                {table
+                  .getAllColumns()
+                  .filter((column) => column.getCanHide())
+                  .map((column) => {
+                    return (
+                      <DropdownMenuCheckboxItem
+                        key={column.id}
+                        className="capitalize"
+                        checked={column.getIsVisible()}
+                        onCheckedChange={(value) =>
+                          column.toggleVisibility(!!value)
+                        }
+                      >
+                        {column.id}
+                      </DropdownMenuCheckboxItem>
+                    );
+                  })}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         </div>
         <Table>
           <TableHeader>
