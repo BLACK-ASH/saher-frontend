@@ -20,8 +20,12 @@ jobs:
           cd /home/deploy/saher/saher-frontend
           git fetch origin
           git reset --hard origin/main
-
+      
           cd /home/deploy/saher
-          docker compose -p saher-dev-local up -d frontend
+          docker compose -p saher-dev-local up -d --build --force-recreate frontend
+
+      - name: Cleanup old images
+        run: docker image prune -a
+
       - name: Verify containers
         run: docker ps
