@@ -2,11 +2,8 @@ import type { Metadata } from "next";
 import { Capriola, Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/app-sidebar";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./provider";
-import { SiteHeader } from "@/components/sidebar/sidebar-header";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -33,14 +30,10 @@ export default function RootLayout({
       <body className={`${capirola} ${geistMono.variable} antialiased`}>
         <Providers>
           <TooltipProvider>
-            <SidebarProvider>
-              <AppSidebar />
-              <main className="w-full h-full">
-                <SiteHeader />
-                {children}
-                <Toaster />
-              </main>
-            </SidebarProvider>
+            <main className="w-full h-full">
+              {children}
+              <Toaster />
+            </main>
           </TooltipProvider>
         </Providers>
       </body>
