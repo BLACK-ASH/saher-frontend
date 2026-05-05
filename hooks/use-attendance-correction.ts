@@ -13,12 +13,12 @@ type useAttendanceCorrectionProps = {
 export const useAttendanceCorrection = ({
   sort = "desc",
   page = 1,
-  limit = 10,
+  limit = 7,
 }: useAttendanceCorrectionProps = {}) => {
   const queryClient = useQueryClient();
 
   const allCorrections = useQuery({
-    queryKey: ["attendance", "correction"],
+    queryKey: ["attendance", "correction", limit, page, sort],
     queryFn: () => getAttendanceCorrection({ sort, page, limit }),
   });
 

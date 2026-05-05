@@ -42,7 +42,7 @@ export const getAttendanceById = async (id: string) => {
 export const getAttendance = async ({
   sort = "desc",
   page = 1,
-  limit = 10,
+  limit = 7,
 }: DefaultProps) => {
   const res = await apiFetch<AttendanceResponse[]>(
     `/api/attendance/user/me?sort=${sort}&page=${page}&limit=${limit}`,
@@ -50,7 +50,7 @@ export const getAttendance = async ({
       method: "GET",
     },
   );
-  return res.data;
+  return { data: res.data, meta: res.meta };
 };
 
 export const checkInApi = async () => {

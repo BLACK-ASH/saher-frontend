@@ -2,7 +2,13 @@
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardAction,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -14,6 +20,9 @@ import {
 import { useAttendance } from "@/hooks/use-attendance";
 import { formatDate, formatHours, formatTime } from "@/lib/utils/time";
 import { AttendanceCorrectionSide } from "./attendance-correction";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft, ArrowRight, RotateCw } from "lucide-react";
+import { useState } from "react";
 
 export const attendanceStatusVariant: Record<
   "half-day" | "present" | "absent",
@@ -28,8 +37,9 @@ export function AttendanceTable({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { attendancesList: data } = useAttendance({ sort: "desc" });
-  const { data: attendances, isLoading } = data;
+  const [page, setPage] = useState<number>(1);
+  const { attendancesList: data } = useAttendance({ sort: "desc", page });
+  const { data: attendances, isLoading, refetch, isRefetching } = data;
 
   if (isLoading) return <DefaultLoader className={className} />;
   if (!attendances)
@@ -45,6 +55,29 @@ export function AttendanceTable({
     <Card className={className}>
       <CardHeader>
         <CardTitle>Recent Attendances</CardTitle>
+        <CardAction className="flex gap-2">
+          <Button
+            variant={"outline"}
+            disabled={isRefetching}
+            onClick={() => refetch()}
+          >
+            <RotateCw />
+          </Button>
+          <Button
+            variant={"outline"}
+            disabled={1 > page - 1}
+            onClick={() => setPage((prev) => prev - 1)}
+          >
+            <ArrowLeft />
+          </Button>
+          <Button
+            disabled={attendances?.meta?.total! < page + 1}
+            onClick={() => setPage((prev) => prev + 1)}
+            variant={"outline"}
+          >
+            <ArrowRight />
+          </Button>
+        </CardAction>
       </CardHeader>
       <CardContent>
         <Table>
@@ -59,7 +92,7 @@ export function AttendanceTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {attendances?.map((attendance) => (
+            {attendances?.data.map((attendance) => (
               <TableRow className="cursor-pointer" key={attendance.id}>
                 <TableCell className="font-medium">
                   {formatDate(attendance.date)}

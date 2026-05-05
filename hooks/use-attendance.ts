@@ -21,7 +21,7 @@ type UseAttendanceProps = {
 };
 
 export const useAttendance = ({
-  limit = 10,
+  limit = 7,
   sort = "asc",
   page = 1,
 }: UseAttendanceProps = {}) => {
