@@ -21,7 +21,7 @@ jobs:
           git fetch origin
           git reset --hard origin/main
       
-          cd /home/deploy/saher
+          cd /home/saher/Test/
           docker compose -p saher-dev-local up -d --build --force-recreate frontend
 
       - name: Cleanup old images
