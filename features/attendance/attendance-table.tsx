@@ -88,6 +88,7 @@ export function AttendanceTable({
               <TableHead className="text-center">Check Out</TableHead>
               <TableHead className="text-center">Work Hours</TableHead>
               <TableHead className="text-center">Status</TableHead>
+              <TableHead className="text-center">Late</TableHead>
               <TableHead className="text-center">Action</TableHead>
             </TableRow>
           </TableHeader>
@@ -109,6 +110,15 @@ export function AttendanceTable({
                 <TableCell className="font-medium">
                   <Badge variant={attendanceStatusVariant[attendance.status]}>
                     {attendance.status}
+                  </Badge>
+                </TableCell>
+                <TableCell className="font-medium text-center">
+                  <Badge
+                    variant={
+                      attendance.isLate ? "outline-warn" : "outline-success"
+                    }
+                  >
+                    {attendance.isLate ? "late" : "on time"}
                   </Badge>
                 </TableCell>
                 <TableCell className="text-center">

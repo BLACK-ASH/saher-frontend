@@ -28,7 +28,7 @@ export const useAttendance = ({
   const queryClient = useQueryClient();
 
   const today = useQuery({
-    queryKey: ["attendance", "today"],
+    queryKey: ["attendance", "today", "me"],
     queryFn: getAttendanceStatus,
   });
 

@@ -53,6 +53,20 @@ export const getAttendance = async ({
   return { data: res.data, meta: res.meta };
 };
 
+export const getTodayAttendance = async ({
+  sort = "desc",
+  page = 1,
+  limit = 15,
+}: DefaultProps) => {
+  const res = await apiFetch<AttendanceResponse[]>(
+    `/api/attendance/today?sort=${sort}&page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+    },
+  );
+  return { data: res.data, meta: res.meta };
+};
+
 export const checkInApi = async () => {
   const res = await apiFetch<AttendanceResponse>("/api/attendance/check-in", {
     method: "POST",
