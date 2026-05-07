@@ -24,8 +24,11 @@ import { useState } from "react";
 import { attendanceStatusVariant } from "../attendance/attendance-table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { imageUrl } from "@/lib/image-url";
-import { useQuery } from "@tanstack/react-query";
-import { getTodayAttendance } from "@/services/attendance.api";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  AttendanceResponse,
+  getTodayAttendance,
+} from "@/services/attendance.api";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,6 +40,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Select } from "@/components/ui/select";
 import { toast } from "sonner";
+import z from "zod";
+import { changeAttendanceStatus } from "@/services/attendance-correction.api";
+
+const markSchema = z.object({
+  id: z.string(),
+  status: z.enum(["present", "absent", "half-day"]),
+  isLate: z.boolean(),
+  date: z.string(),
+});
+
+export type MarKAttendance = z.infer<typeof markSchema>;
 
 export function TodayAttendanceTable({
   className,
@@ -45,13 +59,17 @@ export function TodayAttendanceTable({
   const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(1);
   const [sort, setSort] = useState<"asc" | "desc">("desc");
+  const queryClient = useQueryClient();
 
   const { data, isLoading, isRefetching, refetch } = useQuery({
     queryKey: ["attendance", "today", "list", limit, page, sort],
     queryFn: () => getTodayAttendance({ limit, page, sort }),
   });
+
+  const attendances = data?.data;
+
   if (isLoading) return <DefaultLoader className={className} />;
-  if (!data?.data)
+  if (!attendances || attendances.length === 0)
     return (
       <NoData
         className={className}
@@ -61,10 +79,21 @@ export function TodayAttendanceTable({
     );
 
   const submitHandler = async (
+    attendance: AttendanceResponse,
     status: "absent" | "present" | "half-day",
     late: boolean,
   ) => {
-    toast.info("Feature Coming Soon...");
+    const payload = markSchema.parse({
+      date: attendance.date,
+      id: attendance.user.id,
+      status,
+      isLate: late,
+    });
+    const res = await changeAttendanceStatus(payload);
+    queryClient.invalidateQueries({
+      queryKey: ["attendance", "today", "list"],
+    });
+    toast.info(res.message);
   };
 
   return (
@@ -111,7 +140,7 @@ export function TodayAttendanceTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {data?.data.map((attendance) => (
+            {attendances?.map((attendance) => (
               <TableRow className="cursor-pointer" key={attendance.id}>
                 <TableCell>
                   <div className="flex gap-3 items-center max-w-sm">
@@ -172,17 +201,35 @@ export function TodayAttendanceTable({
                       <DropdownMenuGroup>
                         <DropdownMenuLabel>Status</DropdownMenuLabel>
                         <DropdownMenuItem
-                          onClick={() => submitHandler("absent", false)}
+                          onClick={() =>
+                            submitHandler(
+                              attendance,
+                              "absent",
+                              attendance.isLate,
+                            )
+                          }
                         >
                           Absent
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => submitHandler("half-day", false)}
+                          onClick={() =>
+                            submitHandler(
+                              attendance,
+                              "half-day",
+                              attendance.isLate,
+                            )
+                          }
                         >
                           Half Day
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => submitHandler("present", false)}
+                          onClick={() =>
+                            submitHandler(
+                              attendance,
+                              "present",
+                              attendance.isLate,
+                            )
+                          }
                         >
                           Present
                         </DropdownMenuItem>
@@ -191,12 +238,16 @@ export function TodayAttendanceTable({
                       <DropdownMenuGroup>
                         <DropdownMenuLabel>Late</DropdownMenuLabel>
                         <DropdownMenuItem
-                          onClick={() => submitHandler("present", true)}
+                          onClick={() =>
+                            submitHandler(attendance, attendance.status, true)
+                          }
                         >
                           Late
                         </DropdownMenuItem>
                         <DropdownMenuItem
-                          onClick={() => submitHandler("present", false)}
+                          onClick={() =>
+                            submitHandler(attendance, attendance.status, false)
+                          }
                         >
                           On Time
                         </DropdownMenuItem>

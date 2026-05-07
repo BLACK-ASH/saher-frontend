@@ -21,8 +21,15 @@ import { useAttendance } from "@/hooks/use-attendance";
 import { formatDate, formatHours, formatTime } from "@/lib/utils/time";
 import { AttendanceCorrectionSide } from "./attendance-correction";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, RotateCw } from "lucide-react";
+import { ArrowLeft, ArrowRight, Download, RotateCw } from "lucide-react";
 import { useState } from "react";
+import Link from "next/link";
+import { toast } from "sonner";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export const attendanceStatusVariant: Record<
   "half-day" | "present" | "absent",
@@ -55,7 +62,22 @@ export function AttendanceTable({
     <Card className={className}>
       <CardHeader>
         <CardTitle>Recent Attendances</CardTitle>
-        <CardAction className="flex gap-2">
+        <CardAction className="flex gap-2 items-center">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant={"outline"} asChild>
+                <Link
+                  href={"/api/attendance/export/week"}
+                  onClick={() => toast.info("PDF will be downloaded shortly.")}
+                >
+                  <Download className="size-4" />
+                </Link>
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Download This Week Attendance.</p>
+            </TooltipContent>
+          </Tooltip>
           <Button
             variant={"outline"}
             disabled={isRefetching}
