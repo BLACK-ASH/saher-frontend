@@ -1,4 +1,3 @@
-
 # --------- 1. Base ---------
 
 FROM node:24-alpine AS base
@@ -12,7 +11,8 @@ ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 FROM base AS deps
 
 COPY package.json pnpm-lock.yaml ./
-RUN pnpm install --frozen-lockfile
+# Add this flag to your install command
+RUN pnpm install --frozen-lockfile --dangerously-allow-all-builds
 
 # --------- 3. Build ---------
 
@@ -41,7 +41,7 @@ COPY --from=builder /app/pnpm-lock.yaml ./
 
 # Install only production deps
 
-RUN pnpm install --prod --frozen-lockfile
+RUN pnpm install --prod --frozen-lockfile --dangerously-allow-all-builds
 
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
