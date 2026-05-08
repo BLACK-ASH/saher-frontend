@@ -14,6 +14,7 @@ import {
   ClockAlert,
   ClockCheck,
   Home,
+  LayoutDashboard,
   Mailbox,
   User,
   UserPlus,
@@ -51,6 +52,11 @@ const userRoutes = [
 ];
 
 const adminRoutes = [
+  {
+    label: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
+  },
   {
     label: "Register",
     url: "/register",

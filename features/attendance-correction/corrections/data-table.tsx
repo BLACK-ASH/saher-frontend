@@ -95,11 +95,16 @@ export function AttendanceCorrectionDataTable<TData, TValue>({
           <CardTitle>Attendance Corrections</CardTitle>
           <div className="flex gap-2">
             <Button
+              variant={"outline"}
               className="flex gap-2"
               disabled={isRefetching}
               onClick={() => refetch()}
             >
-              <RotateCw className={isRefetching ? "animate-spin cursor-not-allowed" : ""} />
+              <RotateCw
+                className={
+                  isRefetching ? "animate-spin cursor-not-allowed" : ""
+                }
+              />
               <span className="">Refresh</span>
             </Button>
             <DropdownMenu>

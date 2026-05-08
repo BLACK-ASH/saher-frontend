@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/field";
 import Image from "next/image";
 import { useState } from "react";
-import { Eye, EyeOffIcon } from "lucide-react";
+import { ArrowLeft, Eye, EyeOffIcon } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -122,8 +122,16 @@ export function ForgotPasswordForm({
               </Field>
             )}
           />
-          <Field className="mt-4">
-            <Button type="submit">Request Forgot Password</Button>
+          <Field className="mt-4 flex">
+            <Link href={"/login"}>
+              <Button className="flex" type="button" variant={"outline"}>
+                <ArrowLeft />
+                Go Back
+              </Button>
+            </Link>
+            <Button className="" type="submit">
+              Request Forgot Password
+            </Button>
           </Field>
         </form>
       </CardContent>

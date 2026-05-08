@@ -4,6 +4,7 @@ import z from "zod";
 import { dateField, userField } from "@/lib/common-zod-schema";
 import { AttendanceCorrectionViewType } from "@/features/attendance-correction/attendance-correction-view";
 import { AttendanceCorrectionCreateT } from "@/features/attendance/attendance-correction";
+import { MarKAttendance } from "@/features/dashboard/today-attendance-table";
 
 const record = z.object({
   inTime: dateField,
@@ -52,7 +53,7 @@ export const getAttendanceCorrection = async ({
       method: "GET",
     },
   );
-  return res.data;
+  return { data: res.data, meta: res.meta };
 };
 
 export const getAttendanceCorrectionById = async (correctionId: string) => {
@@ -95,6 +96,15 @@ export const submitAttendanceCorrection = async (
   return res;
 };
 
+export const changeAttendanceStatus = async (payload: MarKAttendance) => {
+  const res = await apiFetch<AttendanceCorrectionResponse>(`/api/attendance/`, {
+    method: "PATCH",
+    body: JSON.stringify(payload),
+  });
+  if (!res.success) toast.error(res.message);
+
+  return res;
+};
 export const handleAttendanceCorrection = async ({
   id,
   payload,

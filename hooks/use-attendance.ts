@@ -21,14 +21,14 @@ type UseAttendanceProps = {
 };
 
 export const useAttendance = ({
-  limit = 10,
+  limit = 7,
   sort = "asc",
   page = 1,
 }: UseAttendanceProps = {}) => {
   const queryClient = useQueryClient();
 
   const today = useQuery({
-    queryKey: ["attendance", "today"],
+    queryKey: ["attendance", "today", "me"],
     queryFn: getAttendanceStatus,
   });
 
