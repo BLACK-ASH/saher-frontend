@@ -17,11 +17,11 @@ jobs:
     steps:
       - name: Dev Deploy app
         run: |
-          cd /home/deploy/saher/saher-frontend
+          cd /home/saher/Test/saher-frontend
           git fetch origin
           git reset --hard origin/main
       
-          cd /home/deploy/saher
+          cd /home/saher/Test/
           docker compose -p saher-dev-local up -d --build --force-recreate frontend
 
       - name: Cleanup old images
