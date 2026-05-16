@@ -4,15 +4,13 @@ FROM node:24-alpine AS base
 WORKDIR /app
 RUN corepack enable
 
-ARG NEXT_PUBLIC_API_URL
-ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
 # --------- 2. Dependencies ---------
 
 FROM base AS deps
 
-COPY package.json pnpm-lock.yaml ./
-# Add this flag to your install command
-RUN pnpm install --frozen-lockfile --dangerously-allow-all-builds
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+
+RUN pnpm ci
 
 # --------- 3. Build ---------
 
@@ -20,8 +18,6 @@ FROM base AS builder
 
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
-ARG NEXT_PUBLIC_SERVER_URL
-ENV NEXT_PUBLIC_SERVER_URL=$NEXT_PUBLIC_SERVER_URL
 
 RUN pnpm build
 
@@ -38,10 +34,11 @@ RUN apk add --no-cache curl
 
 COPY --from=builder /app/package.json ./
 COPY --from=builder /app/pnpm-lock.yaml ./
+COPY --from=builder /app/pnpm-workspace.yaml ./
 
 # Install only production deps
 
-RUN pnpm install --prod --frozen-lockfile --dangerously-allow-all-builds
+RUN pnpm ci
 
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
