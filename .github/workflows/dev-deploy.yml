@@ -22,7 +22,7 @@ jobs:
           git reset --hard origin/main
       
           cd /home/saher/Test/
-          docker compose up -d --build --force-recreate frontend
+          docker compose up -d --build frontend
 
       - name: Cleanup old images
         run: docker image prune -a

@@ -1,3 +1,4 @@
+"use client";
 import {
   Sidebar,
   SidebarContent,
@@ -5,6 +6,7 @@ import {
   SidebarHeader,
   SidebarMenu,
   SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import Image from "next/image";
 import { NavUser } from "./sidebar/nav-user";
@@ -12,8 +14,9 @@ import { NavItem } from "./sidebar/nav-list";
 import Link from "next/link";
 
 export function AppSidebar() {
+  const { state } = useSidebar();
   return (
-    <Sidebar>
+    <Sidebar collapsible="icon">
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem className="flex items-center">
@@ -23,11 +26,13 @@ export function AppSidebar() {
               width={35}
               height={35}
             />
-            <Link href={"/"}>
-              <span className="text-primary text-xl font-bold text-pretty">
-                SAHER
-              </span>
-            </Link>
+            {state !== "collapsed" && (
+              <Link href={"/"}>
+                <span className="text-primary text-xl font-bold text-pretty">
+                  SAHER
+                </span>
+              </Link>
+            )}
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

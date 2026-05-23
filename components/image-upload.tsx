@@ -1,124 +1,187 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";
+import ReactCrop, {
+  centerCrop,
+  makeAspectCrop,
+  Crop,
+  PixelCrop,
+} from "react-image-crop";
+import "react-image-crop/dist/ReactCrop.css";
+
+import Image from "next/image";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { Button } from "@/components/ui/button";
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
-import Image from "next/image";
-import { AspectRatio } from "./ui/aspect-ratio";
 
-const fileSample = {
-  id: "69c61d7869eaed473fefb9f8",
-  fileName: "09e608b9-4c53-4d80-b57b-d946e141f59b.webp",
-  url: "http://localhost:4000/uploads/images/09e608b9-4c53-4d80-b57b-d946e141f59b.webp",
-  size: 74620,
-  width: 1024,
-  height: 576,
-  mimetype: "image/webp",
-};
-
-export type ImageFile = typeof fileSample;
-
-type ImageUploadProps = {
-  onUploadSuccess?: (data: { alt: string; file: ImageFile }) => void;
+type Props = {
   altName: string;
   url?: string;
+  onUploadSuccess?: (data: any) => void;
 };
 
-export default function ImageUpload({
-  onUploadSuccess,
-  altName = "upload",
-  url,
-}: ImageUploadProps) {
-  const [preview, setPreview] = useState<string | null>(url ? url : null);
+export default function ImageUpload({ altName, url, onUploadSuccess }: Props) {
+  const [preview, setPreview] = useState<string | null>(url ?? null);
+  const [imageSrc, setImageSrc] = useState<string | null>(null);
+  const [isCropping, setIsCropping] = useState(false);
+
+  const [crop, setCrop] = useState<Crop>();
+  const [completedCrop, setCompletedCrop] = useState<PixelCrop | null>(null);
+
+  const imgRef = useRef<HTMLImageElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const uploadImage = async (file: File) => {
-    try {
-      setLoading(true);
-      setError("");
-
-      const formData = new FormData();
-      formData.append("image", file);
-      formData.append("name", altName.trim() ?? "user-upload");
-
-      const response = await apiFetch(`/api/upload/image`, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (response?.success) {
-        onUploadSuccess?.({
-          alt: altName,
-          //@ts-expect-error - it will be present
-          file: response?.file,
-        });
-        toast("Image Upload Successful.");
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Upload failed");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    const file = acceptedFiles[0];
+  // 📦 DROP
+  const onDrop = useCallback((files: File[]) => {
+    const file = files[0];
     if (!file) return;
 
-    const previewUrl = URL.createObjectURL(file);
-    setPreview(previewUrl);
-
-    uploadImage(file);
+    const url = URL.createObjectURL(file);
+    setImageSrc(url);
+    setIsCropping(true);
   }, []);
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+  const { getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: { "image/*": [] },
     multiple: false,
   });
 
+  // 🖼️ INIT CROP
+  function onImageLoad(e: React.SyntheticEvent<HTMLImageElement>) {
+    const { width, height } = e.currentTarget;
+
+    const crop = centerCrop(
+      makeAspectCrop({ unit: "%", width: 50 }, 1, width, height),
+      width,
+      height,
+    );
+
+    setCrop(crop);
+  }
+
+  // ✂️ CROP
+  function handleCrop() {
+    if (!completedCrop || !imgRef.current || !canvasRef.current) return;
+
+    const image = imgRef.current;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const scaleX = image.naturalWidth / image.width;
+    const scaleY = image.naturalHeight / image.height;
+
+    canvas.width = completedCrop.width;
+    canvas.height = completedCrop.height;
+
+    ctx.drawImage(
+      image,
+      completedCrop.x * scaleX,
+      completedCrop.y * scaleY,
+      completedCrop.width * scaleX,
+      completedCrop.height * scaleY,
+      0,
+      0,
+      completedCrop.width,
+      completedCrop.height,
+    );
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) return;
+
+      const file = new File([blob], "cropped.png", {
+        type: "image/png",
+      });
+
+      const previewUrl = URL.createObjectURL(file);
+      setPreview(previewUrl);
+      setIsCropping(false);
+
+      // 🚀 Upload
+      try {
+        setLoading(true);
+
+        const formData = new FormData();
+        formData.append("image", file);
+        formData.append("name", altName);
+
+        const res = await apiFetch("/api/upload/image", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (res?.success) {
+          // @ts-expect-error - this will be present
+          onUploadSuccess?.(res.file);
+          toast("Uploaded");
+        }
+      } finally {
+        setLoading(false);
+      }
+    });
+  }
+
   return (
-    <div className="w-full max-w-md mx-auto space-y-4">
+    <div className="space-y-4">
       {/* DROPZONE */}
       <div
         {...getRootProps()}
-        className={`relative border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition
-        ${isDragActive ? "border-purple-500 bg-purple-50" : "border-gray-300"}
-        hover:border-purple-400`}
+        className="border-2 border-dashed p-6 rounded-xl text-center cursor-pointer"
       >
         <input {...getInputProps()} />
 
-        {/* Loading Overlay */}
-        {loading && (
-          <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-2xl">
-            <div className="animate-spin h-8 w-8 border-4 border-purple-500 border-t-transparent rounded-full"></div>
-          </div>
-        )}
-
         {preview ? (
-          <div className="flex flex-col items-center gap-4">
-            <AspectRatio ratio={1 / 1}>
-              <Image src={preview} alt={"preview"} fill />
-            </AspectRatio>
-            <p className="text-sm text-gray-500">
-              {loading ? "Uploading..." : "Click or drag to replace"}
-            </p>
-          </div>
+          <AspectRatio ratio={1}>
+            <Image src={preview} alt="preview" fill />
+          </AspectRatio>
         ) : (
-          <div>
-            <p className="text-lg font-medium">
-              {isDragActive ? "Drop the image here..." : "Drag & drop image"}
-            </p>
-            <p className="text-sm text-gray-500 mt-1">
-              or click to select file
-            </p>
-          </div>
+          <p>Upload Image</p>
         )}
       </div>
-      {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+
+      {/* CROPPER */}
+      <Dialog open={isCropping} onOpenChange={setIsCropping}>
+        <DialogContent className="m-2 min-w-full md:min-w-1/2 max-w-xl">
+          {imageSrc && (
+            <>
+              <ReactCrop
+                crop={crop}
+                onChange={(_, c) => setCrop(c)}
+                onComplete={(c) => setCompletedCrop(c)}
+                keepSelection
+              >
+                <img
+                  ref={imgRef}
+                  src={imageSrc}
+                  alt="crop"
+                  onLoad={onImageLoad}
+                  className="max-h-100 object-contain"
+                />
+              </ReactCrop>
+
+              <div className="flex justify-end gap-2 mt-4">
+                <Button
+                  variant={"destructive"}
+                  onClick={() => setIsCropping(false)}
+                >
+                  Cancel
+                </Button>
+                <Button variant={"default"} onClick={handleCrop}>
+                  Crop & Upload
+                </Button>
+              </div>
+
+              <canvas ref={canvasRef} className="hidden" />
+            </>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
