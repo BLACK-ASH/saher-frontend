@@ -23,8 +23,8 @@ const UploadDocument = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
                   url={form.getValues("uploaded.aadhar")}
                   altName={"aadhar" + form.getValues("user.name")}
                   onUploadSuccess={(data) => {
-                    form.setValue("account.aadhar", data.file.id)
-                    form.setValue("uploaded.aadhar", data.file.url)
+                    form.setValue("account.aadhar", data.id)
+                    form.setValue("uploaded.aadhar", data.url)
                   }}
                 />
                 {fieldState.invalid && (
@@ -43,8 +43,8 @@ const UploadDocument = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
                   url={form.getValues("uploaded.pan")}
                   altName={"pan" + form.getValues("user.name")}
                   onUploadSuccess={(data) => {
-                    form.setValue("account.pan", data.file.id)
-                    form.setValue("uploaded.pan", data.file.url)
+                    form.setValue("account.pan", data.id)
+                    form.setValue("uploaded.pan", data.url)
                   }}
                 />
                 {fieldState.invalid && (
@@ -63,8 +63,8 @@ const UploadDocument = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
                   url={form.getValues("uploaded.resume")}
                   altName={"resume" + form.getValues("user.name")}
                   onUploadSuccess={(data) => {
-                    form.setValue("account.resume", data.file.id)
-                    form.setValue("uploaded.resume", data.file.url)
+                    form.setValue("account.resume", data.id)
+                    form.setValue("uploaded.resume", data.url)
                   }}
                 />
                 {fieldState.invalid && (
