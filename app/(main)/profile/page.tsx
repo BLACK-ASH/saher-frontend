@@ -1,6 +1,6 @@
 import ProfilePage from "@/features/profile/profile";
 
-const page = () => {
+const page = async () => {
   return (
     <section className="p-3 container mx-auto h-[calc(100vh-100px)]">
       <ProfilePage />

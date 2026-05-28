@@ -2,8 +2,8 @@ import AttendanceStatus from "@/features/attendance/attendance-status";
 import { Button } from "@/components/ui/button";
 
 import { User, FileText } from "lucide-react";
-import NotificationBox from "@/features/profile/notification";
 import Link from "next/link";
+import NotificationBox from "@/features/notification/notification-box";
 
 export default function Page() {
   return (

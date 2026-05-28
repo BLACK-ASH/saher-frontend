@@ -7,7 +7,6 @@ import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 import { UserCheck, MailCheck, Ban, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import NotificationBox from "./notification";
 import ProfileInfo from "./profile-info";
 import EmailVerification from "./email-verification";
 
@@ -138,7 +137,6 @@ export default function ProfilePage() {
                 )}
               </CardContent>
             </Card>
-            <NotificationBox />
           </div>
         </div>
       </div>
