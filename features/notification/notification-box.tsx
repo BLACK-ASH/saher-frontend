@@ -60,6 +60,7 @@ const NotificationBox = () => {
                   type={notification.type}
                   title={notification.title}
                   description={notification.description}
+                  action={notification.action}
                 />
               );
             })}
@@ -107,7 +108,7 @@ const Notification = ({
         <AlertAction>
           {action.type === "download" && (
             <Button asChild>
-              <Link href={action.url}>{action.label}</Link>
+              <a href={action.url}>{action.label}</a>
             </Button>
           )}
 
