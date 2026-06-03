@@ -77,7 +77,11 @@ export function UserDataTable<TData, TValue>({
           className="max-w-md"
         />
         <div className="flex gap-2">
-          <Button className="flex gap-2" onClick={() => refetch()}>
+          <Button
+            variant={"outline"}
+            className="flex gap-2"
+            onClick={() => refetch()}
+          >
             <RotateCw />
             <span className="">Refresh</span>
           </Button>

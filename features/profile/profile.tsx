@@ -9,6 +9,7 @@ import { UserCheck, MailCheck, Ban, Trash2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProfileInfo from "./profile-info";
 import EmailVerification from "./email-verification";
+import { NotificationCard } from "../notification/register-push";
 
 export default function ProfilePage() {
   const { data: account, isLoading } = useProfile();
@@ -20,6 +21,7 @@ export default function ProfilePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-10 space-y-10">
+      <NotificationCard dbEnabled={account.user.pushNotificationsEnabled} />
       {!account.user.emailVerified && <EmailVerification />}
       {/* ================= HEADER ================= */}
       <ProfileInfo account={account} />

@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { CalendarIcon, Download } from "lucide-react";
+import { Download } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -54,7 +54,7 @@ export function AttendanceReportDropdown() {
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
             <Download className="size-4" />
-            Export Report
+            <p className="hidden md:block">Export Report</p>
           </Button>
         </DropdownMenuTrigger>
 

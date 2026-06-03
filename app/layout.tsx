@@ -1,17 +1,21 @@
 import type { Metadata } from "next";
-import { Capriola, Geist_Mono, Inter } from "next/font/google";
+import { Geist, Inter } from "next/font/google";
 import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./provider";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
-
-const capirola = Capriola({ weight: "400" });
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Configure with explicit standard-to-bold weight ranges
+const inter = Inter({
   subsets: ["latin"],
+  variable: "--font-sans",
+  weight: ["400", "500", "600", "700"], // Forcefully drop weights 100-300
+});
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-geist",
+  weight: ["400", "500", "600", "700"], // Avoids Vercel's default thin-rendering bug
 });
 
 export const metadata: Metadata = {
@@ -26,8 +30,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={inter.variable} suppressHydrationWarning>
-      <body className={`${capirola} ${geistMono.variable} antialiased`}>
+    <html
+      lang="en"
+      className={`${geist.variable} ${inter.variable}`}
+      suppressHydrationWarning
+    >
+      <body className={`font-sans font-normal antialiased`}>
         <Providers>
           <TooltipProvider>
             <main className="w-full h-full">

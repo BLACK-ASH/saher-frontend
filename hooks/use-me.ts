@@ -10,6 +10,7 @@ export type UserT = {
     src: string;
   };
   readonly role: "user" | "manager" | "admin";
+  readonly pushNotificationsEnabled: boolean;
   readonly email: string;
   readonly id: string;
   readonly emailVerified: boolean;
