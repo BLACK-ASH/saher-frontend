@@ -6,6 +6,6 @@ export const useNotification = () => {
     queryKey: ["notification"],
     queryFn: getNotification,
     retry: 3,
-    staleTime: 1000 * 60,
+    staleTime: 1000 * 30,
   });
 };

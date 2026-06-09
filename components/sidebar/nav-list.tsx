@@ -10,6 +10,7 @@ import {
 } from "../ui/sidebar";
 import { useMe } from "@/hooks/use-me";
 import {
+  Calendar,
   CalendarCheck,
   ClockAlert,
   ClockCheck,
@@ -37,6 +38,11 @@ const userRoutes = [
     label: "Attendance",
     url: "/attendance",
     icon: ClockCheck,
+  },
+  {
+    label: "Calendar",
+    url: "/calendar",
+    icon: Calendar,
   },
   // NOTE: Add This In Future Update
   // {
