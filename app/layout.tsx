@@ -4,6 +4,7 @@ import "./globals.css";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import Providers from "./provider";
+import { ThemeProvider } from "@/components/theme-provider";
 
 // Configure with explicit standard-to-bold weight ranges
 const inter = Inter({
@@ -37,12 +38,19 @@ export default function RootLayout({
     >
       <body className={`font-sans font-normal antialiased`}>
         <Providers>
-          <TooltipProvider>
-            <main className="w-full h-full">
-              {children}
-              <Toaster />
-            </main>
-          </TooltipProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <TooltipProvider>
+              <main className="w-full h-full">
+                {children}
+                <Toaster />
+              </main>
+            </TooltipProvider>
+          </ThemeProvider>
         </Providers>
       </body>
     </html>
