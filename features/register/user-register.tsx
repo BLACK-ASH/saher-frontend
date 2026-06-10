@@ -56,6 +56,7 @@ export default function RegisterUserForm() {
         ifcs: "",
       },
     },
+    mode: "onTouched",
   });
 
   // 🔥 Step-wise validation fields
@@ -146,10 +147,13 @@ export default function RegisterUserForm() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const onError = (err: any) => {
     console.error("ERRORS:", err);
+    if (err instanceof Error) {
+      toast.error(err.message);
+    }
   };
 
   return (
-    <div className="w-full p-4 md:w-2/3 mx-auto space-y-6">
+    <div className="w-full p-4 md:w-3/4 lg:w-2/3 mx-auto space-y-6">
       <form
         onSubmit={form.handleSubmit(onSubmit, onError)}
         className="space-y-6 w-full"

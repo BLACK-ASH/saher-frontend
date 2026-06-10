@@ -8,8 +8,8 @@ const objectId = z
 
 // Bank Schema
 export const bankDetailSchema = z.object({
-  accountHolderName: z.string("Account Holder Name Is Required"),
-  bankName: z.string("Bank Name Is Required."),
+  accountHolderName: z.string().min(2, "Account Holder Name Is Required"),
+  bankName: z.string().min(2, "Bank Name Is Required."),
   accountNumber: z.string("Bank Account Number Is Required."),
   ifcs: z
     .string("Bank IFCS Code Is Required.")
@@ -18,7 +18,7 @@ export const bankDetailSchema = z.object({
       message: "Invalid IFCS Code According To Indian Banks.",
     })
     .transform((val) => val.toUpperCase()),
-  branch: z.string("Branch Name Is Required."),
+  branch: z.string().min(2, "Branch Name Is Required."),
   mobileNumber: z
     .string()
     .trim()
@@ -34,13 +34,10 @@ export const userSchema = z
     name: z
       .string("Username Is Required.")
       .trim()
-      .regex(/^[a-zA-Z0-9_-]+$/, {
-        message: "Only alphanumeric, underscore and hyphen allowed",
-      })
-      .min(2),
+      .min(2, "User Name Is Required"),
     displayName: z.string().optional(),
     image: objectId,
-    role: z.enum(["user", "manager", "admin"]),
+    role: z.enum(["user", "manager", "admin", "intern"]),
     email: z.email("Email Address Is Required."),
   })
   .refine((data) => /^[a-zA-Z]/.test(data.name) && !/[_-]$/.test(data.name), {
@@ -52,8 +49,8 @@ export const userSchema = z
 const accountSchema = z
   .object({
     gender: z.enum(["male", "female", "other"]),
-    dateOfBirth: z.string("Date Of Birth Is Required."),
-    dateOfJoining: z.string("Date Of Joining Is Required."),
+    dateOfBirth: z.string().min(2, "Date Of Birth Is Required."),
+    dateOfJoining: z.string().min(2, "Date Of Joining Is Required."),
     phoneNumber: z
       .string()
       .trim()
@@ -67,16 +64,16 @@ const accountSchema = z
         message: "Invalid Indian Mobile Number",
       })
       .optional(),
-    employeeId: z.string("Employee Id Is Required."),
-    department: z.string("Department Is Required."),
-    designation: z.string("Designation Is Required."),
+    employeeId: z.string().min(2, "Date Of Birth Is Required."),
+    department: z.string().min(2, "Date Of Birth Is Required."),
+    designation: z.string().min(2, "Date Of Birth Is Required."),
     employeeType: z.enum(
       ["full-time", "part-time", "volunteer"],
       "Employee Type Is Required.",
     ),
     employeeShift: z.enum(["shift-1", "shift-2"]).optional(),
-    salaryStructure: z.string("Salary Structure Is Required."),
-    address: z.string("Address Is Required."),
+    salaryStructure: z.string().min(2, "Date Of Birth Is Required."),
+    address: z.string().min(2, "Date Of Birth Is Required."),
     bank: z.string().optional(),
     aadhar: objectId,
     pan: objectId,

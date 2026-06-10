@@ -39,21 +39,16 @@ const userRoutes = [
     url: "/attendance",
     icon: ClockCheck,
   },
-  {
-    label: "Calendar",
-    url: "/calendar",
-    icon: Calendar,
-  },
+  // {
+  //   label: "Calendar",
+  //   url: "/calendar",
+  //   icon: Calendar,
+  // },
   // NOTE: Add This In Future Update
   // {
   //   label: "Mails",
   //   url: "/mail",
   //   icon: Mailbox
-  // },
-  // {
-  //   label: "Workshop",
-  //   url: "/workshop",
-  //   icon: CalendarCheck
   // },
 ];
 
@@ -68,6 +63,11 @@ const adminRoutes = [
     url: "/register",
     icon: UserPlus,
   },
+  // {
+  //   label: "Program",
+  //   url: "/program",
+  //   icon: CalendarCheck,
+  // },
   {
     label: "Users",
     url: "/users",

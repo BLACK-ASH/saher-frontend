@@ -26,7 +26,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { apiFetch } from "@/lib/api-wrapper";
 import Link from "next/link";
 
-export function ForgotPasswordForm({
+export function ChangePasswordForm({
   className,
   ...props
 }: React.ComponentProps<"div">) {

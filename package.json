@@ -17,11 +17,19 @@
     "@fullcalendar/react": "^6.1.20",
     "@fullcalendar/timegrid": "^6.1.20",
     "@hookform/resolvers": "^5.2.2",
+    "@tailwindcss/typography": "^0.5.20",
     "@tanstack/react-query": "^5.94.5",
     "@tanstack/react-table": "^8.21.3",
+    "@tiptap/core": "^3.26.0",
+    "@tiptap/extension-text-style": "^3.26.0",
+    "@tiptap/pm": "^3.26.0",
+    "@tiptap/react": "^3.26.0",
+    "@tiptap/starter-kit": "^3.26.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "jwt-decode": "^4.0.0",
+    "lodash.throttle": "^4.1.1",
     "lucide-react": "^0.575.0",
     "next": "16.1.6",
     "next-themes": "^0.4.6",
@@ -40,6 +48,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/lodash.throttle": "^4.1.9",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
@@ -47,6 +56,6 @@
     "eslint-config-next": "16.1.6",
     "react-hook-form": "^7.71.1",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5.9.3"
   }
 }

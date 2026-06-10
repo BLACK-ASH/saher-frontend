@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { toast } from "sonner";
 import { registerPush } from "@/hooks/use-push-notification";
 import { apiFetch } from "@/lib/api-wrapper";
+import { useQueryClient } from "@tanstack/react-query";
 
 type Props = {
   dbEnabled: boolean;
@@ -15,6 +16,7 @@ type Props = {
 export function NotificationCard({ dbEnabled }: Props) {
   const [loading, setLoading] = useState(false);
   const [realEnabled, setRealEnabled] = useState<boolean | null>(null);
+  const queryClient = useQueryClient();
 
   // check real browser state
   useEffect(() => {
@@ -45,6 +47,7 @@ export function NotificationCard({ dbEnabled }: Props) {
         method: "POST",
       });
 
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       setRealEnabled(true);
       toast.success("Notifications enabled");
     } catch {
@@ -69,6 +72,7 @@ export function NotificationCard({ dbEnabled }: Props) {
         method: "POST",
       });
 
+      queryClient.invalidateQueries({ queryKey: ["user"] });
       setRealEnabled(false);
       toast.success("Notifications disabled");
     } catch {

@@ -31,7 +31,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
 
-const roles = ["user", "manager", "admin"] as const;
+const roles = ["user", "manager", "admin", "intern"] as const;
 const genders = ["male", "female", "other"] as const;
 
 const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
