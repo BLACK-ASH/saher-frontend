@@ -98,6 +98,7 @@ const AttendanceCorrectionView = ({
 }) => {
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const { handleCorrection } = useAdminAttendanceCorrection({});
+  const [visible, setVisible] = useState(false);
 
   const form = useForm<AttendanceCorrectionViewType>({
     resolver: zodResolver(attendanceCorrectionHandleSchema),
@@ -163,6 +164,7 @@ const AttendanceCorrectionView = ({
       },
     };
 
+    setVisible(false);
     handleCorrection.mutate(
       { id: correction.id, payload },
       {
@@ -177,7 +179,7 @@ const AttendanceCorrectionView = ({
   };
 
   return (
-    <Sheet>
+    <Sheet open={visible} onOpenChange={setVisible}>
       <SheetTrigger asChild>
         <Button className="flex gap-2 cursor-pointer" variant="ghost">
           Details

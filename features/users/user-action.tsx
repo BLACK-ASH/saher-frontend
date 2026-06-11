@@ -13,9 +13,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { ArchiveRestore, MoreHorizontal, Trash } from "lucide-react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export default function UserActions({ user }: { user: UserT }) {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const deleteUser = useMutation({
     mutationFn: async () => {
@@ -67,6 +69,9 @@ export default function UserActions({ user }: { user: UserT }) {
           Copy Email ID
         </DropdownMenuItem>
 
+        <DropdownMenuItem onClick={() => router.push("/users/" + user.id)}>
+          Profile
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         {user.isActive ? (
           <DropdownMenuItem

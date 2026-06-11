@@ -15,7 +15,7 @@ import { useAttendanceCorrection } from "@/hooks/use-attendance-correction";
 import { formatDate, timeToDateString, transformTime } from "@/lib/utils/time";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { toast } from "sonner";
@@ -42,8 +42,8 @@ export const attendanceCorrectionCreateSchema = z.object({
     .max(100, "Max Limit Is 100 Characters."),
   proof: z.string().optional(),
   upload: z.string().optional(),
-  inTime: z.string(),
-  outTime: z.string(),
+  inTime: z.string().min(2, "Check In Time Is Required"),
+  outTime: z.string().min(2, "Check Out Time Is Required"),
 });
 
 export type AttendanceCorrectionCreateT = z.infer<
@@ -55,6 +55,7 @@ export function AttendanceCorrectionSide({
 }: {
   attendance: AttendanceResponse;
 }) {
+  const [visible, setVisible] = useState(false);
   const { submitCorrection } = useAttendanceCorrection();
 
   const form = useForm<AttendanceCorrectionCreateT>({
@@ -89,6 +90,8 @@ export function AttendanceCorrectionSide({
       proof: data.proof,
     };
 
+    setVisible(false);
+
     submitCorrection.mutate(payload, {
       onSuccess: (res) => {
         toast.success(res.message);
@@ -100,7 +103,7 @@ export function AttendanceCorrectionSide({
   };
 
   return (
-    <Sheet>
+    <Sheet open={visible} onOpenChange={setVisible}>
       <SheetTrigger asChild>
         <Button variant="ghost">
           <Edit2 />
