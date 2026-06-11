@@ -15,13 +15,15 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { DateSelectArg } from "@fullcalendar/core/index.js";
+import AddEventDialog from "./add-event-dialog";
 
 export default function EventsCalendar() {
   const calendarRef = useRef<FullCalendar>(null);
+  const [selectedVisible, setSelectedVisible] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<DateSelectArg>();
 
   const goPrev = () => {
     calendarRef.current?.getApi().prev();
@@ -113,6 +115,7 @@ export default function EventsCalendar() {
       </CardHeader>
       <CardContent>
         <FullCalendar
+          timeZone="local"
           contentHeight="auto"
           expandRows={true}
           ref={calendarRef}
@@ -135,6 +138,8 @@ export default function EventsCalendar() {
           dayMaxEvents={true}
           // 🆕 CREATE EVENT (click + drag selection)
           select={(info) => {
+            setSelectedVisible(true);
+            setSelectedItem(info);
             console.log({
               startDate: info.start,
               startDateStr: info.startStr,
@@ -174,17 +179,14 @@ export default function EventsCalendar() {
               id: info.event.extendedProps.details.id,
             });
           }}
-          // weekends={weekendsVisible}
-          /*initialEvents={INITIAL_EVENTS} // alternatively, use the `events` setting to fetch from a feed
-          select={handleDateSelect}
-          eventContent={renderEventContent} // custom render function
-          eventsSet={handleEvents} // called after events are initialized/added/changed/removed*/
-          /* you can update a remote database when these fire:
-          eventAdd={function(){}}
-          eventChange={function(){}}
-          eventRemove={function(){}}
-          */
         />
+        {selectedItem && (
+          <AddEventDialog
+            data={selectedItem}
+            visible={selectedVisible}
+            setVisible={setSelectedVisible}
+          />
+        )}
       </CardContent>
     </Card>
   );
