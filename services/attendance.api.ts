@@ -67,6 +67,22 @@ export const getTodayAttendance = async ({
   return { data: res.data, meta: res.meta };
 };
 
+export const getRangeAttendance = async ({
+  sort = "desc",
+  page = 1,
+  limit = 15,
+  startDate,
+  endDate,
+}: DefaultProps & { startDate: string; endDate: string }) => {
+  const res = await apiFetch<AttendanceResponse[]>(
+    `/api/attendance/retrieve-all?startDate=${startDate}&endDate=${endDate}&$sort=${sort}&page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+    },
+  );
+  return { data: res.data, meta: res.meta };
+};
+
 export const checkInApi = async () => {
   const res = await apiFetch<AttendanceResponse>("/api/attendance/check-in", {
     method: "POST",
