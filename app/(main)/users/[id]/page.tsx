@@ -2,20 +2,30 @@
 
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { AccountT } from "@/hooks/use-profile";
 import { apiFetch } from "@/lib/api-wrapper";
 import { formatDate } from "@fullcalendar/core/index.js";
 import { useQuery } from "@tanstack/react-query";
 import { MailCheck, ShieldCheck, UserCheck, UserX } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 import { useParams } from "next/navigation";
+
 function page() {
   const params = useParams<{ id: string }>();
   const { id } = params;
 
   const data = useQuery({
-    queryKey: ["user", "profile", "me"],
+    queryKey: ["user", "profile", id],
     queryFn: async () => {
       const res = await apiFetch<AccountT>(`/api/admin/user/${id}`);
       return res.data;
@@ -145,6 +155,59 @@ function page() {
             <Field label="Mobile" value={bank.mobileNumber} />
           </Grid>
         </Section>
+
+        <Section title="Documents">
+          <Accordion type="single" collapsible defaultValue="aadhar">
+            <AccordionItem value="aadhar">
+              <AccordionTrigger>Aadhar Card</AccordionTrigger>
+              <AccordionContent>
+                <Image
+                  src={account.aadhar.src}
+                  alt={account.aadhar.alt}
+                  height={400}
+                  width={400}
+                />
+                <Link href={account.aadhar.src} download={account.aadhar.alt}>
+                  <Button className="my-4" variant={"outline"}>
+                    Download
+                  </Button>
+                </Link>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="pan">
+              <AccordionTrigger>Pan Card</AccordionTrigger>
+              <AccordionContent>
+                <Image
+                  src={account.pan.src}
+                  alt={account.pan.alt}
+                  height={400}
+                  width={400}
+                />
+                <Link href={account.pan.src} download={account.pan.alt}>
+                  <Button className="my-4" variant={"outline"}>
+                    Download
+                  </Button>
+                </Link>
+              </AccordionContent>
+            </AccordionItem>
+            <AccordionItem value="resume">
+              <AccordionTrigger>Resume</AccordionTrigger>
+              <AccordionContent>
+                <Image
+                  src={account.resume.src}
+                  alt={account.resume.alt}
+                  height={400}
+                  width={400}
+                />
+                <Link href={account.resume.src} download={account.resume.alt}>
+                  <Button className="my-4" variant={"outline"}>
+                    Download
+                  </Button>
+                </Link>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        </Section>
       </div>
     </section>
   );
@@ -185,57 +248,4 @@ function Field({
     </div>
   );
 }
-function StatusRow({
-  icon: Icon,
-  label,
-  value,
-  positive,
-  negative,
-  variant,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: any;
-  label: string;
-  value: boolean;
-  positive: string;
-  negative: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  variant: any;
-}) {
-  return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center gap-3">
-        <Icon className="h-4 w-4 text-muted-foreground" />
-        <span className="text-sm">{label}</span>
-      </div>
-
-      <Badge variant={variant}>{value ? positive : negative}</Badge>
-    </div>
-  );
-}
-
-function MetaRow({
-  icon: Icon,
-  label,
-  value,
-  danger,
-}: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon: any;
-  label: string;
-  value: string;
-  danger?: boolean;
-}) {
-  return (
-    <div className="flex items-center justify-between text-sm">
-      <div className="flex items-center gap-3 text-muted-foreground">
-        <Icon className="h-4 w-4" />
-        <span>{label}</span>
-      </div>
-
-      <span className={danger ? "text-destructive" : ""}>{value}</span>
-    </div>
-  );
-}
-
 export default page;

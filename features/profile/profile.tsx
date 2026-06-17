@@ -10,6 +10,15 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProfileInfo from "./profile-info";
 import EmailVerification from "./email-verification";
 import { NotificationCard } from "../notification/register-push";
+import { Button } from "@/components/ui/button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function ProfilePage() {
   const { data: account, isLoading } = useProfile();
@@ -75,6 +84,59 @@ export default function ProfilePage() {
               <Field label="Branch" value={bank.branch} />
               <Field label="Mobile" value={bank.mobileNumber} />
             </Grid>
+          </Section>
+
+          <Section title="Documents">
+            <Accordion type="single" collapsible defaultValue="aadhar">
+              <AccordionItem value="aadhar">
+                <AccordionTrigger>Aadhar Card</AccordionTrigger>
+                <AccordionContent>
+                  <Image
+                    src={account.aadhar.src}
+                    alt={account.aadhar.alt}
+                    height={400}
+                    width={400}
+                  />
+                  <Link href={account.aadhar.src} download={account.aadhar.alt}>
+                    <Button className="my-4" variant={"outline"}>
+                      Download
+                    </Button>
+                  </Link>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="pan">
+                <AccordionTrigger>Pan Card</AccordionTrigger>
+                <AccordionContent>
+                  <Image
+                    src={account.pan.src}
+                    alt={account.pan.alt}
+                    height={400}
+                    width={400}
+                  />
+                  <Link href={account.pan.src} download={account.pan.alt}>
+                    <Button className="my-4" variant={"outline"}>
+                      Download
+                    </Button>
+                  </Link>
+                </AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="resume">
+                <AccordionTrigger>Resume</AccordionTrigger>
+                <AccordionContent>
+                  <Image
+                    src={account.resume.src}
+                    alt={account.resume.alt}
+                    height={400}
+                    width={400}
+                  />
+                  <Link href={account.resume.src} download={account.resume.alt}>
+                    <Button className="my-4" variant={"outline"}>
+                      Download
+                    </Button>
+                  </Link>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </Section>
         </div>
 

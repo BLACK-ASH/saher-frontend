@@ -27,6 +27,21 @@ export type AccountT = {
   readonly user: UserT;
   readonly bank: BankT;
   readonly employeeShift?: "shift-1" | "shift-2" | undefined;
+  readonly aadhar: {
+    id: string;
+    alt: string;
+    src: string;
+  };
+  readonly pan: {
+    id: string;
+    alt: string;
+    src: string;
+  };
+  readonly resume: {
+    id: string;
+    alt: string;
+    src: string;
+  };
 };
 
 export const useProfile = () => {
