@@ -4,7 +4,9 @@ import TiptapEditor from "@/components/tiptap/editor";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
+import { usePrograms } from "@/hooks/use-programs";
 import { useRef, useState } from "react";
+import { toast } from "sonner";
 
 const ProgramEditor = () => {
   const [description, setDescription] = useState<string>(
@@ -12,10 +14,12 @@ const ProgramEditor = () => {
   );
   const titleRef = useRef<HTMLTextAreaElement>(null);
 
+  const { add } = usePrograms();
+
   return (
     <div className="space-y-2 min-h-2/3">
       <Field>
-        <FieldLabel htmlFor="title">Display Name</FieldLabel>
+        <FieldLabel htmlFor="title">Title</FieldLabel>
         <Textarea
           id="title"
           placeholder="Enter Program Title..."
@@ -29,6 +33,14 @@ const ProgramEditor = () => {
       <Button
         onClick={() => {
           console.log({ title: titleRef.current?.value, description });
+          add.mutate(
+            { title: titleRef.current?.value as string, description },
+            {
+              onSuccess: (res) => {
+                toast.success(res.message);
+              },
+            },
+          );
         }}
       >
         Submit

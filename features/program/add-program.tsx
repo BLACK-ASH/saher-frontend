@@ -11,10 +11,13 @@ import {
 } from "@/components/ui/dialog";
 import ProgramEditor from "@/features/program/program-editor";
 import { Plus } from "lucide-react";
+import { useState } from "react";
 
 const AddProgram = () => {
+  const [visible, setVisible] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={visible} onOpenChange={setVisible}>
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"outline"}>
           <Plus />
