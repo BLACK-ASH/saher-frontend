@@ -21,7 +21,7 @@ const AddProgram = () => {
           Add Program
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-3/4 min-h-2/3">
+      <DialogContent className="min-w-3/4 ">
         <DialogHeader>
           <DialogTitle>Enter Details To Create A Program</DialogTitle>
           <DialogDescription>

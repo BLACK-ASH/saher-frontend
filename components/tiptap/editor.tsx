@@ -21,7 +21,7 @@ const TiptapEditor = ({ content, setContent }: Props) => {
   });
 
   return (
-    <div className="border w-full h-full rounded-lg m-2">
+    <div className="border w-full h-full rounded-lg">
       {/* HEADER */}
       <div className="sticky top-0 z-50 bg-background border-b">
         <MenuBar editor={editor} />
