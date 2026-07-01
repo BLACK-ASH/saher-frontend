@@ -30,11 +30,12 @@ import { Field, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
+import { htmlToPreview } from "@/lib/utils/html-preview";
 
 type Props = {};
 
 function ProgramView({}: Props) {
-  const { programs, update } = usePrograms();
+  const { programs, update, del } = usePrograms();
   const [open, setOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<ProgramsT | null>(
     null,
@@ -72,6 +73,7 @@ function ProgramView({}: Props) {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
+                  <DropdownMenuItem>View</DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       setSelectedProgram(program);
@@ -83,17 +85,29 @@ function ProgramView({}: Props) {
                   </DropdownMenuItem>
 
                   <DropdownMenuItem>Add Participant</DropdownMenuItem>
+                  <DropdownMenuItem
+                    className="text-destructive"
+                    onClick={() => {
+                      del.mutate(program.id, {
+                        onSuccess: (res) => {
+                          toast.success(res.message);
+                        },
+                      });
+                    }}
+                  >
+                    Delete
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardAction>
           </CardHeader>
 
-          <CardContent>{program.description}</CardContent>
+          <CardContent>{htmlToPreview(program.description, 100)}</CardContent>
         </Card>
       ))}
 
       <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent>
+        <DialogContent className="min-w-3/4">
           <DialogHeader>
             <DialogTitle>Update {selectedProgram?.title}</DialogTitle>
           </DialogHeader>
@@ -103,7 +117,7 @@ function ProgramView({}: Props) {
               <FieldLabel htmlFor="title">Title</FieldLabel>
               <Textarea
                 id="title"
-                value={selectedProgram?.title}
+                defaultValue={selectedProgram?.title}
                 placeholder="Enter Program Title..."
                 ref={titleRef}
               />
@@ -114,7 +128,6 @@ function ProgramView({}: Props) {
             </Field>
             <Button
               onClick={() => {
-                console.log({ title: titleRef.current?.value, description });
                 update.mutate(
                   {
                     id: selectedProgram?.id as string,
@@ -130,6 +143,7 @@ function ProgramView({}: Props) {
                     },
                   },
                 );
+                setOpen(false);
               }}
             >
               Submit

@@ -24,7 +24,7 @@ const AddProgram = () => {
           Add Program
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-w-3/4 ">
+      <DialogContent className="min-w-3/4">
         <DialogHeader>
           <DialogTitle>Enter Details To Create A Program</DialogTitle>
           <DialogDescription>
@@ -32,7 +32,7 @@ const AddProgram = () => {
             account and remove your data from our servers.
           </DialogDescription>
         </DialogHeader>
-        <ProgramEditor />
+        <ProgramEditor setVisble={setVisible} />
       </DialogContent>
     </Dialog>
   );

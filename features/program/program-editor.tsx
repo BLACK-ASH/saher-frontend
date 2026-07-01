@@ -5,10 +5,14 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { usePrograms } from "@/hooks/use-programs";
-import { useRef, useState } from "react";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { toast } from "sonner";
 
-const ProgramEditor = () => {
+const ProgramEditor = ({
+  setVisble,
+}: {
+  setVisble: Dispatch<SetStateAction<boolean>>;
+}) => {
   const [description, setDescription] = useState<string>(
     "Enter Program Description",
   );
@@ -32,7 +36,6 @@ const ProgramEditor = () => {
       </Field>
       <Button
         onClick={() => {
-          console.log({ title: titleRef.current?.value, description });
           add.mutate(
             { title: titleRef.current?.value as string, description },
             {
@@ -41,6 +44,7 @@ const ProgramEditor = () => {
               },
             },
           );
+          setVisble(false);
         }}
       >
         Submit

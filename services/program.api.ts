@@ -47,5 +47,5 @@ export const deleteProgram = async (id: string) => {
     method: "DELETE",
   });
   if (!res.success) toast.error(res.message);
-  return res.data;
+  return res;
 };
