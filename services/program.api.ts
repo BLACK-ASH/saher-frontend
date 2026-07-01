@@ -13,7 +13,7 @@ type UpdateProgramInput = {
   data: Omit<ProgramsT, "participants">;
 };
 
-export const getProgram = async () => {
+export const getPrograms = async () => {
   const res = await apiFetch<ProgramsT[]>("/api/events/programs", {
     method: "GET",
   });

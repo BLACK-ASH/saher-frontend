@@ -10,3 +10,5 @@ export const userField = z.object({
   role: z.enum(["user", "manager", "admin"]),
   image: z.object({ src: z.string() }),
 });
+
+export type DefaultUserT = z.infer<typeof userField>;

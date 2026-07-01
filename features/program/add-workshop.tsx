@@ -8,11 +8,11 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import ProgramEditor from "@/features/program/program-editor";
 import { Plus } from "lucide-react";
 import { useState } from "react";
+import WorkshopEditor from "./workshop-editor";
 
-const AddProgram = () => {
+const AddWorkshop = () => {
   const [visible, setVisible] = useState(false);
 
   return (
@@ -20,17 +20,17 @@ const AddProgram = () => {
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"outline"}>
           <Plus />
-          Add Program
+          Add Workshop
         </Button>
       </DialogTrigger>
       <DialogContent className="min-w-3/4">
         <DialogHeader>
-          <DialogTitle>Enter Details To Create A Program</DialogTitle>
+          <DialogTitle>Enter Details To Create A Workshop</DialogTitle>
         </DialogHeader>
-        <ProgramEditor setVisble={setVisible} />
+        <WorkshopEditor setVisble={setVisible} />
       </DialogContent>
     </Dialog>
   );
 };
 
-export default AddProgram;
+export default AddWorkshop;

@@ -1,7 +1,7 @@
 import {
   addProgram,
   deleteProgram,
-  getProgram,
+  getPrograms,
   updateProgram,
 } from "@/services/program.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -11,7 +11,7 @@ export const usePrograms = () => {
 
   const programs = useQuery({
     queryKey: ["programs"],
-    queryFn: getProgram,
+    queryFn: getPrograms,
   });
 
   const add = useMutation({
