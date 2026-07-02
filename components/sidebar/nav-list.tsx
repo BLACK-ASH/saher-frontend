@@ -44,12 +44,11 @@ const userRoutes = [
     url: "/calendar",
     icon: Calendar,
   },
-  // NOTE: Add This In Future Update
-  // {
-  //   label: "Mails",
-  //   url: "/mail",
-  //   icon: Mailbox
-  // },
+  {
+    label: "Mails",
+    url: "/mail",
+    icon: Mailbox,
+  },
 ];
 
 const adminRoutes = [

@@ -5,9 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { UserT } from "@/hooks/use-me";
 import { imageUrl } from "@/lib/image-url";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal, Trash } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import UserActions from "./user-action";
 
 // This type is used to define the shape of our data.
