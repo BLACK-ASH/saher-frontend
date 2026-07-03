@@ -1,20 +1,12 @@
-import { DateSelectArg } from "@fullcalendar/core/index.js";
-
-import type { Dispatch, SetStateAction } from "react";
+import { useEffect, type Dispatch, type SetStateAction } from "react";
 import {
   Dialog,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import z from "zod";
-type Props = {
-  data: DateSelectArg;
-  visible: boolean;
-  setVisible: Dispatch<SetStateAction<boolean>>;
-};
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import {
@@ -26,6 +18,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toLocalInput } from "@/lib/utils/time";
+import { CalendarSelection } from "./calendar";
+import { addDays, parseISO } from "date-fns";
+import { useCalendar } from "@/hooks/use-calendar";
+import { toast } from "sonner";
+
+type Props = {
+  data: CalendarSelection | null;
+  visible: boolean;
+  setVisible: Dispatch<SetStateAction<boolean>>;
+};
 
 const createEventSchema = z.object({
   title: z.string(),
@@ -35,24 +37,44 @@ const createEventSchema = z.object({
   description: z.string(),
 });
 
-const onEventSubmit = (data: z.infer<typeof createEventSchema>) => {
-  console.log(data);
-};
+export type EventPayload = z.infer<typeof createEventSchema>;
 
 function AddEventDialog({ data, visible, setVisible }: Props) {
-  console.log({
-    start: data.start,
-    end: data.end,
-    localStart: toLocalInput(data.start),
-    localEnd: toLocalInput(data.end),
-  });
-  const form = useForm<z.infer<typeof createEventSchema>>({
+  const { add } = useCalendar({});
+  const form = useForm<EventPayload>({
     resolver: zodResolver(createEventSchema),
-    defaultValues: {
+  });
+
+  useEffect(() => {
+    if (!data) return;
+
+    form.reset({
+      title: "",
+      type: "",
+      description: "",
       start: data.start,
       end: data.end,
-    },
-  });
+    });
+  }, [data, form]);
+
+  if (!data) return null;
+
+  const start = form.watch("start");
+  const end = form.watch("end");
+
+  const onEventSubmit = (data: EventPayload) => {
+    add.mutate(
+      { ...data, end: addDays(data.end, 1) },
+      {
+        onSuccess: (res) => {
+          toast.success(res.message);
+        },
+      },
+    );
+    form.reset();
+    setVisible(false);
+  };
+
   return (
     <Dialog open={visible} onOpenChange={setVisible}>
       <DialogContent className="min-w-1/2 ">
@@ -111,8 +133,8 @@ function AddEventDialog({ data, visible, setVisible }: Props) {
                   <Input
                     id="start"
                     type="datetime-local"
-                    value={toLocalInput(field.value)}
-                    onChange={(e) => field.onChange(new Date(e.target.value))}
+                    value={toLocalInput(start)}
+                    onChange={(e) => field.onChange(parseISO(e.target.value))}
                     aria-invalid={fieldState.invalid}
                   />
                   {fieldState.invalid && (
@@ -131,8 +153,8 @@ function AddEventDialog({ data, visible, setVisible }: Props) {
                   <Input
                     id="end"
                     type="datetime-local"
-                    value={toLocalInput(field.value)}
-                    onChange={(e) => field.onChange(new Date(e.target.value))}
+                    value={toLocalInput(end)}
+                    onChange={(e) => field.onChange(parseISO(e.target.value))}
                     aria-invalid={fieldState.invalid}
                   />
                   {fieldState.invalid && (

@@ -53,6 +53,11 @@ export async function apiFetch<T>(
 
   let json: ApiResponse<T>;
 
+  if (res.status === 204) {
+    // @ts-ignore
+    return null;
+  }
+
   try {
     json = await res.json();
   } catch {

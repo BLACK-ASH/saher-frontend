@@ -1,3 +1,4 @@
+import { EventPayload } from "@/features/calendar/add-event-dialog";
 import { apiFetch } from "@/lib/api-wrapper";
 
 type EventT = {
@@ -19,4 +20,33 @@ export const getCalendar = async (year: string, month: string) => {
     method: "GET",
   });
   return res.data;
+};
+
+export const createCalendarEvent = async (data: EventPayload) => {
+  const res = await apiFetch(`/api/calendar/event`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+  return res;
+};
+
+export const updateCalendarEvent = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: Partial<EventPayload>;
+}) => {
+  const res = await apiFetch(`/api/calendar/event/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+  return res;
+};
+
+export const deleteCalendarEvent = async (id: string) => {
+  const res = await apiFetch(`/api/calendar/event/${id}`, {
+    method: "DELETE",
+  });
+  return res;
 };
