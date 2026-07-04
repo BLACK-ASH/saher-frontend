@@ -5,6 +5,7 @@ import {
   Card,
   CardAction,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -31,11 +32,13 @@ import { toast } from "sonner";
 import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useWorkshops } from "@/hooks/use-workshops";
 import { WorkshopT } from "@/services/workshop.api";
+import { useSearchParams } from "next/navigation";
 
 type Props = {};
 
 function WorkshopView({}: Props) {
-  const { workshops, update, del } = useWorkshops();
+  const keyword = useSearchParams().get("keyword") || "";
+  const { workshops, update, del } = useWorkshops({ keyword });
   const [open, setOpen] = useState(false);
   const [selectedWorkshop, setSelectedWorkshop] = useState<WorkshopT | null>(
     null,
@@ -61,7 +64,7 @@ function WorkshopView({}: Props) {
         <Card key={workshop.id}>
           <CardHeader>
             <CardTitle>{workshop.title}</CardTitle>
-
+            <CardDescription>{workshop.programId.title}</CardDescription>
             <CardAction>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

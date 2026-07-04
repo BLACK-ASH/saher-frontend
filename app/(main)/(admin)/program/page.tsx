@@ -1,3 +1,4 @@
+import { SearchBox } from "@/components/search-box";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AddProgram from "@/features/program/add-program";
@@ -21,7 +22,11 @@ const page = () => {
         <TabsContent value="session">
           <div className="flex my-4">
             <div className="flex-1">
-              <Input className="w-1/2" />
+              <SearchBox
+                queryName="keyword"
+                placeholder="Search Session ..."
+                debounce={700}
+              />
             </div>
             <AddSession />
           </div>
@@ -30,7 +35,11 @@ const page = () => {
         <TabsContent value="workshop">
           <div className="flex my-4">
             <div className="flex-1">
-              <Input className="w-1/2" />
+              <SearchBox
+                queryName="keyword"
+                placeholder="Search Workshops ..."
+                debounce={700}
+              />
             </div>
             <AddWorkshop />
           </div>
@@ -39,7 +48,11 @@ const page = () => {
         <TabsContent value="program">
           <div className="flex my-4">
             <div className="flex-1">
-              <Input className="w-1/2" />
+              <SearchBox
+                queryName="keyword"
+                placeholder="Search Programs ..."
+                debounce={700}
+              />
             </div>
             <AddProgram />
           </div>

@@ -13,10 +13,23 @@ type UpdateProgramInput = {
   data: Omit<ProgramsT, "participants">;
 };
 
-export const getPrograms = async () => {
-  const res = await apiFetch<ProgramsT[]>("/api/events/programs", {
-    method: "GET",
-  });
+export type QueryProps = {
+  keyword?: string;
+  limit?: number;
+  page?: number;
+};
+
+export const getPrograms = async ({
+  keyword,
+  page = 1,
+  limit = 10,
+}: QueryProps) => {
+  const res = await apiFetch<ProgramsT[]>(
+    `/api/events/programs?keyword=${keyword}&page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+    },
+  );
   if (!res.success) toast.error(res.message);
   return res.data;
 };

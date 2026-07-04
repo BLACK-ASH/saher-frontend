@@ -18,7 +18,7 @@ const ProgramEditor = ({
   );
   const titleRef = useRef<HTMLTextAreaElement>(null);
 
-  const { add } = usePrograms();
+  const { add } = usePrograms({});
 
   return (
     <div className="space-y-2 min-h-2/3">

@@ -1,3 +1,4 @@
+import { QueryProps } from "@/services/program.api";
 import {
   addWorkshops,
   deleteWorkshops,
@@ -6,12 +7,14 @@ import {
 } from "@/services/workshop.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export const useWorkshops = () => {
+type Props = {} & QueryProps;
+
+export const useWorkshops = ({ keyword, page, limit }: Props) => {
   const queryClient = useQueryClient();
 
   const workshops = useQuery({
-    queryKey: ["workshops"],
-    queryFn: getWorkshops,
+    queryKey: ["workshops", keyword, page, limit],
+    queryFn: () => getWorkshops({ keyword, page, limit }),
   });
 
   const add = useMutation({

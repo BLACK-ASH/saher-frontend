@@ -31,11 +31,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { htmlToPreview } from "@/lib/utils/html-preview";
+import { useSearchParams } from "next/navigation";
 
 type Props = {};
 
 function ProgramView({}: Props) {
-  const { programs, update, del } = usePrograms();
+  const keyword = useSearchParams().get("keyword") || "";
+  const { programs, update, del } = usePrograms({ keyword });
   const [open, setOpen] = useState(false);
   const [selectedProgram, setSelectedProgram] = useState<ProgramsT | null>(
     null,

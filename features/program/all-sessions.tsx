@@ -5,6 +5,7 @@ import {
   Card,
   CardAction,
   CardContent,
+  CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -31,11 +32,13 @@ import { toast } from "sonner";
 import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useSessions } from "@/hooks/use-sessions";
 import { SessionT } from "@/services/session.api";
+import { useSearchParams } from "next/navigation";
 
 type Props = {};
 
 function SessionView({}: Props) {
-  const { sessions, update, del } = useSessions();
+  const keyword = useSearchParams().get("keyword") || "";
+  const { sessions, update, del } = useSessions({ keyword });
   const [open, setOpen] = useState(false);
   const [selectedSession, setSelectedSession] = useState<SessionT | null>(null);
   const [description, setDescription] = useState<string>("");
@@ -55,11 +58,14 @@ function SessionView({}: Props) {
 
   return (
     <section className="grid grid-cols-2 md:grid-cols-4 gap-2">
-      {data.map((workshop) => (
-        <Card key={workshop.id}>
+      {data.map((session) => (
+        <Card key={session.id}>
           <CardHeader>
-            <CardTitle>{workshop.title}</CardTitle>
-
+            <CardTitle>{session.title}</CardTitle>
+            <CardDescription>
+              {session.programId.title} -{" "}
+              {session.workshopId.title.slice(0, 20)}
+            </CardDescription>
             <CardAction>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -74,8 +80,8 @@ function SessionView({}: Props) {
                   <DropdownMenuItem>View</DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
-                      setSelectedSession(workshop);
-                      setDescription(workshop.description);
+                      setSelectedSession(session);
+                      setDescription(session.description);
                       setOpen(true);
                     }}
                   >
@@ -86,7 +92,7 @@ function SessionView({}: Props) {
                   <DropdownMenuItem
                     className="text-destructive"
                     onClick={() => {
-                      del.mutate(workshop.id, {
+                      del.mutate(session.id, {
                         onSuccess: (res) => {
                           toast.success(res.message);
                         },
@@ -100,7 +106,7 @@ function SessionView({}: Props) {
             </CardAction>
           </CardHeader>
 
-          <CardContent>{htmlToPreview(workshop.description, 100)}</CardContent>
+          <CardContent>{htmlToPreview(session.description, 100)}</CardContent>
         </Card>
       ))}
 

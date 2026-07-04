@@ -30,7 +30,7 @@ import { outBoxColumns } from "@/features/mail/outbox-colunm";
 
 /* ---------------- TYPES ---------------- */
 
-type MailUser = {
+export type MailUser = {
   id: string;
   name: string;
   email: string;
