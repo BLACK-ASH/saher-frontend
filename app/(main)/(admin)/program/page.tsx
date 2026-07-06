@@ -1,12 +1,13 @@
 import { SearchBox } from "@/components/search-box";
-import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import AddProgram from "@/features/program/add-program";
-import AddSession from "@/features/program/add-session";
-import AddWorkshop from "@/features/program/add-workshop";
-import ProgramView from "@/features/program/all-programs";
-import SessionView from "@/features/program/all-sessions";
-import WorkshopView from "@/features/program/all-workshops";
+import ParticipantView from "@/features/program/participant/all-participant";
+import ParticipantHeader from "@/features/program/participant/participant-header";
+import ProgramView from "@/features/program/program/all-programs";
+import ProgramHeader from "@/features/program/program/program-header";
+import AddSession from "@/features/program/session/add-session";
+import SessionView from "@/features/program/session/all-sessions";
+import AddWorkshop from "@/features/program/workshop/add-workshop";
+import WorkshopView from "@/features/program/workshop/all-workshops";
 
 const page = () => {
   return (
@@ -18,7 +19,10 @@ const page = () => {
           <TabsTrigger value="workshop">Workshop</TabsTrigger>
           <TabsTrigger value="session">Session</TabsTrigger>
         </TabsList>
-        <TabsContent value="participant">This is Participant tab</TabsContent>
+        <TabsContent value="participant">
+          <ParticipantHeader />
+          <ParticipantView />
+        </TabsContent>
         <TabsContent value="session">
           <div className="flex my-4">
             <div className="flex-1">
@@ -46,16 +50,7 @@ const page = () => {
           <WorkshopView />
         </TabsContent>
         <TabsContent value="program">
-          <div className="flex my-4">
-            <div className="flex-1">
-              <SearchBox
-                queryName="keyword"
-                placeholder="Search Programs ..."
-                debounce={700}
-              />
-            </div>
-            <AddProgram />
-          </div>
+          <ProgramHeader />
           <ProgramView />
         </TabsContent>
       </Tabs>

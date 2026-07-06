@@ -1,17 +1,19 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
+import { ParticipantT } from "./participant.api";
 
 export type ProgramsT = {
   id: string;
   title: string;
   description: string;
-  participants?: string[] | undefined;
 };
 
 type UpdateProgramInput = {
   id: string;
-  data: Omit<ProgramsT, "participants">;
+  data: ProgramsT;
 };
+
+export type SingleParticipantT = ProgramsT & { participants: ParticipantT[] };
 
 export type QueryProps = {
   keyword?: string;
@@ -30,6 +32,14 @@ export const getPrograms = async ({
       method: "GET",
     },
   );
+  if (!res.success) toast.error(res.message);
+  return res.data;
+};
+
+export const getSingleProgram = async (id: string) => {
+  const res = await apiFetch<SingleParticipantT>(`/api/events/programs/${id}`, {
+    method: "GET",
+  });
   if (!res.success) toast.error(res.message);
   return res.data;
 };
@@ -59,6 +69,38 @@ export const deleteProgram = async (id: string) => {
   const res = await apiFetch(`/api/events/programs/${id}`, {
     method: "DELETE",
   });
+  if (!res.success) toast.error(res.message);
+  return res;
+};
+
+export const addParticipantsInProgram = async ({
+  id,
+  participants,
+}: {
+  id: string;
+  participants: string[];
+}) => {
+  const res = await apiFetch("/api/events/programs/participants/" + id, {
+    method: "POST",
+    body: JSON.stringify(participants),
+  });
+  if (!res.success) toast.error(res.message);
+  return res;
+};
+
+export const removeParticipantFromProgram = async ({
+  programId,
+  participantId,
+}: {
+  programId: string;
+  participantId: string;
+}) => {
+  const res = await apiFetch(
+    `/api/events/programs/participants/${programId}/${participantId}`,
+    {
+      method: "DELETE",
+    },
+  );
   if (!res.success) toast.error(res.message);
   return res;
 };

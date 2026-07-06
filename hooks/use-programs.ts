@@ -1,20 +1,34 @@
 import {
+  addParticipantsInProgram,
   addProgram,
   deleteProgram,
   getPrograms,
+  getSingleProgram,
   QueryProps,
+  removeParticipantFromProgram,
   updateProgram,
 } from "@/services/program.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-type Props = {} & QueryProps;
+type Props = { id?: string } & QueryProps;
 
-export const usePrograms = ({ keyword = "", limit = 10, page = 1 }: Props) => {
+export const usePrograms = ({
+  id,
+  keyword = "",
+  limit = 10,
+  page = 1,
+}: Props) => {
   const queryClient = useQueryClient();
 
   const programs = useQuery({
     queryKey: ["programs", keyword, page, limit],
     queryFn: () => getPrograms({ keyword, page, limit }),
+  });
+
+  const program = useQuery({
+    queryKey: ["programs", id],
+    queryFn: () => getSingleProgram(id as string),
+    enabled: !!id,
   });
 
   const add = useMutation({
@@ -38,10 +52,27 @@ export const usePrograms = ({ keyword = "", limit = 10, page = 1 }: Props) => {
     },
   });
 
+  const addParticipants = useMutation({
+    mutationFn: addParticipantsInProgram,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+    },
+  });
+
+  const removeParticipant = useMutation({
+    mutationFn: removeParticipantFromProgram,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+    },
+  });
+
   return {
     programs,
+    program,
     add,
     update,
     del,
+    addParticipants,
+    removeParticipant,
   };
 };

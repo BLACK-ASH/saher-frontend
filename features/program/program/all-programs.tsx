@@ -46,7 +46,7 @@ function ProgramView({}: Props) {
   const titleRef = useRef<HTMLTextAreaElement>(null);
   const router = useRouter();
 
-  const { data, isLoading, refetch, isRefetching } = programs;
+  const { data, isLoading } = programs;
 
   if (isLoading) return <DefaultLoader className="col-span-2" />;
   if (!data)
@@ -91,7 +91,6 @@ function ProgramView({}: Props) {
                     Update
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem>Add Participant</DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-destructive"
                     onClick={() => {
