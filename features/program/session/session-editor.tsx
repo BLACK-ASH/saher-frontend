@@ -21,8 +21,8 @@ import { toast } from "sonner";
 import z from "zod";
 
 const sessionCreateSchema = z.object({
-  programId: z.string().min(1, "Program is required."),
-  workshopId: z.string().optional(),
+  program: z.string().min(1, "Program is required."),
+  workshop: z.string().optional(),
   title: z.string().min(3, "Title must be at least 3 characters."),
   description: z.string().min(5, "Description is required."),
   date: z.string().min(1, "Date is required."),
@@ -52,8 +52,8 @@ const SessionEditor = ({
   const form = useForm<z.infer<typeof sessionCreateSchema>>({
     resolver: zodResolver(sessionCreateSchema),
     defaultValues: {
-      programId: "",
-      workshopId: "",
+      program: "",
+      workshop: "",
       title: "",
       description: "<p>Enter Session Description</p>",
       date: "",
@@ -67,8 +67,8 @@ const SessionEditor = ({
     const payload: SessionCreateT = {
       title: values.title,
       description: values.description,
-      programId: values.programId,
-      workshopId: values.workshopId,
+      program: values.program,
+      workshop: values.workshop,
       speaker: values.speaker.map((e: MailUser) => e.id.toString()),
       date: values.date,
       startTime: new Date(`${values.date}T${values.startTime}`),
@@ -77,7 +77,7 @@ const SessionEditor = ({
 
     add.mutate(
       {
-        programId: values.programId,
+        programId: values.program,
         data: payload,
       },
       {
@@ -94,7 +94,7 @@ const SessionEditor = ({
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
           <Controller
-            name="programId"
+            name="program"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field>
@@ -168,7 +168,7 @@ const SessionEditor = ({
             )}
           />
           <Controller
-            name="workshopId"
+            name="workshop"
             control={form.control}
             render={({ field, fieldState }) => (
               <Field>

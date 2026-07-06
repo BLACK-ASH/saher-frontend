@@ -2,6 +2,7 @@ import {
   addParticipantsInProgram,
   addProgram,
   deleteProgram,
+  getParticipantFromProgram,
   getPrograms,
   getSingleProgram,
   QueryProps,
@@ -52,6 +53,12 @@ export const usePrograms = ({
     },
   });
 
+  const participants = useQuery({
+    queryKey: ["programs", "participants", id],
+    queryFn: () => getParticipantFromProgram(id as string),
+    enabled: !!id,
+  });
+
   const addParticipants = useMutation({
     mutationFn: addParticipantsInProgram,
     onSuccess: () => {
@@ -72,6 +79,7 @@ export const usePrograms = ({
     add,
     update,
     del,
+    participants,
     addParticipants,
     removeParticipant,
   };

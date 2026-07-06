@@ -8,7 +8,7 @@ export const userField = z.object({
   displayName: z.string(),
   email: z.string(),
   role: z.enum(["user", "manager", "admin"]),
-  image: z.object({ src: z.string() }),
+  image: z.object({ id: z.string(), src: z.string(), alt: z.string() }),
 });
 
 export type DefaultUserT = z.infer<typeof userField>;

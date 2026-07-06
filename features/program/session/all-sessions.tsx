@@ -32,7 +32,7 @@ import { toast } from "sonner";
 import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useSessions } from "@/hooks/use-sessions";
 import { SessionT } from "@/services/session.api";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {};
 
@@ -43,6 +43,7 @@ function SessionView({}: Props) {
   const [selectedSession, setSelectedSession] = useState<SessionT | null>(null);
   const [description, setDescription] = useState<string>("");
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const router = useRouter();
 
   const { data, isLoading, refetch, isRefetching } = sessions;
 
@@ -57,14 +58,13 @@ function SessionView({}: Props) {
     );
 
   return (
-    <section className="grid grid-cols-2 md:grid-cols-4 gap-2">
+    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
       {data.map((session) => (
         <Card key={session.id}>
           <CardHeader>
             <CardTitle>{session.title}</CardTitle>
             <CardDescription>
-              {session.programId.title} -{" "}
-              {session.workshopId.title.slice(0, 20)}
+              {session.program.title} - {session.workshop.title.slice(0, 20)}
             </CardDescription>
             <CardAction>
               <DropdownMenu>
@@ -77,7 +77,13 @@ function SessionView({}: Props) {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                  <DropdownMenuItem>View</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      router.push("/program/sessions/" + session.id)
+                    }
+                  >
+                    View
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       setSelectedSession(session);
@@ -88,7 +94,20 @@ function SessionView({}: Props) {
                     Update
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem>Add Participant</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      router.push("/program/sessions/attendance/" + session.id)
+                    }
+                  >
+                    Attendance
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      router.push("/program/sessions/review/" + session.id)
+                    }
+                  >
+                    Add Review
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-destructive"
                     onClick={() => {

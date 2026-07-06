@@ -36,7 +36,7 @@ export default function ParticipantPage() {
     <div className="mx-auto max-w-5xl space-y-12">
       <Button
         className="flex gap-2 items-center mt-4"
-        onClick={() => router.push("/program")}
+        onClick={() => router.back()}
         variant={"ghost"}
       >
         <ArrowLeft /> Back

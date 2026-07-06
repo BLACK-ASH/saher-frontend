@@ -1,12 +1,10 @@
-import { SearchBox } from "@/components/search-box";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ParticipantView from "@/features/program/participant/all-participant";
 import ParticipantHeader from "@/features/program/participant/participant-header";
 import ProgramView from "@/features/program/program/all-programs";
 import ProgramHeader from "@/features/program/program/program-header";
-import AddSession from "@/features/program/session/add-session";
 import SessionView from "@/features/program/session/all-sessions";
-import AddWorkshop from "@/features/program/workshop/add-workshop";
+import SessionHeader from "@/features/program/session/session-header";
 import WorkshopView from "@/features/program/workshop/all-workshops";
 import WorkshopHeader from "@/features/program/workshop/workshop-header";
 
@@ -25,16 +23,7 @@ const page = () => {
           <ParticipantView />
         </TabsContent>
         <TabsContent value="session">
-          <div className="flex my-4">
-            <div className="flex-1">
-              <SearchBox
-                queryName="keyword"
-                placeholder="Search Session ..."
-                debounce={700}
-              />
-            </div>
-            <AddSession />
-          </div>
+          <SessionHeader />
           <SessionView />
         </TabsContent>
         <TabsContent value="workshop">
