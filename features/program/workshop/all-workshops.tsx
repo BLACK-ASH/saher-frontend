@@ -32,7 +32,7 @@ import { toast } from "sonner";
 import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useWorkshops } from "@/hooks/use-workshops";
 import { WorkshopT } from "@/services/workshop.api";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {};
 
@@ -45,8 +45,9 @@ function WorkshopView({}: Props) {
   );
   const [description, setDescription] = useState<string>("");
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const router = useRouter();
 
-  const { data, isLoading, refetch, isRefetching } = workshops;
+  const { data, isLoading } = workshops;
 
   if (isLoading) return <DefaultLoader className="col-span-2" />;
   if (!data)
@@ -64,7 +65,7 @@ function WorkshopView({}: Props) {
         <Card key={workshop.id}>
           <CardHeader>
             <CardTitle>{workshop.title}</CardTitle>
-            <CardDescription>{workshop.programId.title}</CardDescription>
+            <CardDescription>{workshop.program.title}</CardDescription>
             <CardAction>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -76,7 +77,13 @@ function WorkshopView({}: Props) {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                  <DropdownMenuItem>View</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      router.push("/program/workshops/" + workshop.id)
+                    }
+                  >
+                    View
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       setSelectedWorkshop(workshop);
@@ -87,7 +94,6 @@ function WorkshopView({}: Props) {
                     Update
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem>Add Participant</DropdownMenuItem>
                   <DropdownMenuItem
                     className="text-destructive"
                     onClick={() => {

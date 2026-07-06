@@ -8,6 +8,7 @@ import AddSession from "@/features/program/session/add-session";
 import SessionView from "@/features/program/session/all-sessions";
 import AddWorkshop from "@/features/program/workshop/add-workshop";
 import WorkshopView from "@/features/program/workshop/all-workshops";
+import WorkshopHeader from "@/features/program/workshop/workshop-header";
 
 const page = () => {
   return (
@@ -37,16 +38,7 @@ const page = () => {
           <SessionView />
         </TabsContent>
         <TabsContent value="workshop">
-          <div className="flex my-4">
-            <div className="flex-1">
-              <SearchBox
-                queryName="keyword"
-                placeholder="Search Workshops ..."
-                debounce={700}
-              />
-            </div>
-            <AddWorkshop />
-          </div>
+          <WorkshopHeader />
           <WorkshopView />
         </TabsContent>
         <TabsContent value="program">

@@ -2,19 +2,26 @@ import { QueryProps } from "@/services/program.api";
 import {
   addWorkshops,
   deleteWorkshops,
+  getSingleWorkshop,
   getWorkshops,
   updateWorkshops,
 } from "@/services/workshop.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-type Props = {} & QueryProps;
+type Props = { id?: string } & QueryProps;
 
-export const useWorkshops = ({ keyword, page, limit }: Props) => {
+export const useWorkshops = ({ id, keyword, page, limit }: Props) => {
   const queryClient = useQueryClient();
 
   const workshops = useQuery({
     queryKey: ["workshops", keyword, page, limit],
     queryFn: () => getWorkshops({ keyword, page, limit }),
+  });
+
+  const workshop = useQuery({
+    queryKey: ["workshops", id],
+    queryFn: () => getSingleWorkshop(id as string),
+    enabled: !!id,
   });
 
   const add = useMutation({
@@ -40,6 +47,7 @@ export const useWorkshops = ({ keyword, page, limit }: Props) => {
 
   return {
     workshops,
+    workshop,
     add,
     update,
     del,

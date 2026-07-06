@@ -6,7 +6,7 @@ export type WorkshopT = {
   id: string;
   title: string;
   description: string;
-  programId: {
+  program: {
     id: string;
     title: string;
   };
@@ -14,7 +14,7 @@ export type WorkshopT = {
 
 type UpdateProgramInput = {
   id: string;
-  data: Omit<WorkshopT, "programId">;
+  data: Omit<WorkshopT, "program">;
 };
 
 export const getWorkshops = async ({
@@ -32,12 +32,20 @@ export const getWorkshops = async ({
   return res.data;
 };
 
+export const getSingleWorkshop = async (id: string) => {
+  const res = await apiFetch<WorkshopT>(`/api/events/workshops/${id}`, {
+    method: "GET",
+  });
+  if (!res.success) toast.error(res.message);
+  return res.data;
+};
+
 export const addWorkshops = async ({
   programId,
   data,
 }: {
   programId: string;
-  data: Omit<WorkshopT, "id" | "programId">;
+  data: Omit<WorkshopT, "id" | "program">;
 }) => {
   const res = await apiFetch("/api/events/workshops/" + programId, {
     method: "POST",
