@@ -31,7 +31,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { htmlToPreview } from "@/lib/utils/html-preview";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 type Props = {};
 
@@ -44,6 +44,7 @@ function ProgramView({}: Props) {
   );
   const [description, setDescription] = useState<string>("");
   const titleRef = useRef<HTMLTextAreaElement>(null);
+  const router = useRouter();
 
   const { data, isLoading, refetch, isRefetching } = programs;
 
@@ -75,7 +76,11 @@ function ProgramView({}: Props) {
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-                  <DropdownMenuItem>View</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => router.push("/program/" + program.id)}
+                  >
+                    View
+                  </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
                       setSelectedProgram(program);

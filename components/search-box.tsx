@@ -1,8 +1,8 @@
 "use client";
 
 import { Input } from "@/components/ui/input";
-import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState } from "react";
 
 type SearchBoxProps = {
   queryName?: string;
@@ -16,19 +16,35 @@ export function SearchBox({
   debounce = 300,
 }: SearchBoxProps) {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
 
-  const [value, setValue] = useState(searchParams.get(queryName) ?? "");
+  const [value, setValue] = useState(() => searchParams.get(queryName) ?? "");
 
-  // Keep input in sync when the URL changes (e.g. back/forward navigation)
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Sync input if URL changes externally
   useEffect(() => {
     setValue(searchParams.get(queryName) ?? "");
   }, [searchParams, queryName]);
 
+  // Cancel pending debounce when component unmounts
   useEffect(() => {
-    const timer = setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
+  const handleChange = (value: string) => {
+    setValue(value);
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
+      const params = new URLSearchParams(window.location.search);
 
       if (value.trim()) {
         params.set(queryName, value);
@@ -36,22 +52,27 @@ export function SearchBox({
         params.delete(queryName);
       }
 
-      // Optional: reset page on new search
+      // Reset pagination on new search
       params.delete("page");
 
-      router.replace(`${pathname}?${params.toString()}`, {
-        scroll: false,
-      });
-    }, debounce);
+      const query = params.toString();
 
-    return () => clearTimeout(timer);
-  }, [value, debounce, pathname, queryName, router, searchParams]);
+      router.replace(
+        query
+          ? `${window.location.pathname}?${query}`
+          : window.location.pathname,
+        {
+          scroll: false,
+        },
+      );
+    }, debounce);
+  };
 
   return (
     <Input
       value={value}
       placeholder={placeholder}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={(e) => handleChange(e.target.value)}
     />
   );
 }
