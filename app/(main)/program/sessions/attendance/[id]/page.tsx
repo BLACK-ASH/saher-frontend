@@ -64,7 +64,7 @@ export default function SessionAttendancePage() {
   };
 
   return (
-    <main className="mx-auto max-w-7xl space-y-12">
+    <main className="mx-auto max-w-7xl space-y-12 p-4">
       <Button
         variant="ghost"
         className="gap-2 my-6"

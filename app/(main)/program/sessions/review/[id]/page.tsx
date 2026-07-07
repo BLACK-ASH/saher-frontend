@@ -77,7 +77,7 @@ export default function SessionReportPage() {
   };
 
   return (
-    <main className="mx-auto max-w-7xl space-y-12 pb-8">
+    <main className="mx-auto max-w-7xl space-y-12 pb-8 p-4">
       <div className="space-y-4">
         <Button
           variant="ghost"

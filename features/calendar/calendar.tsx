@@ -57,10 +57,10 @@ export default function EventsCalendar() {
 
   // Calendar Nav
   const { calendar, del, update } = useCalendar({ year, month });
-  const { data: events, isLoading, refetch, isRefetching } = calendar;
+  const { data: events } = calendar;
 
   return (
-    <Card className="md:m-2">
+    <Card className="m-2 md:m-4">
       <CardHeader className="flex items-center justify-between">
         {/* Left controls */}
         <div className="flex items-center gap-2">

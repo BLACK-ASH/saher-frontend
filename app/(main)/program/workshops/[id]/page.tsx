@@ -49,7 +49,7 @@ export default function WorkshopPage() {
   }
 
   return (
-    <main className="mx-auto max-w-5xl px-6 py-10">
+    <main className="mx-auto max-w-7xl space-y-12 p-4 py-10">
       <Button
         className="flex gap-2 items-center mb-6"
         onClick={() => router.back()}

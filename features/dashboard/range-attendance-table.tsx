@@ -145,9 +145,9 @@ export function RangeAttendanceTable({
 
   return (
     <Card className={className}>
-      <CardHeader className="flex items-center justify-between">
+      <CardHeader className="flex items-center justify-between flex-wrap">
         <CardTitle>Users Attendances</CardTitle>
-        <div className="flex gap-4 items-center">
+        <div className="flex gap-4 items-center flex-wrap">
           <Button
             variant={"ghost"}
             className="flex gap-2 items-center"

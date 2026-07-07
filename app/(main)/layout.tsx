@@ -15,7 +15,9 @@ export default function Layout({
       <main className="flex min-h-screen max-h-screen w-full flex-col">
         <SiteHeader />
 
-        <main className="flex-1 overflow-y-scroll">{children}</main>
+        <main className="flex-1 max-sm:min-h-screen overflow-y-scroll">
+          {children}
+        </main>
 
         <Footer />
       </main>

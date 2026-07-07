@@ -7,6 +7,7 @@ import SessionView from "@/features/program/session/all-sessions";
 import SessionHeader from "@/features/program/session/session-header";
 import WorkshopView from "@/features/program/workshop/all-workshops";
 import WorkshopHeader from "@/features/program/workshop/workshop-header";
+import { Suspense } from "react";
 
 const page = () => {
   return (
@@ -18,22 +19,24 @@ const page = () => {
           <TabsTrigger value="workshop">Workshop</TabsTrigger>
           <TabsTrigger value="session">Session</TabsTrigger>
         </TabsList>
-        <TabsContent value="participant">
-          <ParticipantHeader />
-          <ParticipantView />
-        </TabsContent>
-        <TabsContent value="session">
-          <SessionHeader />
-          <SessionView />
-        </TabsContent>
-        <TabsContent value="workshop">
-          <WorkshopHeader />
-          <WorkshopView />
-        </TabsContent>
-        <TabsContent value="program">
-          <ProgramHeader />
-          <ProgramView />
-        </TabsContent>
+        <Suspense>
+          <TabsContent value="participant">
+            <ParticipantHeader />
+            <ParticipantView />
+          </TabsContent>
+          <TabsContent value="session">
+            <SessionHeader />
+            <SessionView />
+          </TabsContent>
+          <TabsContent value="workshop">
+            <WorkshopHeader />
+            <WorkshopView />
+          </TabsContent>
+          <TabsContent value="program">
+            <ProgramHeader />
+            <ProgramView />
+          </TabsContent>
+        </Suspense>
       </Tabs>
     </section>
   );

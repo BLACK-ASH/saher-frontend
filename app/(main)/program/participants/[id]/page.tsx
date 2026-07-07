@@ -43,7 +43,7 @@ export default function ParticipantPage() {
   }
 
   return (
-    <main className="mx-auto max-w-7xl space-y-12">
+    <main className="mx-auto max-w-7xl space-y-12 p-4">
       <Button
         className="flex gap-2 items-center my-4"
         onClick={() => router.back()}

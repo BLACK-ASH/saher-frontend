@@ -63,7 +63,7 @@ export default function SessionPage() {
   const data = session.data;
 
   return (
-    <main className="mx-auto max-w-7xl space-y-12">
+    <main className="mx-auto max-w-7xl space-y-12 p-4">
       {/* Header */}
       <section className="space-y-8 border-b pb-10">
         <Button
@@ -90,7 +90,9 @@ export default function SessionPage() {
 
             <Button
               variant="outline"
-              onClick={() => router.push(`/workshop/${data.workshop.id}`)}
+              onClick={() =>
+                router.push(`/program/workshop/${data.workshop.id}`)
+              }
             >
               {data.workshop.title}
             </Button>
