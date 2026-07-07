@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 import { ParticipantT } from "@/services/participant.api";
 import UpdateParticipant from "./update-participant";
+import RoleAccess from "@/components/role-access";
 
 type Props = {};
 
@@ -111,18 +112,20 @@ function ParticipantView({}: Props) {
                     Update
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem
-                    className="text-destructive"
-                    onClick={() => {
-                      del.mutate(participant.id, {
-                        onSuccess: (res) => {
-                          toast.success(res.message);
-                        },
-                      });
-                    }}
-                  >
-                    Delete
-                  </DropdownMenuItem>
+                  <RoleAccess roles={["admin"]}>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        del.mutate(participant.id, {
+                          onSuccess: (res) => {
+                            toast.success(res.message);
+                          },
+                        });
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </RoleAccess>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardAction>

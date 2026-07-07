@@ -49,23 +49,18 @@ const userRoutes = [
     url: "/mail",
     icon: Mailbox,
   },
-];
-
-const adminRoutes = [
-  {
-    label: "Dashboard",
-    url: "/dashboard",
-    icon: LayoutDashboard,
-  },
-  {
-    label: "Register",
-    url: "/register",
-    icon: UserPlus,
-  },
   {
     label: "Program",
     url: "/program",
     icon: CalendarCheck,
+  },
+];
+
+const managerRoutes = [
+  {
+    label: "Dashboard",
+    url: "/dashboard",
+    icon: LayoutDashboard,
   },
   {
     label: "Users",
@@ -76,6 +71,14 @@ const adminRoutes = [
     label: "Attendance Correction",
     url: "/attendance-correction",
     icon: ClockAlert,
+  },
+];
+
+const adminRoutes = [
+  {
+    label: "Register",
+    url: "/register",
+    icon: UserPlus,
   },
 ];
 
@@ -93,7 +96,7 @@ const NavSkeleton = () => {
 };
 
 export function NavItem() {
-  const { data: user, isLoading, error } = useMe();
+  const { data: user, isLoading } = useMe();
   const router = useRouter();
   const pathname = usePathname();
 
@@ -141,7 +144,29 @@ export function NavItem() {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-      {user?.role !== "user" && (
+      {user?.role === "manager" ||
+        (user?.role === "admin" && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Manager</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {managerRoutes.map((item) => (
+                  <SidebarMenuItem key={item.url}>
+                    <SidebarMenuButton
+                      isActive={isActive(item.url)}
+                      onClick={() => navigateLink(item.url)}
+                      tooltip={item.label}
+                    >
+                      {item.icon && <item.icon />}
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        ))}
+      {user?.role === "admin" && (
         <SidebarGroup>
           <SidebarGroupLabel>Admin</SidebarGroupLabel>
           <SidebarGroupContent>

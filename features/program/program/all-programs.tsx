@@ -32,6 +32,7 @@ import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useRouter, useSearchParams } from "next/navigation";
+import RoleAccess from "@/components/role-access";
 
 type Props = {};
 
@@ -75,34 +76,36 @@ function ProgramView({}: Props) {
 
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>Actions</DropdownMenuLabel>
-
                   <DropdownMenuItem
                     onClick={() => router.push("/program/" + program.id)}
                   >
                     View
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setSelectedProgram(program);
-                      setDescription(program.description);
-                      setOpen(true);
-                    }}
-                  >
-                    Update
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    className="text-destructive"
-                    onClick={() => {
-                      del.mutate(program.id, {
-                        onSuccess: (res) => {
-                          toast.success(res.message);
-                        },
-                      });
-                    }}
-                  >
-                    Delete
-                  </DropdownMenuItem>
+                  <RoleAccess roles={["admin"]}>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedProgram(program);
+                        setDescription(program.description);
+                        setOpen(true);
+                      }}
+                    >
+                      Update
+                    </DropdownMenuItem>
+                  </RoleAccess>
+                  <RoleAccess roles={["admin"]}>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        del.mutate(program.id, {
+                          onSuccess: (res) => {
+                            toast.success(res.message);
+                          },
+                        });
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </RoleAccess>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardAction>

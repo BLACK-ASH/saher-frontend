@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import AddSession from "./add-session";
+import RoleAccess from "@/components/role-access";
 
 type Props = {};
 
@@ -64,7 +65,9 @@ function SessionHeader({}: Props) {
           <ArrowRight />
         </Button>
       </div>
-      <AddSession />
+      <RoleAccess roles={["manager", "admin"]}>
+        <AddSession />
+      </RoleAccess>
     </div>
   );
 }

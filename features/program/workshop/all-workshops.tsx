@@ -33,6 +33,7 @@ import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useWorkshops } from "@/hooks/use-workshops";
 import { WorkshopT } from "@/services/workshop.api";
 import { useRouter, useSearchParams } from "next/navigation";
+import RoleAccess from "@/components/role-access";
 
 type Props = {};
 
@@ -84,28 +85,31 @@ function WorkshopView({}: Props) {
                   >
                     View
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setSelectedWorkshop(workshop);
-                      setDescription(workshop.description);
-                      setOpen(true);
-                    }}
-                  >
-                    Update
-                  </DropdownMenuItem>
-
-                  <DropdownMenuItem
-                    className="text-destructive"
-                    onClick={() => {
-                      del.mutate(workshop.id, {
-                        onSuccess: (res) => {
-                          toast.success(res.message);
-                        },
-                      });
-                    }}
-                  >
-                    Delete
-                  </DropdownMenuItem>
+                  <RoleAccess roles={["admin", "manager"]}>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedWorkshop(workshop);
+                        setDescription(workshop.description);
+                        setOpen(true);
+                      }}
+                    >
+                      Update
+                    </DropdownMenuItem>
+                  </RoleAccess>
+                  <RoleAccess roles={["admin"]}>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        del.mutate(workshop.id, {
+                          onSuccess: (res) => {
+                            toast.success(res.message);
+                          },
+                        });
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </RoleAccess>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardAction>
@@ -120,7 +124,6 @@ function WorkshopView({}: Props) {
           <DialogHeader>
             <DialogTitle>Update {selectedWorkshop?.title}</DialogTitle>
           </DialogHeader>
-
           <div className="space-y-2 min-h-2/3">
             <Field>
               <FieldLabel htmlFor="title">Title</FieldLabel>

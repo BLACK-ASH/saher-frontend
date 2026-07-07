@@ -63,10 +63,14 @@ export default function SessionPage() {
   const data = session.data;
 
   return (
-    <main className="mx-auto max-w-5xl space-y-16 px-6 py-10">
+    <main className="mx-auto max-w-7xl space-y-12">
       {/* Header */}
       <section className="space-y-8 border-b pb-10">
-        <Button variant="ghost" className="gap-2" onClick={() => router.back()}>
+        <Button
+          variant="ghost"
+          className="gap-2 mt-6"
+          onClick={() => router.back()}
+        >
           <ArrowLeft className="h-4 w-4" />
           Back
         </Button>

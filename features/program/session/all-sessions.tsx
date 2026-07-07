@@ -33,6 +33,7 @@ import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useSessions } from "@/hooks/use-sessions";
 import { SessionT } from "@/services/session.api";
 import { useRouter, useSearchParams } from "next/navigation";
+import RoleAccess from "@/components/role-access";
 
 type Props = {};
 
@@ -84,16 +85,17 @@ function SessionView({}: Props) {
                   >
                     View
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setSelectedSession(session);
-                      setDescription(session.description);
-                      setOpen(true);
-                    }}
-                  >
-                    Update
-                  </DropdownMenuItem>
-
+                  <RoleAccess roles={["admin", "manager"]}>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setSelectedSession(session);
+                        setDescription(session.description);
+                        setOpen(true);
+                      }}
+                    >
+                      Update
+                    </DropdownMenuItem>
+                  </RoleAccess>
                   <DropdownMenuItem
                     onClick={() =>
                       router.push("/program/sessions/attendance/" + session.id)
@@ -108,18 +110,20 @@ function SessionView({}: Props) {
                   >
                     Add Review
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    className="text-destructive"
-                    onClick={() => {
-                      del.mutate(session.id, {
-                        onSuccess: (res) => {
-                          toast.success(res.message);
-                        },
-                      });
-                    }}
-                  >
-                    Delete
-                  </DropdownMenuItem>
+                  <RoleAccess roles={["admin"]}>
+                    <DropdownMenuItem
+                      className="text-destructive"
+                      onClick={() => {
+                        del.mutate(session.id, {
+                          onSuccess: (res) => {
+                            toast.success(res.message);
+                          },
+                        });
+                      }}
+                    >
+                      Delete
+                    </DropdownMenuItem>
+                  </RoleAccess>
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardAction>

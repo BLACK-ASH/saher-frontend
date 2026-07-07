@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import AddProgram from "./add-program";
+import RoleAccess from "@/components/role-access";
 
 type Props = {};
 
@@ -64,7 +65,9 @@ function ProgramHeader({}: Props) {
           <ArrowRight />
         </Button>
       </div>
-      <AddProgram />
+      <RoleAccess roles={["admin"]}>
+        <AddProgram />
+      </RoleAccess>
     </div>
   );
 }

@@ -20,7 +20,7 @@ import { Input } from "@/components/ui/input";
 import { useParticipants } from "@/hooks/use-participant";
 import { usePrograms } from "@/hooks/use-programs";
 import { ParticipantT } from "@/services/participant.api";
-import { ArrowLeft, Plus, Trash2, User, Users, X } from "lucide-react";
+import { ArrowLeft, Plus, Trash2, User, X } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -69,7 +69,7 @@ export default function ProgramPage() {
   const data = program.data;
 
   return (
-    <main className="mx-auto max-w-4xl px-6 py-10">
+    <main className="mx-auto max-w-7xl px-6 py-10">
       <Button variant="ghost" className="mb-8" onClick={() => router.back()}>
         <ArrowLeft className="mr-2 h-4 w-4" />
         Back

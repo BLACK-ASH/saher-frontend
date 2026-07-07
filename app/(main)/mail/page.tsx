@@ -104,7 +104,7 @@ const Page = () => {
   };
 
   return (
-    <section className="p-3 container mx-auto h-[calc(100vh-100px)]">
+    <section className="p-4 container mx-auto">
       <Tabs defaultValue="inbox">
         <TabsList>
           <TabsTrigger value="inbox">Inbox</TabsTrigger>

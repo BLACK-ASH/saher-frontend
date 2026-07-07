@@ -32,10 +32,20 @@ export default function ParticipantPage() {
   if (isLoading) return <DefaultLoader className="col-span-2" />;
   if (!data) notFound();
 
+  if (!data) {
+    return (
+      <div className="flex min-h-[70vh] flex-col items-center justify-center gap-4">
+        <h1 className="text-3xl font-bold">Participant not found</h1>
+
+        <Button onClick={() => router.back()}>Go Back</Button>
+      </div>
+    );
+  }
+
   return (
-    <div className="mx-auto max-w-5xl space-y-12">
+    <main className="mx-auto max-w-7xl space-y-12">
       <Button
-        className="flex gap-2 items-center mt-4"
+        className="flex gap-2 items-center my-4"
         onClick={() => router.back()}
         variant={"ghost"}
       >
@@ -225,6 +235,6 @@ export default function ParticipantPage() {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+    </main>
   );
 }

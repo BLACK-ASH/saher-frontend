@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 import { useWorkshops } from "@/hooks/use-workshops";
 
@@ -13,7 +12,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function WorkshopPage() {
   const { id } = useParams<{ id: string }>();
-
+  const router = useRouter();
   const { workshop: ws } = useWorkshops({ id });
 
   const { data: workshop, isLoading } = ws;
@@ -41,35 +40,26 @@ export default function WorkshopPage() {
 
   if (!workshop) {
     return (
-      <main className="flex min-h-[70vh] flex-col items-center justify-center space-y-6 text-center">
-        <h1 className="text-4xl font-bold">Workshop Not Found</h1>
+      <div className="flex min-h-[70vh] flex-col items-center justify-center gap-4">
+        <h1 className="text-3xl font-bold">Workshop not found</h1>
 
-        <p className="text-muted-foreground">
-          The workshop you are looking for does not exist.
-        </p>
-
-        <Button asChild>
-          <Link href="/program">
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Programs
-          </Link>
-        </Button>
-      </main>
+        <Button onClick={() => router.back()}>Go Back</Button>
+      </div>
     );
   }
 
   return (
     <main className="mx-auto max-w-5xl px-6 py-10">
-      <Button variant="ghost" asChild className="mb-8 -ml-4">
-        <Link href="/program">
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back
-        </Link>
+      <Button
+        className="flex gap-2 items-center mb-6"
+        onClick={() => router.back()}
+        variant={"ghost"}
+      >
+        <ArrowLeft /> Back
       </Button>
-
       <header className="space-y-5">
         <Badge variant="secondary" className="w-fit">
-          {workshop.programId.title}
+          {workshop.program.title}
         </Badge>
 
         <h1 className="text-5xl font-bold tracking-tight">{workshop.title}</h1>

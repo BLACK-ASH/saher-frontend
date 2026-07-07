@@ -1,3 +1,4 @@
+import Footer from "@/components/app-footer";
 import { AppSidebar } from "@/components/app-sidebar";
 import { SiteHeader } from "@/components/sidebar/sidebar-header";
 import { SidebarProvider } from "@/components/ui/sidebar";
@@ -10,9 +11,13 @@ export default function Layout({
   return (
     <SidebarProvider>
       <AppSidebar />
-      <main className="w-full h-full">
+
+      <main className="flex min-h-screen max-h-screen w-full flex-col">
         <SiteHeader />
-        {children}
+
+        <main className="flex-1 overflow-y-scroll">{children}</main>
+
+        <Footer />
       </main>
     </SidebarProvider>
   );

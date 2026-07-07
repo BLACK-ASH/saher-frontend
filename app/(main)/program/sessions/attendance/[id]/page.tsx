@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { usePrograms } from "@/hooks/use-programs";
 import { useSessions } from "@/hooks/use-sessions";
-import { User } from "lucide-react";
+import { ArrowLeft, User } from "lucide-react";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
@@ -64,7 +64,15 @@ export default function SessionAttendancePage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-8 p-4">
+    <main className="mx-auto max-w-7xl space-y-12">
+      <Button
+        variant="ghost"
+        className="gap-2 my-6"
+        onClick={() => router.back()}
+      >
+        <ArrowLeft className="h-4 w-4" />
+        Back
+      </Button>
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Session Attendance</h1>
@@ -79,7 +87,7 @@ export default function SessionAttendancePage() {
         name="present"
         control={form.control}
         render={({ field }) => (
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {participants.map((participant) => {
               const checked = field.value.includes(participant.id);
 
@@ -159,6 +167,6 @@ export default function SessionAttendancePage() {
 
         <Button onClick={form.handleSubmit(onSubmit)}>Submit Attendance</Button>
       </div>
-    </div>
+    </main>
   );
 }

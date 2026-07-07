@@ -77,9 +77,13 @@ export default function SessionReportPage() {
   };
 
   return (
-    <div className="mx-auto max-w-5xl space-y-12 p-4">
+    <main className="mx-auto max-w-7xl space-y-12 pb-8">
       <div className="space-y-4">
-        <Button variant="ghost" className="gap-2" onClick={() => router.back()}>
+        <Button
+          variant="ghost"
+          className="gap-2 my-6"
+          onClick={() => router.back()}
+        >
           <ArrowLeft className="h-4 w-4" />
           Back
         </Button>
@@ -208,6 +212,6 @@ export default function SessionReportPage() {
           )}
         </Button>
       </div>
-    </div>
+    </main>
   );
 }
