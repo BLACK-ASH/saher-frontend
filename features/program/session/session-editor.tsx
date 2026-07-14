@@ -47,7 +47,7 @@ const SessionEditor = ({
 
   const { add } = useSessions({});
   const { programs } = usePrograms({ keyword, limit: 3 });
-  const { workshops } = useWorkshops({ keyword, limit: 5 });
+  const { workshops } = useWorkshops({ keyword: wKeyword, limit: 5 });
 
   const form = useForm<z.infer<typeof sessionCreateSchema>>({
     resolver: zodResolver(sessionCreateSchema),
@@ -145,6 +145,7 @@ const SessionEditor = ({
                             onClick={() => {
                               setProgram(item);
                               field.onChange(item.id);
+                              setWKeyword(item.title);
                               setKeyword("");
                             }}
                           >
@@ -222,7 +223,7 @@ const SessionEditor = ({
                               setWKeyword("");
                             }}
                           >
-                            {item.title}
+                            {item.title} - {item.program.title}
                           </button>
                         ))
                       ) : (
@@ -246,7 +247,7 @@ const SessionEditor = ({
         <Controller
           name="speaker"
           control={form.control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <Field>
               <FieldLabel htmlFor="speaker">Speaker</FieldLabel>
 
@@ -297,6 +298,11 @@ const SessionEditor = ({
                   </div>
                 ))}
               </div>
+              {fieldState.error && (
+                <p className="text-sm text-destructive">
+                  {fieldState.error.message}
+                </p>
+              )}
             </Field>
           )}
         />

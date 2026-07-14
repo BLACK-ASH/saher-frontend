@@ -33,7 +33,7 @@ const AddParticipant = () => {
     defaultValues: {
       name: "",
       age: undefined,
-      gender: "",
+      gender: undefined,
       phoneNumber: "",
       image: undefined,
       address: "",
