@@ -17,6 +17,7 @@ import {
   Home,
   LayoutDashboard,
   Mailbox,
+  NotebookPen,
   User,
   UserPlus,
   Users,
@@ -50,6 +51,11 @@ const userRoutes = [
     icon: Mailbox,
   },
   {
+    label: "Leave",
+    url: "/leave",
+    icon: NotebookPen,
+  },
+  {
     label: "Program",
     url: "/program",
     icon: CalendarCheck,
@@ -71,6 +77,11 @@ const managerRoutes = [
     label: "Attendance Correction",
     url: "/attendance-correction",
     icon: ClockAlert,
+  },
+  {
+    label: "Leave Management",
+    url: "/leave-management",
+    icon: NotebookPen,
   },
 ];
 
