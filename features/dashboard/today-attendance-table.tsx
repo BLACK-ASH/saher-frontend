@@ -80,7 +80,7 @@ export function TodayAttendanceTable({
 
   const submitHandler = async (
     attendance: AttendanceResponse,
-    status: "absent" | "present" | "half-day",
+    status: "absent" | "present" | "half-day" | "week-off" | "on-leave",
     late: boolean,
   ) => {
     const payload = markSchema.parse({
@@ -232,6 +232,28 @@ export function TodayAttendanceTable({
                           }
                         >
                           Present
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            submitHandler(
+                              attendance,
+                              "week-off",
+                              attendance.isLate,
+                            )
+                          }
+                        >
+                          Week Off
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            submitHandler(
+                              attendance,
+                              "on-leave",
+                              attendance.isLate,
+                            )
+                          }
+                        >
+                          On Leave
                         </DropdownMenuItem>
                       </DropdownMenuGroup>
                       <DropdownMenuSeparator />

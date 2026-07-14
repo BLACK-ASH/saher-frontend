@@ -126,7 +126,7 @@ export function RangeAttendanceTable({
 
   const submitHandler = async (
     attendance: AttendanceResponse,
-    status: "absent" | "present" | "half-day",
+    status: "absent" | "present" | "half-day" | "on-leave" | "week-off",
     late: boolean,
   ) => {
     const payload = markSchema.parse({

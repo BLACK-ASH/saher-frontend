@@ -4,6 +4,8 @@ import {
   checkInApi,
   checkOutApi,
   getAttendance,
+  overtimeCheckInApi,
+  weekoff,
 } from "@/services/attendance.api";
 
 export enum AttendanceStatus {
@@ -50,6 +52,19 @@ export const useAttendance = ({
       queryClient.invalidateQueries({ queryKey: ["attendance"] });
     },
   });
+  const overtimeCheckIn = useMutation({
+    mutationFn: overtimeCheckInApi,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["attendance"] });
+    },
+  });
+
+  const weekOff = useMutation({
+    mutationFn: weekoff,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["attendance"] });
+    },
+  });
 
   // 🔥 derive status
   let status = AttendanceStatus.NOT_CHECKED_IN;
@@ -79,5 +94,7 @@ export const useAttendance = ({
 
     checkIn,
     checkOut,
+    overtimeCheckIn,
+    weekOff,
   };
 };

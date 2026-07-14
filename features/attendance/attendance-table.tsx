@@ -31,12 +31,14 @@ import {
 import { AttendanceReportDropdown } from "./attendance-report";
 
 export const attendanceStatusVariant: Record<
-  "half-day" | "present" | "absent",
-  "outline-warn" | "outline-success" | "destructive"
+  "half-day" | "present" | "absent" | "week-off" | "on-leave",
+  "outline-warn" | "outline-success" | "destructive" | "default"
 > = {
   "half-day": "outline-warn",
   present: "outline-success",
   absent: "destructive",
+  "week-off": "default",
+  "on-leave": "default",
 };
 
 export function AttendanceTable({

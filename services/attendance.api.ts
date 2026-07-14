@@ -4,14 +4,15 @@ import { toast } from "sonner";
 import z from "zod";
 
 export const attendanceSchema = z.object({
-  id: z.string("Attendance Id Is Required."),
+  id: z.string(),
   user: userField,
-  inTime: z.coerce.date().nullable(),
-  outTime: z.coerce.date().nullable(),
+  inTime: z.string().nullable(),
+  outTime: z.string().nullable(),
   workHours: z.number(),
   date: z.string(),
+  status: z.enum(["present", "half-day", "absent", "week-off", "on-leave"]),
+  overtime: z.boolean().optional(),
   isLate: z.boolean(),
-  status: z.enum(["present", "half-day", "absent"]),
 });
 
 type DefaultProps = {
@@ -75,7 +76,7 @@ export const getRangeAttendance = async ({
   endDate,
 }: DefaultProps & { startDate: string; endDate: string }) => {
   const res = await apiFetch<AttendanceResponse[]>(
-    `/api/attendance/retrieve-all?startDate=${startDate}&endDate=${endDate}&$sort=${sort}&page=${page}&limit=${limit}`,
+    `/api/attendance/retrieve?startDate=${startDate}&endDate=${endDate}&$sort=${sort}&page=${page}&limit=${limit}`,
     {
       method: "GET",
     },
@@ -87,6 +88,25 @@ export const checkInApi = async () => {
   const res = await apiFetch<AttendanceResponse>("/api/attendance/check-in", {
     method: "POST",
   });
+  if (!res.success) toast.error(res.message);
+  return res.data;
+};
+
+export const weekoff = async () => {
+  const res = await apiFetch<AttendanceResponse>("/api/attendance/weekoff", {
+    method: "POST",
+  });
+  if (!res.success) toast.error(res.message);
+  return res.data;
+};
+
+export const overtimeCheckInApi = async () => {
+  const res = await apiFetch<AttendanceResponse>(
+    "/api/attendance/overtime/check-in",
+    {
+      method: "POST",
+    },
+  );
   if (!res.success) toast.error(res.message);
   return res.data;
 };
