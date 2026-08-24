@@ -50,7 +50,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 01-02-PLAN.md — Reference tests: provider-aware component render + msw→apiFetch envelope integration (FNDT-01)
+- [x] 01-02-PLAN.md — Reference tests: provider-aware component render + msw→apiFetch envelope integration (FNDT-01)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -193,7 +193,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Quality Gates & Test Infrastructure | 1/3 | In Progress|  |
+| 1. Quality Gates & Test Infrastructure | 2/3 | In Progress|  |
 | 2. Shared Infrastructure & Session Reliability | 0/? | Not started | - |
 | 3. Noticeboard Pilot | 0/? | Not started | - |
 | 4. Staff Self-Service — Mail & Leave | 0/? | Not started | - |

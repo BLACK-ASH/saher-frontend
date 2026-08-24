@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Completed 01-01-PLAN.md
-last_updated: "2026-08-24T14:06:34.718Z"
+stopped_at: Completed 01-02-PLAN.md
+last_updated: "2026-08-24T14:20:07.910Z"
 last_activity: 2026-08-24
 progress:
   total_phases: 7
   completed_phases: 0
   total_plans: 3
-  completed_plans: 1
+  completed_plans: 2
   percent: 0
 ---
 
@@ -26,11 +26,11 @@ See: .planning/PROJECT.md (updated 2026-08-24)
 ## Current Position
 
 Phase: 01 (quality-gates-test-infrastructure) — EXECUTING
-Plan: 2 of 3
+Plan: 3 of 3
 Status: Ready to execute
 Last activity: 2026-08-24
 
-Progress: [███░░░░░░░] 33%
+Progress: [███████░░░] 67%
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Progress: [███░░░░░░░] 33%
 
 *Updated after each plan completion*
 | Phase 01 P01 | 25 min | 4 tasks | 42 files |
+| Phase 01 P02 | 7min | 2 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -67,6 +68,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Lint baseline repaired by fixing all 42 errors in place, eslint config untouched
 - [Phase 01]: All 8 test-toolchain packages installed only after explicit user approval at blocking-human legitimacy gate
 - [Phase 01]: vitest.config.ts uses import.meta.dirname for @ alias; coverage report-only until Phase 7
+- [Phase ?]: Test harness proven by two durable reference tests: LoginForm render through a fresh-per-call QueryClientProvider helper, and real apiFetch driven through msw-intercepted fetch with full envelope + meta assertions
+- [Phase ?]: msw lifecycle lives in tests/setup.ts (listen onUnhandledRequest:error / resetHandlers / close) over a shared no-default-handler setupServer; handlers registered inline per test
 
 ### Pending Todos
 
@@ -88,6 +91,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-24T14:06:34.688Z
-Stopped at: Completed 01-01-PLAN.md
+Last session: 2026-08-24T14:19:02.109Z
+Stopped at: Completed 01-02-PLAN.md
 Resume file: None
