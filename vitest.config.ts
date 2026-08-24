@@ -10,7 +10,7 @@ export default defineConfig({
   },
   test: {
     environment: "jsdom",
-    // No setup entries yet — plan 01-02 wires tests/setup.ts into this config.
+    setupFiles: ["./tests/setup.ts"],
     coverage: {
       // Report-only per D-09 — limits arrive in Phase 7.
       provider: "v8",
