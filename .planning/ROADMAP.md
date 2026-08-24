@@ -37,10 +37,12 @@ Decimal phases appear between their surrounding integers in numeric order.
   2. A sample testing-library component test renders a real component and asserts on output via jsdom
   3. An msw handler intercepts an apiFetch-backed call in a test and serves mock data through the real wrapper
   4. Package hygiene fixed: react-hook-form resolves as a production dependency, unused deps removed, dead SCSS deleted from styles/
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
-- [ ] 01-01: TBD during plan-phase
+- [ ] 01-01-PLAN.md — Branch sync to dev + package hygiene + gate scripts + vitest foundation (FNDT-01, FNDT-07)
+- [ ] 01-02-PLAN.md — Reference tests: provider-aware component render + msw→apiFetch envelope integration (FNDT-01)
+- [ ] 01-03-PLAN.md — Deploy workflow retargeted to dev with quality-gate pre-steps; first gated deploy (FNDT-07)
 
 ### Phase 2: Shared Infrastructure & Session Reliability
 **Goal**: All future modules write onto tested shared foundations — IST-correct dates, normalized list envelopes, graceful session death, safe pagination, consistent RBAC gating — and login/logout/refresh behave exactly per contract.
