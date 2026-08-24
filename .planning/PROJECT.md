@@ -66,6 +66,7 @@ Every backend domain has a working, reliable screen — staff and admins run the
 | Follow backend handbook as binding contract | Backend is canonical and deployed; OpenAPI at /docs is source of truth | — Pending |
 | Verify every module against actual route structure + RBAC guards before building UI | Owner directive: handbook/MODULE_ROUTES can drift from code; routes and `authorize()` calls are ground truth | — Pending |
 | Modules delivered complete, one module per effort — no intra-module versioning | Owner directive: partial modules leave broken UX; whole-module delivery keeps flows testable end-to-end | — Pending |
+| Build only what the backend demonstrably supports; keep UI as simple as possible for normal users | Owner directive: every screen maps to a real endpoint + guard; simplicity beats feature parity with commercial suites | — Pending |
 | No strict priority ordering across modules | Org needs everything working; sequencing left to roadmap dependency logic | — Pending |
 
 ## Evolution

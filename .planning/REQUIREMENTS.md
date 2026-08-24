@@ -152,13 +152,72 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| (populated during roadmap creation) | | Pending |
+| FNDT-01 | Phase 1 | Pending |
+| FNDT-07 | Phase 1 | Pending |
+| FNDT-02 | Phase 2 | Pending |
+| FNDT-03 | Phase 2 | Pending |
+| FNDT-04 | Phase 2 | Pending |
+| FNDT-05 | Phase 2 | Pending |
+| FNDT-06 | Phase 2 | Pending |
+| AUTH-01 | Phase 2 | Pending |
+| NOTC-01 | Phase 3 | Pending |
+| NOTC-02 | Phase 3 | Pending |
+| NOTC-03 | Phase 3 | Pending |
+| MAIL-01 | Phase 4 | Pending |
+| MAIL-02 | Phase 4 | Pending |
+| MAIL-03 | Phase 4 | Pending |
+| MAIL-04 | Phase 4 | Pending |
+| LEAV-01 | Phase 4 | Pending |
+| LEAV-02 | Phase 4 | Pending |
+| LEAV-03 | Phase 4 | Pending |
+| LEAV-04 | Phase 4 | Pending |
+| LEAV-05 | Phase 4 | Pending |
+| LEAV-06 | Phase 4 | Pending |
+| REIM-01 | Phase 5 | Pending |
+| REIM-02 | Phase 5 | Pending |
+| REIM-03 | Phase 5 | Pending |
+| REIM-04 | Phase 5 | Pending |
+| REIM-05 | Phase 5 | Pending |
+| REIM-06 | Phase 5 | Pending |
+| REIM-07 | Phase 5 | Pending |
+| REIM-08 | Phase 5 | Pending |
+| REIM-09 | Phase 5 | Pending |
+| REIM-10 | Phase 5 | Pending |
+| REIM-11 | Phase 5 | Pending |
+| REIM-12 | Phase 5 | Pending |
+| PAYR-01 | Phase 5 | Pending |
+| PAYR-02 | Phase 5 | Pending |
+| PAYR-03 | Phase 5 | Pending |
+| PAYR-04 | Phase 5 | Pending |
+| ADMN-01 | Phase 6 | Pending |
+| ADMN-02 | Phase 6 | Pending |
+| ADMN-03 | Phase 6 | Pending |
+| ADMN-04 | Phase 6 | Pending |
+| ADMN-05 | Phase 6 | Pending |
+| EVNT-01 | Phase 6 | Pending |
+| EVNT-02 | Phase 6 | Pending |
+| EVNT-03 | Phase 6 | Pending |
+| EVNT-04 | Phase 6 | Pending |
+| EVNT-05 | Phase 6 | Pending |
+| EVNT-06 | Phase 6 | Pending |
+| EVNT-07 | Phase 6 | Pending |
+| EVNT-08 | Phase 6 | Pending |
+| AUDT-01 | Phase 7 | Pending |
+| AUDT-02 | Phase 7 | Pending |
+| AUDT-03 | Phase 7 | Pending |
+| AUDT-04 | Phase 7 | Pending |
+| AUDT-05 | Phase 7 | Pending |
+| AUDT-06 | Phase 7 | Pending |
+| AUDT-07 | Phase 7 | Pending |
+| AUDT-08 | Phase 7 | Pending |
+| AUTH-02 | Phase 7 | Pending |
+| AUTH-03 | Phase 7 | Pending |
 
 **Coverage:**
-- v1 requirements: 55 total
-- Mapped to phases: 0
-- Unmapped: 55 ⚠️
+- v1 requirements: 60 total (corrected from 55 — recount during roadmap creation)
+- Mapped to phases: 60
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-08-24*
-*Last updated: 2026-08-24 after initial definition*
+*Last updated: 2026-08-24 after roadmap traceability mapping (60 requirements across 7 phases)*
