@@ -44,6 +44,9 @@ Tested shared foundations that every later module builds on, plus session reliab
 ### Pagination Footer Behavior
 - **D-20:** Footer renders prev/next buttons + "Page N of M" readout; controls DISABLED (never hidden/crashing) when meta is missing/malformed or already at first/last page.
 
+### Hooks Consolidation (user request, 2026-08-24)
+- **D-21:** While migrating lists onto `normalizeList` (D-16) and the session module (D-17), collapse the six hand-rolled list hooks (`use-workshops`, `use-sessions`, `use-programs`, `use-participant`, `use-leave`, `use-admin-attendance-correction`) onto ONE shared list-hook factory so query/mutation/invalidate wiring exists once. Fix `use-login`'s `invalidateQueries({ queryKey: [] })` and `use-logout`'s `removeQueries({ queryKey: [] })` to target real keys. Non-query utility hooks (tiptap/dom/breakpoint) are out of scope.
+
 ### the agent's Discretion
 User delegated remaining mechanics ("do what will be ok / best"): exact file names for new lib/ modules and the footer component, factory signature details, which shadcn primitives back the footer, test case lists beyond D-19's minimum, internal structure of the permissions matrix, how `next=` interacts with proxy.ts cookie redirects.
 </decisions>
