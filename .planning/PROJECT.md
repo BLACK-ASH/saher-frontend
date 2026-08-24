@@ -20,6 +20,7 @@ Every backend domain has a working, reliable screen — staff and admins run the
 - ✓ Calendar month aggregation — existing
 - ✓ Notification feed + web-push — existing
 - ✓ Program admin page — existing (depth incomplete)
+- ✓ Quality gates: lint/typecheck/test CI gates + vitest/testing-library/msw harness — Validated in Phase 1: Quality Gates & Test Infrastructure
 
 ### Active
 
@@ -33,7 +34,7 @@ Every backend domain has a working, reliable screen — staff and admins run the
 - [ ] Admin bank + accounts management
 - [ ] Events depth: workshops/sessions/participants CRUD, session attendance, reminders, exports
 - [ ] Systematic audit-and-fix of existing modules against backend contract
-- [ ] Test setup (vitest + testing-library) with coverage of critical flows
+- [x] Test setup (vitest + testing-library) with coverage of critical flows — Phase 1
 - [ ] Responsive layout across staff-used screens
 
 ### Out of Scope
