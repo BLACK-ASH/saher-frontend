@@ -1,0 +1,36 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-08-24T16:13:33.457Z",
+  "phase": "2",
+  "phase_name": "Shared Infrastructure & Session Reliability",
+  "phase_dir": ".planning/phases/02-shared-infrastructure-session-reliability",
+  "plan": 0,
+  "task": 0,
+  "total_tasks": 0,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "Research (gsd-phase-researcher)", "status": "done", "commit": "510c199"},
+    {"id": 2, "name": "Validation strategy (02-VALIDATION.md) + CONTEXT.md D-21 hooks-consolidation decision", "status": "done", "commit": "67d1f29"},
+    {"id": 3, "name": "UI-SPEC gate decision", "status": "done", "progress": "User chose skip — design decisions already locked in CONTEXT.md D-09/D-10/D-20"},
+    {"id": 4, "name": "Pattern mapping (gsd-pattern-mapper)", "status": "in_progress", "progress": "Failed twice: provider 'Endpoint is unavailable'. Non-blocking per workflow — proceed without PATTERNS.md"}
+  ],
+  "remaining_tasks": [
+    {"id": 5, "name": "Spawn gsd-planner (MVP mode, security threat-model block required)", "status": "not_started"},
+    {"id": 6, "name": "Plan-checker verification loop (max 3 iterations)", "status": "not_started"},
+    {"id": 7, "name": "Requirements coverage gate (FNDT-02..06, AUTH-01) + decision coverage gate (D-01..D-21)", "status": "not_started"},
+    {"id": 8, "name": "STATE.md planned-phase record, ROADMAP annotation, final docs commit", "status": "not_started"}
+  ],
+  "blockers": [
+    {"description": "Subagent provider intermittently returns 'Upstream request failed: Endpoint is unavailable' (killed gsd-pattern-mapper twice, aborted gsd-planner spawn)", "type": "external", "workaround": "Retry; pattern mapper failure is non-blocking by workflow"}
+  ],
+  "human_actions_pending": [
+    {"action": "Start backend on :4000 for live /api/auth/me role-string probe (D-15)", "context": "Manager role strings are MEDIUM confidence; matrix keys must match observed values", "blocking": false}
+  ],
+  "decisions": [
+    {"decision": "D-21 added to CONTEXT.md: consolidate six list hooks (use-workshops, use-sessions, use-programs, use-participant, use-leave, use-admin-attendance-correction) onto ONE shared list-hook factory during retrofit; fix empty-queryKey misuse in use-login/use-logout; tiptap/dom/breakpoint hooks out of scope", "rationale": "User asked to un-jumble hooks; six near-identical hooks duplicate query/mutation/invalidate wiring Phase 2 already touches", "phase": "2"},
+    {"decision": "Skip UI-SPEC for Phase 2 (--skip-ui semantics)", "rationale": "All UI decisions locked in CONTEXT.md D-09/D-10/D-20; only new component is a behavior-focused pagination footer", "phase": "2"}
+  ],
+  "uncommitted_files": [],
+  "next_action": "Re-run /gsd-plan-phase 2 --skip-ui — init will detect existing RESEARCH.md (reused) and zero plans (straight to planner spawn). MVP mode active via ROADMAP.",
+  "context_notes": "Mid plan-phase orchestration. Yolo config mode (recommended defaults auto-taken). Planner prompt must include: MVP vertical slices, <threat_model> block per plan (ASVS L1, block high), deep-work rules (read_first/acceptance_criteria/concrete actions), VALIDATION.md exists, no PATTERNS.md. Key research findings: backend has FOUR roles (intern/user/manager/admin) with NO hierarchy — matrix must mirror role-permission.ts verbatim; both meta field names are PAGE COUNT (frontend interprets them inconsistently today = live bug); zero new deps needed for IST."
+}
