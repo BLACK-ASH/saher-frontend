@@ -15,13 +15,13 @@ Requirements for initial release. Each maps to roadmap phases.
 
 Shared infrastructure that all modules depend on. Built first, tested.
 
-- [ ] **FNDT-01**: Test infrastructure (vitest + testing-library + msw) installed and running via package script, msw wired at the apiFetch boundary
+- [x] **FNDT-01**: Test infrastructure (vitest + testing-library + msw) installed and running via package script, msw wired at the apiFetch boundary
 - [ ] **FNDT-02**: IST-safe datetime utilities (fixed-offset formatting/parsing, ISO strings with +05:30) with unit tests; all date rendering/parsing routes through them
 - [ ] **FNDT-03**: Envelope normalization factory handling both page-count field names (`total` and `totalPages`) and nullable `data`
 - [ ] **FNDT-04**: Central session-death handler (401 after refresh attempt → clear query cache + redirect to login) and logout cache-clearing fixed without refetch storms
 - [ ] **FNDT-05**: Safe pagination footer component that never crashes on missing/malformed meta
 - [ ] **FNDT-06**: Permission helper (`can(action, resource)`) driving consistent RBAC affordance gating
-- [ ] **FNDT-07**: Lint/typecheck baseline green; package hygiene fixed (react-hook-form moved to dependencies, unused deps removed, dead SCSS deleted)
+- [x] **FNDT-07**: Lint/typecheck baseline green; package hygiene fixed (react-hook-form moved to dependencies, unused deps removed, dead SCSS deleted)
 
 ### Auth & Profile
 
@@ -152,8 +152,8 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| FNDT-01 | Phase 1 | Pending |
-| FNDT-07 | Phase 1 | Pending |
+| FNDT-01 | Phase 1 | Complete |
+| FNDT-07 | Phase 1 | Complete |
 | FNDT-02 | Phase 2 | Pending |
 | FNDT-03 | Phase 2 | Pending |
 | FNDT-04 | Phase 2 | Pending |
