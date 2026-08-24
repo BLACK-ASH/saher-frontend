@@ -3,7 +3,7 @@ name: Deploy Dev
 on:
   push:
     branches:
-      - main
+      - dev
   workflow_dispatch:
 
 jobs:
@@ -19,8 +19,20 @@ jobs:
         run: |
           cd /home/saher/Test/saher-frontend
           git fetch origin
-          git reset --hard origin/main
-      
+          git reset --hard origin/dev
+
+      - name: Quality gates
+        run: |
+          cd /home/saher/Test/saher-frontend
+          corepack enable
+
+          pnpm --version
+
+          pnpm install --frozen-lockfile
+          pnpm lint && pnpm typecheck && pnpm test
+
+      - name: Docker Compose rebuild
+        run: |
           cd /home/saher/Test/
           docker compose up -d --build frontend
 
