@@ -27,8 +27,12 @@ export default function SessionReportPage() {
   useEffect(() => {
     if (!session.data) return;
 
+    // ponytail: sync fetched server data into editable draft state; derive-on-render
+    // refactor deferred until this screen is reworked
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setReport(session.data.review ?? "");
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setImages(
       (session.data.images ?? []).map((image) => ({
         id: image.id,

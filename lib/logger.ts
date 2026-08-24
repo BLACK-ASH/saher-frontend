@@ -1,5 +1,9 @@
 // lib/logger.ts
-export function logError(error: unknown, context?: Record<string, any>) {
+export function logError(
+  error: unknown,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- context bag is free-form by design
+  context?: Record<string, any>,
+) {
   const err = error instanceof Error ? error : new Error(String(error));
 
   // 👉 Replace this with Sentry later

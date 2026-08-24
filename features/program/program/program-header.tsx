@@ -7,9 +7,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import AddProgram from "./add-program";
 import RoleAccess from "@/components/role-access";
 
-type Props = {};
-
-function ProgramHeader({}: Props) {
+function ProgramHeader() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();

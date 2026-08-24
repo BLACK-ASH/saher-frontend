@@ -23,6 +23,7 @@ export function useTiptapEditor(providedEditor?: Editor | null): {
 
   useEffect(() => {
     if (!mainEditor) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- clear stale page editor when main editor detaches
       setStorageEditor(null)
       return
     }

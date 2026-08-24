@@ -1,5 +1,8 @@
 "use client"
 
+/* eslint-disable react-hooks/immutability
+   -- vendored react-dropzone ref-composition util; writing refs after render is its whole purpose */
+
 import { useCallback, useRef } from "react"
 
 // basically Exclude<React.ClassAttributes<T>["ref"], string>

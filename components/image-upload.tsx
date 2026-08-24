@@ -20,6 +20,7 @@ import { toast } from "sonner";
 type Props = {
   altName: string;
   url?: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- upload payload shape is backend-defined
   onUploadSuccess?: (data: any) => void;
 };
 

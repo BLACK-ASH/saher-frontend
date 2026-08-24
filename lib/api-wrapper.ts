@@ -54,7 +54,7 @@ export async function apiFetch<T>(
   let json: ApiResponse<T>;
 
   if (res.status === 204) {
-    // @ts-ignore
+    // @ts-expect-error -- 204 carries no envelope; callers treat null as "no content"
     return null;
   }
 

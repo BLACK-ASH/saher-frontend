@@ -25,7 +25,9 @@ export function useIsBreakpoint(
     const mql = window.matchMedia(query)
     const onChange = (e: MediaQueryListEvent) => setMatches(e.matches)
 
-    // Set initial value
+    // Set initial value — deliberately in-effect: window is unavailable during
+    // SSR/prerender, so a lazy useState initializer would crash there
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setMatches(mql.matches)
 
     // Add listener

@@ -80,7 +80,7 @@ const AttendanceCorrectionRequests = () => {
             <ArrowLeft />
           </Button>
           <Button
-            disabled={corrections?.meta?.total! < page + 1}
+            disabled={Number(corrections?.meta?.total) < page + 1}
             onClick={() => setPage((prev) => prev + 1)}
             variant={"outline"}
           >

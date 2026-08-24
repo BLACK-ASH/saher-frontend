@@ -1,6 +1,4 @@
-type Props = {};
-
-export default function Footer({}: Props) {
+export default function Footer() {
   return (
     <footer className="mt-auto border-t bg-muted/20">
       <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-6 py-4 text-sm md:flex-row">

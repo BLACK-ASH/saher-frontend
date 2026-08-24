@@ -119,7 +119,6 @@ const Page = () => {
             data={inData || []}
             refetch={inRefetch}
             onRowClick={(mail) => {
-              console.log(mail);
               setSelectedMail(mail);
               setOpen(true);
             }}
@@ -397,7 +396,7 @@ const Page = () => {
               <p className="font-bold">To</p>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                 {selectedMail?.to.map((user) => (
-                  <div className="flex items-center gap-3">
+                  <div key={user.email} className="flex items-center gap-3">
                     <Avatar className="h-8 w-8 rounded-lg">
                       <AvatarImage
                         src={imageUrl(user.image?.src)}
@@ -421,7 +420,7 @@ const Page = () => {
                 <p className="font-bold">CC</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                   {selectedMail?.cc.map((user) => (
-                    <div className="flex items-center gap-3">
+                    <div key={user.email} className="flex items-center gap-3">
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage
                           src={imageUrl(user.image?.src)}
@@ -446,7 +445,7 @@ const Page = () => {
                 <p className="font-bold">CC</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {selectedMail?.bcc.map((user) => (
-                    <div className="flex items-center gap-3">
+                    <div key={user.email} className="flex items-center gap-3">
                       <Avatar className="h-8 w-8 rounded-lg">
                         <AvatarImage
                           src={imageUrl(user.image?.src)}

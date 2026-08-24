@@ -105,6 +105,7 @@ export function useElementRect({
 
   useEffect(() => {
     if (!enabled || !isClientSide()) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset rect when disabled/unmounted env
       setRect(initialRect)
       return
     }

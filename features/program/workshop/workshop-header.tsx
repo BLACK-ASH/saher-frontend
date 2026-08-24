@@ -7,9 +7,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import AddWorkshop from "./add-workshop";
 import RoleAccess from "@/components/role-access";
 
-type Props = {};
-
-function WorkshopHeader({}: Props) {
+function WorkshopHeader() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();

@@ -30,12 +30,14 @@ interface MenuBarProps {
 }
 
 export function MenuBar({ editor }: MenuBarProps) {
-  if (!editor) return null;
-
   const editorState = useEditorState({
     editor,
-    selector: menuBarStateSelector,
+    // Hook must run on every render (stable order); selector no-ops until
+    // the editor instance exists.
+    selector: (ctx) => (ctx.editor ? menuBarStateSelector(ctx.editor) : null),
   });
+
+  if (!editor || !editorState) return null;
 
   return (
     <div className="flex flex-wrap items-center gap-2 border-b bg-background p-2">

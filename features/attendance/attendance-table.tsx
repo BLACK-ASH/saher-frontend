@@ -87,7 +87,7 @@ export function AttendanceTable({
             <ArrowLeft />
           </Button>
           <Button
-            disabled={attendances?.meta?.total! < page + 1}
+            disabled={Number(attendances?.meta?.total) < page + 1}
             onClick={() => setPage((prev) => prev + 1)}
             variant={"outline"}
           >

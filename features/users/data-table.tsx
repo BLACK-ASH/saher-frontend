@@ -35,6 +35,7 @@ import { ChevronDown, RotateCw } from "lucide-react";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- TanStack refetch signatures vary by query wiring
   refetch: any;
 }
 

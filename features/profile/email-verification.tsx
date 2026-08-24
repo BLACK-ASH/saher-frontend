@@ -4,9 +4,7 @@ import { apiFetch } from "@/lib/api-wrapper";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 
-type Props = {};
-
-function EmailVerification({}: Props) {
+function EmailVerification() {
   const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {

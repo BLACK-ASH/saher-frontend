@@ -35,9 +35,7 @@ import { SessionT } from "@/services/session.api";
 import { useRouter, useSearchParams } from "next/navigation";
 import RoleAccess from "@/components/role-access";
 
-type Props = {};
-
-function SessionView({}: Props) {
+function SessionView() {
   const keyword = useSearchParams().get("keyword") || "";
   const { sessions, update, del } = useSessions({ keyword });
   const [open, setOpen] = useState(false);

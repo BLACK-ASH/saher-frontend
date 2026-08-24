@@ -225,7 +225,6 @@ export default function EventsCalendar() {
           // setSelectedEvent(null)
           //          }}
           onDelete={(event) => {
-            console.log("Delete", event);
             del.mutate(event.id, {
               onSuccess: () => {
                 toast.success("Calendar Event Deleted");

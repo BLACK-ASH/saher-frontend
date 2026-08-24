@@ -35,9 +35,7 @@ import { WorkshopT } from "@/services/workshop.api";
 import { useRouter, useSearchParams } from "next/navigation";
 import RoleAccess from "@/components/role-access";
 
-type Props = {};
-
-function WorkshopView({}: Props) {
+function WorkshopView() {
   const keyword = useSearchParams().get("keyword") || "";
   const { workshops, update, del } = useWorkshops({ keyword });
   const [open, setOpen] = useState(false);

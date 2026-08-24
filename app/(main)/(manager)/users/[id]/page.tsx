@@ -20,7 +20,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 
-function page() {
+function ManagerUserPage() {
   const params = useParams<{ id: string }>();
   const { id } = params;
 
@@ -248,4 +248,4 @@ function Field({
     </div>
   );
 }
-export default page;
+export default ManagerUserPage;

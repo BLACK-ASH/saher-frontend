@@ -7,9 +7,7 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import AddSession from "./add-session";
 import RoleAccess from "@/components/role-access";
 
-type Props = {};
-
-function SessionHeader({}: Props) {
+function SessionHeader() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();

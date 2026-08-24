@@ -6,9 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 
-type Props = {};
-
-function ParticipantHeader({}: Props) {
+function ParticipantHeader() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const pathname = usePathname();

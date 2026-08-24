@@ -186,7 +186,7 @@ export function RangeAttendanceTable({
             <ArrowLeft />
           </Button>
           <Button
-            disabled={data?.meta?.total! < page + 1}
+            disabled={Number(data?.meta?.total) < page + 1}
             onClick={() => setPage((prev) => prev + 1)}
             variant={"outline"}
           >

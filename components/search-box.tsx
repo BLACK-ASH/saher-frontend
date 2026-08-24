@@ -24,6 +24,9 @@ export function SearchBox({
 
   // Sync input if URL changes externally
   useEffect(() => {
+    // ponytail: intentional external-URL → input sync; derive-state refactor
+    // would fight the debounce write-back
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setValue(searchParams.get(queryName) ?? "");
   }, [searchParams, queryName]);
 

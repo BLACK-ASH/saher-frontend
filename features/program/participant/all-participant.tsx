@@ -27,9 +27,7 @@ import { ParticipantT } from "@/services/participant.api";
 import UpdateParticipant from "./update-participant";
 import RoleAccess from "@/components/role-access";
 
-type Props = {};
-
-function ParticipantView({}: Props) {
+function ParticipantView() {
   const keyword = useSearchParams().get("keyword") || "";
   const page = Number(useSearchParams().get("page")) || 1;
   const { participants, del } = useParticipants({

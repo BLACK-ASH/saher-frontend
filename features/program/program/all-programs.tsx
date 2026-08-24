@@ -34,9 +34,7 @@ import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useRouter, useSearchParams } from "next/navigation";
 import RoleAccess from "@/components/role-access";
 
-type Props = {};
-
-function ProgramView({}: Props) {
+function ProgramView() {
   const keyword = useSearchParams().get("keyword") || "";
   const { programs, update, del } = usePrograms({ keyword });
   const [open, setOpen] = useState(false);
