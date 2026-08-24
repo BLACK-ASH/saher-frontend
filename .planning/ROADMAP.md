@@ -17,7 +17,7 @@ Per owner directives: every module is delivered **complete** within its phase (n
 
 Decimal phases appear between their surrounding integers in numeric order.
 
-- [ ] **Phase 1: Quality Gates & Test Infrastructure** - Lint/typecheck/test gates exist before any mass changes; vitest + testing-library + msw wired at the apiFetch boundary
+- [x] **Phase 1: Quality Gates & Test Infrastructure** - Lint/typecheck/test gates exist before any mass changes; vitest + testing-library + msw wired at the apiFetch boundary (completed 2026-08-24)
 - [ ] **Phase 2: Shared Infrastructure & Session Reliability** - IST date utils, envelope normalization factory, session-death handler, safe pagination footer, RBAC helper — each tested; auth refresh/logout flows verified against contract
 - [ ] **Phase 3: Noticeboard Pilot** - First complete module proves the Slice Contract end-to-end; promotes trash-tabs and pagination footer to shared components
 - [ ] **Phase 4: Staff Self-Service — Mail & Leave** - Staff run daily personal workflows in-app: read/write internal mail, apply for leave with balances, managers review applications
@@ -54,7 +54,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 01-03-PLAN.md — Deploy workflow retargeted to dev with quality-gate pre-steps; first gated deploy (FNDT-07)
+- [x] 01-03-PLAN.md — Deploy workflow retargeted to dev with quality-gate pre-steps; first gated deploy deferred after user cancelled CI run (FNDT-07)
 
 ### Phase 2: Shared Infrastructure & Session Reliability
 
@@ -193,7 +193,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Quality Gates & Test Infrastructure | 2/3 | In Progress|  |
+| 1. Quality Gates & Test Infrastructure | 3/3 | Complete   | 2026-08-24 |
 | 2. Shared Infrastructure & Session Reliability | 0/? | Not started | - |
 | 3. Noticeboard Pilot | 0/? | Not started | - |
 | 4. Staff Self-Service — Mail & Leave | 0/? | Not started | - |

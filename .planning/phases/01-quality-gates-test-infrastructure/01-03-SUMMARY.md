@@ -102,16 +102,15 @@ None.
 None - no external service configuration required.
 
 ## Next Phase Readiness
-- **BLOCKED ON HUMAN ACTION (Task 3 checkpoint):** `git push origin dev` requires explicit user approval; until pushed, GitHub still runs the old main-triggered workflow and the Test env is not yet gated
-- After approval: executor pushes dev (never main), monitors the "Deploy Dev" Actions run through Quality gates → compose rebuild → healthy container; fix-forward on dev if the runner lacks Corepack/pnpm
-- Local dev is 24 commits ahead of origin/dev (branch-sync merge + all Phase 1 work incl. `01553d9`)
-- Nothing has been pushed during this plan; main remains untouched (`git log origin/main..main` still shows local-only commits)
+- **Task 3 outcome (final):** push approved and executed — `origin/dev` == `9ddbc3e`; the gated "Deploy Dev" run auto-triggered, then **the user manually cancelled it in the Actions UI** before any server-side deploy
+- Acceptance item 4 (first gated deploy green) is **deferred**: quality gates were verified locally (full runner rehearsal, exit 0); CI verification happens at the next natural push/workflow_dispatch
+- Standing instruction from user: GSD must not push to `dev` again without an explicit ask (future verification runs should use workflow_dispatch or a feature branch)
 
 ---
 *Phase: 01-quality-gates-test-infrastructure*
-*Completed: 2026-08-24 (pending Task 3 checkpoint resolution)*
+*Completed: 2026-08-24*
 
 ---
 ## Self-Check: PASSED
 
-Key file exists on disk: `.github/workflows/dev-deploy.yml` ✓. Commit `01553d9` present in git log ✓. Plan-level verification items 1–3 verified (workflow dev-exclusive, gates precede compose verbatim, local rehearsal exit-0); item 4 (post-push Actions run green) is intrinsically pending the Task 3 human checkpoint and cannot be claimed yet.
+Key file exists on disk: `.github/workflows/dev-deploy.yml` ✓. Commit `01553d9` present in git log ✓. Plan-level verification items 1–3 verified (workflow dev-exclusive, gates precede compose verbatim, local rehearsal exit-0); item 4 deferred per Task 3 outcome above — recorded as a deliberate deviation, not a failure.
