@@ -68,8 +68,8 @@ Recent decisions affecting current work:
 - [Phase 01]: Lint baseline repaired by fixing all 42 errors in place, eslint config untouched
 - [Phase 01]: All 8 test-toolchain packages installed only after explicit user approval at blocking-human legitimacy gate
 - [Phase 01]: vitest.config.ts uses import.meta.dirname for @ alias; coverage report-only until Phase 7
-- [Phase ?]: Test harness proven by two durable reference tests: LoginForm render through a fresh-per-call QueryClientProvider helper, and real apiFetch driven through msw-intercepted fetch with full envelope + meta assertions
-- [Phase ?]: msw lifecycle lives in tests/setup.ts (listen onUnhandledRequest:error / resetHandlers / close) over a shared no-default-handler setupServer; handlers registered inline per test
+- [Phase 01]: Test harness proven by two durable reference tests: LoginForm render through a fresh-per-call QueryClientProvider helper, and real apiFetch driven through msw-intercepted fetch with full envelope + meta assertions
+- [Phase 01]: msw lifecycle lives in tests/setup.ts (listen onUnhandledRequest:error / resetHandlers / close) over a shared no-default-handler setupServer; handlers registered inline per test
 
 ### Pending Todos
 
