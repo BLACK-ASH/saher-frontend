@@ -13,8 +13,14 @@ export function handleSessionDeath(queryClient: QueryClient): Promise<void> {
   if (died) return Promise.resolve();
   died = true;
 
+  const path = window.location.pathname;
+  const isPublic = ["/login", "/forgot-password"].some((r) =>
+    path.startsWith(r),
+  );
+
   return Promise.resolve(queryClient.cancelQueries()).then(() => {
     queryClient.clear();
+    if (isPublic) return;
     toast.error("Session expired. Please login again.");
     // ponytail: hard navigation accepted (A3) — guarantees exactly-once
     // clean-tree semantics.
@@ -28,9 +34,7 @@ export function handleSessionDeath(queryClient: QueryClient): Promise<void> {
 export function performLogoutCleanup(queryClient: QueryClient): void {
   queryClient.cancelQueries();
   queryClient.clear();
-  // ponytail: redirect "/" not /login — avoids proxy.ts bouncing a
-  // cookie-carrying browser back home (RESEARCH Pitfall 2).
-  window.location.assign("/");
+  window.location.href = "/login";
 }
 
 export function resetSessionGuard(): void {

@@ -55,7 +55,7 @@ export function LoginForm({
         toast.success(res.message);
         const raw = params.get("next") ?? "/";
         const next = raw.startsWith("/") && !raw.startsWith("//") ? raw : "/";
-        router.push(next);
+        window.location.href = next;
       },
       onError: (err: Error) => {
         toast.error(err.message);
