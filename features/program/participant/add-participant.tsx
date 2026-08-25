@@ -46,7 +46,7 @@ const AddParticipant = () => {
   const onSubmit = (values: FormValues) => {
     add.mutate(values, {
       onSuccess: (res) => {
-        toast.success(res.message);
+        toast.success((res as { message: string }).message);
       },
     });
     form.reset();

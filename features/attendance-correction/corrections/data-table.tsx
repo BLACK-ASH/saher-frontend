@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, RotateCw } from "lucide-react";
 import { useAdminAttendanceCorrection } from "@/hooks/use-admin-attendance-correction";
+import { PaginationFooter } from "@/components/pagination-footer";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 import { CardTitle } from "@/components/ui/card";
@@ -187,22 +188,11 @@ export function AttendanceCorrectionDataTable<TData, TValue>({
           </TableBody>
         </Table>
         <div className="flex items-center justify-end space-x-2 py-4 mx-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.previousPage()}
-            disabled={!table.getCanPreviousPage()}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => table.nextPage()}
-            disabled={!table.getCanNextPage()}
-          >
-            Next
-          </Button>
+          <PaginationFooter
+            page={table.getState().pagination.pageIndex + 1}
+            totalPages={corrections?.totalPages ?? 0}
+            onPageChange={(p) => table.setPageIndex(Math.max(0, p - 1))}
+          />
         </div>
       </div>
     </div>

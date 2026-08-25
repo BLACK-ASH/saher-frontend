@@ -46,7 +46,7 @@ export default function ProgramPage() {
     },
   });
 
-  const { program, addParticipants, removeParticipant } = usePrograms({ id });
+  const { program, addParticipants, removeParticipant, participants: programParticipants } = usePrograms({ id });
 
   if (program.isLoading) {
     return (
@@ -84,7 +84,7 @@ export default function ProgramPage() {
           <div>
             <p className="font-medium text-foreground">Participants</p>
 
-            <p>{data.participants?.length ?? 0}</p>
+            <p>{programParticipants.data?.length ?? 0}</p>
           </div>
 
           <div>
@@ -144,7 +144,7 @@ export default function ProgramPage() {
         </div>
 
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {data.participants?.map((participant) => (
+          {programParticipants.data?.map((participant) => (
             <Card
               key={participant.id}
               className="group relative cursor-pointer transition-all hover:border-primary hover:shadow-md"
@@ -271,9 +271,10 @@ export default function ProgramPage() {
                     </div>
                   ) : (
                     participants.data
-                      ?.filter(
+                      ?.items
+                      .filter(
                         (participant) =>
-                          !data.participants?.some(
+                          !programParticipants.data?.some(
                             (p) => p.id === participant.id,
                           ),
                       )

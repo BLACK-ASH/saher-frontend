@@ -6,7 +6,18 @@ import {
   updateParticipant,
 } from "@/services/participant.api";
 import { QueryProps } from "@/services/program.api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createResourceListHook } from "./resource-list-factory";
+
+const useParticipantBase = createResourceListHook({
+  baseKey: ["participants"],
+  list: getParticipants,
+  get: getSingleParticipant,
+  mutations: {
+    add: addParticipant as (args: unknown) => Promise<unknown>,
+    update: updateParticipant as (args: unknown) => Promise<unknown>,
+    del: deleteParticipant as (args: unknown) => Promise<unknown>,
+  },
+});
 
 type Props = { id?: string } & QueryProps;
 
@@ -16,43 +27,16 @@ export const useParticipants = ({
   page = 1,
   id,
 }: Props) => {
-  const queryClient = useQueryClient();
-
-  const participants = useQuery({
-    queryKey: ["participants", keyword, page, limit],
-    queryFn: () => getParticipants({ keyword, page, limit }),
-  });
-
-  const participant = useQuery({
-    queryKey: ["participants", id],
-    queryFn: () => getSingleParticipant(id as string),
-    enabled: !!id,
-  });
-
-  const add = useMutation({
-    mutationFn: addParticipant,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["participants"] });
-    },
-  });
-
-  const update = useMutation({
-    mutationFn: updateParticipant,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["participants"] });
-    },
-  });
-
-  const del = useMutation({
-    mutationFn: deleteParticipant,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["participants"] });
-    },
+  const { list, detail, add, update, del } = useParticipantBase({
+    id,
+    keyword,
+    page,
+    limit,
   });
 
   return {
-    participant,
-    participants,
+    participants: list,
+    participant: detail,
     add,
     update,
     del,

@@ -66,8 +66,8 @@ const WorkshopEditor = ({
                 <div className="px-3 py-4 text-center text-sm text-muted-foreground">
                   Loading programs...
                 </div>
-              ) : programs.data?.length ? (
-                programs.data.map((item) => (
+              ) : programs.data?.items.length ? (
+                programs.data.items.map((item) => (
                   <button
                     key={item.id}
                     type="button"
@@ -110,7 +110,7 @@ const WorkshopEditor = ({
             },
             {
               onSuccess: (res) => {
-                toast.success(res.message);
+                toast.success((res as { message: string }).message);
               },
             },
           );

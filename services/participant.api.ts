@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api-wrapper";
+import { normalizeList } from "@/lib/normalize-list";
 import { toast } from "sonner";
 import z from "zod";
 import { QueryProps } from "./program.api";
@@ -78,7 +79,7 @@ export const getParticipants = async ({
     },
   );
   if (!res.success) toast.error(res.message);
-  return res.data;
+  return normalizeList<ParticipantT>(res);
 };
 
 export const getSingleParticipant = async (id: string) => {

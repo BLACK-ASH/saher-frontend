@@ -1,4 +1,5 @@
-import { apiFetch, MetaResponse } from "@/lib/api-wrapper";
+import { apiFetch } from "@/lib/api-wrapper";
+import { normalizeList } from "@/lib/normalize-list";
 import { DefaultUserT } from "@/lib/common-zod-schema";
 import { isActive } from "@tiptap/core";
 import { toast } from "sonner";
@@ -240,10 +241,7 @@ export const getLeaveApplications = async ({
 
   if (!res.success) toast.error(res.message);
 
-  return {
-    data: res.data,
-    meta: res.meta as MetaResponse,
-  };
+  return normalizeList<LeaveT>(res);
 };
 
 export const getAllLeaveApplications = async ({
@@ -262,10 +260,7 @@ export const getAllLeaveApplications = async ({
 
   if (!res.success) toast.error(res.message);
 
-  return {
-    data: res.data,
-    meta: res.meta as MetaResponse,
-  };
+  return normalizeList<LeaveT>(res);
 };
 
 /* -------------------------------------------------------------------------- */

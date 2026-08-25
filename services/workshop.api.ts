@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api-wrapper";
+import { normalizeList } from "@/lib/normalize-list";
 import { toast } from "sonner";
 import { QueryProps } from "./program.api";
 
@@ -29,7 +30,7 @@ export const getWorkshops = async ({
     },
   );
   if (!res.success) toast.error(res.message);
-  return res.data;
+  return normalizeList<WorkshopT>(res);
 };
 
 export const getSingleWorkshop = async (id: string) => {

@@ -40,7 +40,7 @@ const ProgramEditor = ({
             { title: titleRef.current?.value as string, description },
             {
               onSuccess: (res) => {
-                toast.success(res.message);
+                toast.success((res as { message: string }).message);
               },
             },
           );

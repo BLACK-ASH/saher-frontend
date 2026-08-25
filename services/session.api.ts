@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api-wrapper";
+import { normalizeList } from "@/lib/normalize-list";
 import { DefaultUserT } from "@/lib/common-zod-schema";
 import { toast } from "sonner";
 import { QueryProps } from "./program.api";
@@ -52,7 +53,7 @@ export const getSessions = async ({
     },
   );
   if (!res.success) toast.error(res.message);
-  return res.data;
+  return normalizeList<SessionT>(res);
 };
 
 export const getSingleSession = async (id: string) => {

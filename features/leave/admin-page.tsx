@@ -75,7 +75,7 @@ export default function AdminLeavePage() {
             </TableHeader>
 
             <TableBody>
-              {applications.data?.data.map((leave) => (
+              {applications.data?.items.map((leave) => (
                 <TableRow key={leave.id}>
                   <TableCell>
                     <div className="flex items-center gap-4">

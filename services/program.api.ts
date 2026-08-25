@@ -1,4 +1,5 @@
 import { apiFetch } from "@/lib/api-wrapper";
+import { normalizeList } from "@/lib/normalize-list";
 import { toast } from "sonner";
 import { ParticipantT } from "./participant.api";
 
@@ -33,7 +34,7 @@ export const getPrograms = async ({
     },
   );
   if (!res.success) toast.error(res.message);
-  return res.data;
+  return normalizeList<ProgramsT>(res);
 };
 
 export const getSingleProgram = async (id: string) => {

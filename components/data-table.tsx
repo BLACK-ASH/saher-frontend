@@ -25,8 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
-
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { PaginationFooter } from "@/components/pagination-footer";
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];
@@ -154,28 +153,11 @@ export function DataTable<TData, TValue>({
 
       {/* Pagination */}
       <div className="flex items-center justify-end gap-2">
-        <Button
-          variant="outline"
-          size="icon"
-          disabled={!table.getCanPreviousPage()}
-          onClick={() => table.previousPage()}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
-
-        <span className="text-sm text-muted-foreground">
-          Page {table.getState().pagination.pageIndex + 1} of{" "}
-          {table.getPageCount()}
-        </span>
-
-        <Button
-          variant="outline"
-          size="icon"
-          disabled={!table.getCanNextPage()}
-          onClick={() => table.nextPage()}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
+        <PaginationFooter
+          page={table.getState().pagination.pageIndex + 1}
+          totalPages={table.getPageCount()}
+          onPageChange={(p) => table.setPageIndex(p - 1)}
+        />
       </div>
     </div>
   );

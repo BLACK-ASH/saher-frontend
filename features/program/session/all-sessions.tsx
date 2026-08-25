@@ -58,7 +58,7 @@ function SessionView() {
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-      {data.map((session) => (
+      {data.items.map((session) => (
         <Card key={session.id}>
           <CardHeader>
             <CardTitle>{session.title}</CardTitle>
@@ -114,7 +114,7 @@ function SessionView() {
                       onClick={() => {
                         del.mutate(session.id, {
                           onSuccess: (res) => {
-                            toast.success(res.message);
+                            toast.success((res as { message: string }).message);
                           },
                         });
                       }}
@@ -164,7 +164,7 @@ function SessionView() {
                   },
                   {
                     onSuccess: (res) => {
-                      toast.success(res.message);
+                      toast.success((res as { message: string }).message);
                     },
                   },
                 );

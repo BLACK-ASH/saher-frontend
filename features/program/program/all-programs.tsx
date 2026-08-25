@@ -59,7 +59,7 @@ function ProgramView() {
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-      {data.map((program) => (
+      {data.items.map((program) => (
         <Card key={program.id}>
           <CardHeader>
             <CardTitle>{program.title}</CardTitle>
@@ -96,7 +96,7 @@ function ProgramView() {
                       onClick={() => {
                         del.mutate(program.id, {
                           onSuccess: (res) => {
-                            toast.success(res.message);
+                            toast.success((res as { message: string }).message);
                           },
                         });
                       }}
@@ -146,7 +146,7 @@ function ProgramView() {
                   },
                   {
                     onSuccess: (res) => {
-                      toast.success(res.message);
+                      toast.success((res as { message: string }).message);
                     },
                   },
                 );

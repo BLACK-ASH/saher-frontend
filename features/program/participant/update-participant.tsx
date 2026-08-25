@@ -81,7 +81,7 @@ const UpdateParticipant = ({ participant, open, onOpenChange }: Props) => {
       { id: participant?.id as string, data: values },
       {
         onSuccess: (res) => {
-          toast.success(res.message);
+          toast.success((res as { message: string }).message);
         },
       },
     );

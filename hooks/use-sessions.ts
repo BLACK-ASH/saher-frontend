@@ -9,44 +9,29 @@ import {
   updateSession,
   updateSessionAttendance,
 } from "@/services/session.api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createResourceListHook } from "./resource-list-factory";
+
+const useSessionBase = createResourceListHook({
+  baseKey: ["sessions"],
+  list: getSessions,
+  get: getSingleSession,
+  mutations: {
+    add: addSession as (args: unknown) => Promise<unknown>,
+    update: updateSession as (args: unknown) => Promise<unknown>,
+    del: deleteSession as (args: unknown) => Promise<unknown>,
+  },
+});
 
 type Props = { id?: string } & QueryProps;
 
 export const useSessions = ({ id, keyword, limit, page }: Props) => {
   const queryClient = useQueryClient();
-
-  const sessions = useQuery({
-    queryKey: ["sessions", keyword, limit, page],
-    queryFn: () => getSessions({ keyword, page, limit }),
-  });
-
-  const session = useQuery({
-    queryKey: ["sessions", id],
-    queryFn: () => getSingleSession(id as string),
-    enabled: !!id,
-  });
-
-  const add = useMutation({
-    mutationFn: addSession,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workshops"] });
-      queryClient.invalidateQueries({ queryKey: ["sessions"] });
-    },
-  });
-
-  const update = useMutation({
-    mutationFn: updateSession,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["sessions"] });
-    },
-  });
-
-  const del = useMutation({
-    mutationFn: deleteSession,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["sessions"] });
-    },
+  const { list, detail, add, update, del } = useSessionBase({
+    id,
+    keyword,
+    page,
+    limit,
   });
 
   const markAttendance = useMutation({
@@ -71,8 +56,8 @@ export const useSessions = ({ id, keyword, limit, page }: Props) => {
   });
 
   return {
-    sessions,
-    session,
+    sessions: list,
+    session: detail,
     add,
     update,
     del,

@@ -78,8 +78,7 @@ export default function LeavePage() {
 
         <LeaveTable
           loading={applications.isLoading}
-          data={applications.data?.data ?? []}
-          meta={applications.data?.meta}
+          data={applications.data?.items ?? []}
         />
       </section>
 

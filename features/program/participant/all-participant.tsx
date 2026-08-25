@@ -41,7 +41,7 @@ function ParticipantView() {
   const router = useRouter();
 
   if (isLoading) return <DefaultLoader className="col-span-2" />;
-  if (!data || data.length === 0)
+  if (!data || data.items.length === 0)
     return (
       <NoData
         className="col-span-2"
@@ -52,7 +52,7 @@ function ParticipantView() {
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-      {data.map((participant) => (
+      {data.items.map((participant) => (
         <Card key={participant.id} className="w-full">
           <CardHeader className="flex flex-row justify-between items-center gap-4">
             <div className="flex gap-2 items-center">
@@ -116,7 +116,7 @@ function ParticipantView() {
                       onClick={() => {
                         del.mutate(participant.id, {
                           onSuccess: (res) => {
-                            toast.success(res.message);
+                            toast.success((res as { message: string }).message);
                           },
                         });
                       }}

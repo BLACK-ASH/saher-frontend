@@ -60,7 +60,7 @@ function WorkshopView() {
 
   return (
     <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-      {data.map((workshop) => (
+      {data.items.map((workshop) => (
         <Card key={workshop.id}>
           <CardHeader>
             <CardTitle>{workshop.title}</CardTitle>
@@ -100,7 +100,7 @@ function WorkshopView() {
                       onClick={() => {
                         del.mutate(workshop.id, {
                           onSuccess: (res) => {
-                            toast.success(res.message);
+                            toast.success((res as { message: string }).message);
                           },
                         });
                       }}
@@ -149,7 +149,7 @@ function WorkshopView() {
                   },
                   {
                     onSuccess: (res) => {
-                      toast.success(res.message);
+                      toast.success((res as { message: string }).message);
                     },
                   },
                 );

@@ -18,7 +18,7 @@ export default function SessionAttendancePage() {
 
   const { session, markAttendance } = useSessions({ id });
 
-  const { program } = usePrograms({
+  const { program, participants: programParticipants } = usePrograms({
     id: session.data?.program.id,
   });
 
@@ -46,7 +46,7 @@ export default function SessionAttendancePage() {
     );
   }
 
-  const participants = program.data.participants ?? [];
+  const participants = programParticipants.data ?? [];
 
   const onSubmit = (values: { present: string[] }) => {
     markAttendance.mutate(

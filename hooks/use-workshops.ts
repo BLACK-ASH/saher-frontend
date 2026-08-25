@@ -6,48 +6,32 @@ import {
   getWorkshops,
   updateWorkshops,
 } from "@/services/workshop.api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createResourceListHook } from "./resource-list-factory";
+
+const useWorkshopBase = createResourceListHook({
+  baseKey: ["workshops"],
+  list: getWorkshops,
+  get: getSingleWorkshop,
+  mutations: {
+    add: addWorkshops as (args: unknown) => Promise<unknown>,
+    update: updateWorkshops as (args: unknown) => Promise<unknown>,
+    del: deleteWorkshops as (args: unknown) => Promise<unknown>,
+  },
+});
 
 type Props = { id?: string } & QueryProps;
 
 export const useWorkshops = ({ id, keyword, page, limit }: Props) => {
-  const queryClient = useQueryClient();
-
-  const workshops = useQuery({
-    queryKey: ["workshops", keyword, page, limit],
-    queryFn: () => getWorkshops({ keyword, page, limit }),
-  });
-
-  const workshop = useQuery({
-    queryKey: ["workshops", id],
-    queryFn: () => getSingleWorkshop(id as string),
-    enabled: !!id,
-  });
-
-  const add = useMutation({
-    mutationFn: addWorkshops,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workshops"] });
-    },
-  });
-
-  const update = useMutation({
-    mutationFn: updateWorkshops,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workshops"] });
-    },
-  });
-
-  const del = useMutation({
-    mutationFn: deleteWorkshops,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workshops"] });
-    },
+  const { list, detail, add, update, del } = useWorkshopBase({
+    id,
+    keyword,
+    page,
+    limit,
   });
 
   return {
-    workshops,
-    workshop,
+    workshops: list,
+    workshop: detail,
     add,
     update,
     del,

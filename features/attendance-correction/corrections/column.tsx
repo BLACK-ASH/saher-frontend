@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { attendanceCorrectionStatusVariant } from "@/features/attendance/attendance-correction-requests";
 import { imageUrl } from "@/lib/image-url";
-import { formatDate, formatTime } from "@/lib/utils/time";
+import { formatIstDate, formatIstDateTime } from "@/lib/date";
 import { AttendanceCorrectionResponse } from "@/services/attendance-correction.api";
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowRight, ArrowUpDown } from "lucide-react";
@@ -60,7 +60,7 @@ export const attendanceCorrectionColumns: ColumnDef<AttendanceCorrectionResponse
       accessorFn: (row) => row.attendance.date,
       header: () => <div>Day</div>,
       cell: ({ row }) => {
-        return <p>{formatDate(row.getValue("date"))}</p>;
+        return <p>{formatIstDate(row.getValue("date"))}</p>;
       },
     },
     {
@@ -73,9 +73,9 @@ export const attendanceCorrectionColumns: ColumnDef<AttendanceCorrectionResponse
 
         return (
           <div className="flex gap-1 items-center text-muted-foreground">
-            <p>{formatTime(previous.inTime)}</p>
+            <p>{formatIstDateTime(previous.inTime)}</p>
             <ArrowRight className="size-4" />
-            <p className="text-foreground">{formatTime(changes.inTime)}</p>
+            <p className="text-foreground">{formatIstDateTime(changes.inTime)}</p>
           </div>
         );
       },
@@ -90,9 +90,9 @@ export const attendanceCorrectionColumns: ColumnDef<AttendanceCorrectionResponse
 
         return (
           <div className="flex gap-1 items-center text-muted-foreground">
-            <p>{formatTime(previous.outTime)}</p>
+            <p>{formatIstDateTime(previous.outTime)}</p>
             <ArrowRight className="size-4" />
-            <p className="text-foreground">{formatTime(changes.outTime)}</p>
+            <p className="text-foreground">{formatIstDateTime(changes.outTime)}</p>
           </div>
         );
       },

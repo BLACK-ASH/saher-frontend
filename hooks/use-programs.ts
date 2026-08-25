@@ -10,6 +10,18 @@ import {
   updateProgram,
 } from "@/services/program.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { createResourceListHook } from "./resource-list-factory";
+
+const useProgramBase = createResourceListHook({
+  baseKey: ["programs"],
+  list: getPrograms,
+  get: getSingleProgram,
+  mutations: {
+    add: addProgram as (args: unknown) => Promise<unknown>,
+    update: updateProgram as (args: unknown) => Promise<unknown>,
+    del: deleteProgram as (args: unknown) => Promise<unknown>,
+  },
+});
 
 type Props = { id?: string } & QueryProps;
 
@@ -20,37 +32,11 @@ export const usePrograms = ({
   page = 1,
 }: Props) => {
   const queryClient = useQueryClient();
-
-  const programs = useQuery({
-    queryKey: ["programs", keyword, page, limit],
-    queryFn: () => getPrograms({ keyword, page, limit }),
-  });
-
-  const program = useQuery({
-    queryKey: ["programs", id],
-    queryFn: () => getSingleProgram(id as string),
-    enabled: !!id,
-  });
-
-  const add = useMutation({
-    mutationFn: addProgram,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["programs"] });
-    },
-  });
-
-  const update = useMutation({
-    mutationFn: updateProgram,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["programs"] });
-    },
-  });
-
-  const del = useMutation({
-    mutationFn: deleteProgram,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["programs"] });
-    },
+  const { list, detail, add, update, del } = useProgramBase({
+    id,
+    keyword,
+    page,
+    limit,
   });
 
   const participants = useQuery({
@@ -74,8 +60,8 @@ export const usePrograms = ({
   });
 
   return {
-    programs,
-    program,
+    programs: list,
+    program: detail,
     add,
     update,
     del,
