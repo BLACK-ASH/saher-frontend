@@ -24,6 +24,7 @@ import {
 import { LeaveT } from "@/services/leave.api";
 
 import LeaveStatusBadge from "./leave-status-badge";
+import { formatIstDate } from "@/lib/date";
 
 type Props = {
   leave?: LeaveT;
@@ -74,8 +75,8 @@ export default function LeaveDetailsDialog({
                 <p className="font-medium">Duration</p>
 
                 <p className="text-muted-foreground">
-                  {new Date(leave.startDate).toLocaleDateString()} —{" "}
-                  {new Date(leave.endDate).toLocaleDateString()}
+                  {formatIstDate(leave.startDate)} —{" "}
+                  {formatIstDate(leave.endDate)}
                 </p>
               </div>
             </div>

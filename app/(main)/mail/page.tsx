@@ -27,6 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { imageUrl } from "@/lib/image-url";
 import { outBoxColumns } from "@/features/mail/outbox-colunm";
+import { formatIstDateTime } from "@/lib/date";
 
 /* ---------------- TYPES ---------------- */
 
@@ -467,7 +468,7 @@ const Page = () => {
             {/* _____________________________ */}
             <div>
               <strong>Date:</strong>{" "}
-              {new Date(selectedMail?.createdAt as Date).toLocaleString()}
+              {formatIstDateTime(selectedMail?.createdAt)}
             </div>
 
             <Separator />

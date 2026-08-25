@@ -19,6 +19,7 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 
 import { AttendanceResponse } from "@/services/attendance.api";
+import { formatIstDate, formatIstDateTime } from "@/lib/date";
 
 type Props = {
   attendance: AttendanceResponse;
@@ -27,20 +28,11 @@ type Props = {
 
 function formatTime(date: Date | string | null) {
   if (!date) return "--";
-
-  return new Date(date).toLocaleTimeString("en-IN", {
-    hour: "2-digit",
-    minute: "2-digit",
-  });
+  return formatIstDateTime(date);
 }
 
 function formatDate(date: string) {
-  return new Date(date).toLocaleDateString("en-IN", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+  return formatIstDate(date);
 }
 
 function formatHours(hours: number) {

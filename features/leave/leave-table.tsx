@@ -22,6 +22,7 @@ import { LeaveT } from "@/services/leave.api";
 
 import LeaveStatusBadge from "./leave-status-badge";
 import LeaveDetailsDialog from "./leave-details-dialog";
+import { formatIstDate } from "@/lib/date";
 
 type Props = {
   data: LeaveT[];
@@ -91,13 +92,13 @@ export default function LeaveTable({ data, loading }: Props) {
                       <CalendarRange className="h-4 w-4 text-muted-foreground" />
 
                       <span>
-                        {new Date(leave.startDate).toLocaleDateString()}
+                        {formatIstDate(leave.startDate)}
                       </span>
 
                       <span>—</span>
 
                       <span>
-                        {new Date(leave.endDate).toLocaleDateString()}
+                        {formatIstDate(leave.endDate)}
                       </span>
                     </div>
                   </TableCell>

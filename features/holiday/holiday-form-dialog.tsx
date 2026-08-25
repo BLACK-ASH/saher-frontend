@@ -5,12 +5,12 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
 
 import { useHoliday } from "@/hooks/use-holiday";
 import { holidayTypes, HolidayT } from "@/services/holiday.api";
 
 import { cn } from "@/lib/utils";
+import { dateToIstDateOnly, istDateOnlyToDate, formatIstDate } from "@/lib/date";
 
 import {
   Dialog,
@@ -77,7 +77,7 @@ export function HolidayFormDialog({ open, onOpenChange, holiday }: Props) {
       reset({
         title: holiday.title,
         type: holiday.type,
-        date: new Date(holiday.date).toLocaleDateString(),
+        date: dateToIstDateOnly(new Date(holiday.date)),
         description: holiday.description ?? "",
       });
     } else {
@@ -192,16 +192,16 @@ export function HolidayFormDialog({ open, onOpenChange, holiday }: Props) {
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
 
-                      {field.value ? format(field.value, "PPP") : "Select date"}
+                      {field.value ? formatIstDate(field.value) : "Select date"}
                     </Button>
                   </PopoverTrigger>
 
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={new Date(field.value)}
+                      selected={field.value ? istDateOnlyToDate(field.value) : undefined}
                       onSelect={(value) =>
-                        field.onChange(value?.toLocaleDateString())
+                        field.onChange(value ? dateToIstDateOnly(value) : undefined)
                       }
                     />
                   </PopoverContent>

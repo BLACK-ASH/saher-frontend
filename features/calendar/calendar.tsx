@@ -21,6 +21,7 @@ import AddEventDialog from "./add-event-dialog";
 import { subDays } from "date-fns";
 import EventDetailsSheet, { CalendarEvent } from "./event-details";
 import { toast } from "sonner";
+import { getMonthYear } from "@/lib/date";
 
 // types/calendar.ts
 
@@ -78,10 +79,7 @@ export default function EventsCalendar() {
         </div>
         {/* Center title */}
         <div className="flex items-center gap-2 font-semibold text-lg">
-          {calendarDate.toLocaleString("default", {
-            month: "long",
-            year: "numeric",
-          })}
+          {getMonthYear(calendarDate)}
         </div>
         {/* Right side (optional view switch UI) */}
         <DropdownMenu>

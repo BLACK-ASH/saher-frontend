@@ -10,9 +10,10 @@ import AttendanceSummary from "./attendance-summary";
 import { AttendanceRow } from "./types";
 import AttendanceTable from "./attendance-table";
 import { PaginationFooter } from "@/components/pagination-footer";
+import { dateToIstDateOnly, istDateOnlyToDate } from "@/lib/date";
 
 function formatDate(date: Date) {
-  return date.toISOString().split("T")[0];
+  return dateToIstDateOnly(date);
 }
 
 function addDays(date: Date, days: number) {
@@ -24,8 +25,8 @@ function addDays(date: Date, days: number) {
 function getDatesBetween(start: string, end: string) {
   const dates: string[] = [];
 
-  const current = new Date(start);
-  const last = new Date(end);
+  const current = istDateOnlyToDate(start);
+  const last = istDateOnlyToDate(end);
 
   while (current <= last) {
     dates.push(formatDate(current));
@@ -119,25 +120,25 @@ export default function AttendanceDashboard() {
   const previousRange = () => {
     const diff =
       Math.ceil(
-        (new Date(endDate).getTime() - new Date(startDate).getTime()) /
+        (istDateOnlyToDate(endDate).getTime() - istDateOnlyToDate(startDate).getTime()) /
           86400000,
       ) + 1;
 
-    setStartDate(formatDate(addDays(new Date(startDate), -diff)));
+    setStartDate(formatDate(addDays(istDateOnlyToDate(startDate), -diff)));
 
-    setEndDate(formatDate(addDays(new Date(endDate), -diff)));
+    setEndDate(formatDate(addDays(istDateOnlyToDate(endDate), -diff)));
   };
 
   const nextRange = () => {
     const diff =
       Math.ceil(
-        (new Date(endDate).getTime() - new Date(startDate).getTime()) /
+        (istDateOnlyToDate(endDate).getTime() - istDateOnlyToDate(startDate).getTime()) /
           86400000,
       ) + 1;
 
-    setStartDate(formatDate(addDays(new Date(startDate), diff)));
+    setStartDate(formatDate(addDays(istDateOnlyToDate(startDate), diff)));
 
-    setEndDate(formatDate(addDays(new Date(endDate), diff)));
+    setEndDate(formatDate(addDays(istDateOnlyToDate(endDate), diff)));
   };
 
   const goToday = () => {

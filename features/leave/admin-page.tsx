@@ -25,6 +25,7 @@ import LeaveStatusBadge from "./leave-status-badge";
 import ReviewLeaveDialog from "./review-leave-dialog";
 import LeaveDetailsDialog from "./leave-details-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { formatIstDate } from "@/lib/date";
 
 export default function AdminLeavePage() {
   const searchParams = useSearchParams();
@@ -110,11 +111,11 @@ export default function AdminLeavePage() {
 
                   <TableCell>
                     <div className="text-sm">
-                      {new Date(leave.startDate).toLocaleDateString()}
+                      {formatIstDate(leave.startDate)}
 
                       {" - "}
 
-                      {new Date(leave.endDate).toLocaleDateString()}
+                      {formatIstDate(leave.endDate)}
                     </div>
                   </TableCell>
 

@@ -26,6 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
+import { dateToIstDateOnly, formatIstDate } from "@/lib/date";
 
 const employeeType = ["volunteer", "part-time", "full-time"];
 const employeeShift = [
@@ -214,7 +215,7 @@ const EmployeeDetail = ({
                       className="justify-start font-normal"
                     >
                       {field.value
-                        ? new Date(field.value).toDateString()
+                        ? formatIstDate(field.value)
                         : "Select Date"}
                     </Button>
                   </PopoverTrigger>
@@ -227,10 +228,11 @@ const EmployeeDetail = ({
                       selected={new Date()}
                       defaultMonth={new Date()}
                       captionLayout="dropdown"
+                      timeZone="Asia/Kolkata"
                       onSelect={(date) => {
                         form.setValue(
                           "account.dateOfJoining",
-                          date?.toDateString() || "",
+                          date ? dateToIstDateOnly(date) : "",
                         );
                         setOpen(false);
                       }}

@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { useSessions } from "@/hooks/use-sessions";
 import { ArrowLeft, ImageIcon, Loader2, Trash2 } from "lucide-react";
+import { formatIstDate } from "@/lib/date";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -112,7 +113,7 @@ export default function SessionReportPage() {
             </div>
 
             <Badge variant="secondary">
-              {new Date(data.date).toLocaleDateString()}
+              {formatIstDate(data.date)}
             </Badge>
           </CardContent>
         </Card>

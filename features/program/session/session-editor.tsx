@@ -19,6 +19,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
+import { combineDateAndTimeToIso } from "@/lib/date";
 
 const sessionCreateSchema = z.object({
   program: z.string().min(1, "Program is required."),
@@ -71,8 +72,8 @@ const SessionEditor = ({
       workshop: values.workshop,
       speaker: values.speaker.map((e: MailUser) => e.id.toString()),
       date: values.date,
-      startTime: new Date(`${values.date}T${values.startTime}`),
-      endTime: new Date(`${values.date}T${values.endTime}`),
+      startTime: new Date(combineDateAndTimeToIso(values.date, values.startTime)),
+      endTime: new Date(combineDateAndTimeToIso(values.date, values.endTime)),
     };
 
     add.mutate(

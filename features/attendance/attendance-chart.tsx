@@ -16,7 +16,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { useAttendance } from "@/hooks/use-attendance";
-import { getMonthYear } from "@/lib/date";
+import { getMonthYear, formatIstDate } from "@/lib/date";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 
@@ -51,7 +51,7 @@ export function AttendanceChart({
       />
     );
 
-  const firstDay = new Date(chartData[0]?.date);
+  const firstDay = chartData[0]?.date;
 
   return (
     <Card className={className} {...props}>
@@ -78,9 +78,7 @@ export function AttendanceChart({
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) =>
-                new Date(value).toLocaleDateString("en-IN", { day: "2-digit" })
-              }
+              tickFormatter={(value) => formatIstDate(value)}
             />
             <ChartTooltip
               cursor={false}

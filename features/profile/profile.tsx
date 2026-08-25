@@ -11,6 +11,7 @@ import ProfileInfo from "./profile-info";
 import EmailVerification from "./email-verification";
 import { NotificationCard } from "../notification/register-push";
 import { Button } from "@/components/ui/button";
+import { formatIstDate } from "@/lib/date";
 import {
   Accordion,
   AccordionContent,
@@ -247,7 +248,7 @@ function Field({
 
 function formatDate(date?: Date) {
   if (!date) return "-";
-  return new Date(date).toLocaleDateString();
+  return formatIstDate(date);
 }
 
 function maskAccount(acc: string) {

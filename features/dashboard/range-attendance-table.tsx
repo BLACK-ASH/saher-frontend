@@ -17,7 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatIstDate, formatIstDateTime, formatHours } from "@/lib/date";
+import { formatIstDate, formatIstDateTime, formatHours, dateToIstDateOnly, istDateOnlyToDate } from "@/lib/date";
 import { Button } from "@/components/ui/button";
 import {
   ChevronLeft,
@@ -62,7 +62,7 @@ export function RangeAttendanceTable({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const today = new Date().toISOString().split("T")[0];
+  const today = dateToIstDateOnly(new Date());
 
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(1);
@@ -87,7 +87,7 @@ export function RangeAttendanceTable({
 
   const changeDay = (direction: "next" | "prev") => {
     setStartDate((prev) => {
-      const date = new Date(prev);
+      const date = istDateOnlyToDate(prev);
 
       if (direction === "next") {
         date.setDate(date.getDate() + 1);
@@ -95,7 +95,7 @@ export function RangeAttendanceTable({
         date.setDate(date.getDate() - 1);
       }
 
-      const newDate = date.toISOString().split("T")[0];
+      const newDate = dateToIstDateOnly(date);
 
       setEndDate(newDate);
 
@@ -104,7 +104,7 @@ export function RangeAttendanceTable({
   };
 
   const changeDate = (value: string) => {
-    const date = new Date(value).toISOString().split("T")[0];
+    const date = dateToIstDateOnly(istDateOnlyToDate(value));
     setStartDate(date);
     setEndDate(date);
     return;

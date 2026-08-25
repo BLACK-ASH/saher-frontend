@@ -2,9 +2,9 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-import { format } from "date-fns";
 
 import { HolidayT } from "@/services/holiday.api";
+import { formatIstDate } from "@/lib/date";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -62,7 +62,7 @@ export const holidayColumns = ({
         <ArrowUpDown className="ml-2 h-4 w-4" />
       </Button>
     ),
-    cell: ({ row }) => format(new Date(row.original.date), "dd MMM yyyy"),
+    cell: ({ row }) => formatIstDate(row.original.date),
   },
 
   {

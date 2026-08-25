@@ -20,15 +20,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useSessions } from "@/hooks/use-sessions";
-import {
-  ArrowLeft,
-  Calendar,
-  Clock3,
-  Clock4,
-  Download,
-  Mail,
-  Users,
-} from "lucide-react";
+import { ArrowLeft, Calendar, Clock3, Clock4, Download, Mail, Users } from "lucide-react";
+import { formatIstDate, formatIstDateTime } from "@/lib/date";
 import Image from "next/image";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
@@ -112,12 +105,7 @@ export default function SessionPage() {
 
             <div>
               <p className="font-medium">
-                {new Date(data.date).toLocaleDateString(undefined, {
-                  weekday: "long",
-                  day: "numeric",
-                  month: "long",
-                  year: "numeric",
-                })}
+                {formatIstDate(data.date)}
               </p>
             </div>
           </CardContent>
@@ -132,10 +120,7 @@ export default function SessionPage() {
             <Clock3 className="h-5 w-5 text-muted-foreground" />
 
             <span>
-              {new Date(data.startTime).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {formatIstDateTime(data.startTime)}
             </span>
           </CardContent>
         </Card>
@@ -149,10 +134,7 @@ export default function SessionPage() {
             <Clock4 className="h-5 w-5 text-muted-foreground" />
 
             <span>
-              {new Date(data.endTime).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-              })}
+              {formatIstDateTime(data.endTime)}
             </span>
           </CardContent>
         </Card>

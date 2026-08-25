@@ -156,6 +156,25 @@ export const calculateWorkHours = (
 };
 
 // ========================
+// DATE-ONLY BOUNDARY HELPERS
+// ========================
+
+export const dateToIstDateOnly = (d: Date): string => {
+  const p = istParts(d, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    // en-CA gives YYYY-MM-DD order via formatToParts
+  });
+  // formatToParts with en-CA locale yields { year, month, day } keys
+  return `${p.year}-${p.month}-${p.day}`;
+};
+
+export const istDateOnlyToDate = (value: string): Date => {
+  return new Date(`${value}T00:00:00+05:30`);
+};
+
+// ========================
 // MONTH/YEAR
 // ========================
 

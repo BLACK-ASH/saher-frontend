@@ -12,6 +12,7 @@ import {
 
 import { AttendanceRow } from "./types";
 import AttendanceRowComponent from "./attendance-row";
+import { formatIstDate } from "@/lib/date";
 
 type Props = {
   loading: boolean;
@@ -54,15 +55,7 @@ export default function AttendanceTable({ loading, dates, rows }: Props) {
                 <TableHead key={date} className="min-w-20 text-center">
                   <div className="flex flex-col">
                     <span>
-                      {new Date(date).toLocaleDateString("en-IN", {
-                        day: "2-digit",
-                      })}
-                    </span>
-
-                    <span className="text-xs text-muted-foreground">
-                      {new Date(date).toLocaleDateString("en-IN", {
-                        weekday: "short",
-                      })}
+                      {formatIstDate(date)}
                     </span>
                   </div>
                 </TableHead>

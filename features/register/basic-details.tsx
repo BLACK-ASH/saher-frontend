@@ -30,6 +30,7 @@ import {
 import { Calendar } from "@/components/ui/calendar";
 import { useState } from "react";
 import { Separator } from "@/components/ui/separator";
+import { dateToIstDateOnly, formatIstDate } from "@/lib/date";
 
 const roles = ["user", "manager", "admin", "intern"] as const;
 const genders = ["male", "female", "other"] as const;
@@ -210,7 +211,7 @@ const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
                       className="justify-start font-normal"
                     >
                       {field.value
-                        ? new Date(field.value).toDateString()
+                        ? formatIstDate(field.value)
                         : "Select Date"}
                     </Button>
                   </PopoverTrigger>
@@ -223,10 +224,11 @@ const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
                       selected={new Date()}
                       defaultMonth={new Date()}
                       captionLayout="dropdown"
+                      timeZone="Asia/Kolkata"
                       onSelect={(date) => {
                         form.setValue(
                           "account.dateOfBirth",
-                          date?.toDateString() || "",
+                          date ? dateToIstDateOnly(date) : "",
                         );
                         setOpen(false);
                       }}

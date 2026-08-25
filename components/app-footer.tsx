@@ -1,3 +1,5 @@
+import { dateToIstDateOnly } from "@/lib/date";
+
 export default function Footer() {
   return (
     <footer className="mt-auto border-t bg-muted/20">
@@ -5,7 +7,7 @@ export default function Footer() {
         <div>
           <p className="font-medium">SAHER Internals</p>
           <p className="text-muted-foreground">
-            © {new Date().getFullYear()} Society for Awareness, Harmony and
+            © {dateToIstDateOnly(new Date()).slice(0, 4)} Society for Awareness, Harmony and
             Equal Rights.
           </p>
         </div>
