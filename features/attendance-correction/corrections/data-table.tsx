@@ -58,7 +58,7 @@ export function AttendanceCorrectionDataTable<TData, TValue>({
   } = allCorrections;
 
   const table = useReactTable({
-    data: corrections?.data as TData[],
+    data: corrections?.items as TData[],
     columns,
 
     state: {
@@ -74,7 +74,7 @@ export function AttendanceCorrectionDataTable<TData, TValue>({
     manualPagination: true,
     manualSorting: true,
     manualFiltering: true,
-    pageCount: corrections?.meta?.total,
+    pageCount: corrections?.totalPages,
     getCoreRowModel: getCoreRowModel(),
   });
 

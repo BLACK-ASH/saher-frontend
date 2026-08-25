@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { userField } from "@/lib/common-zod-schema";
+import { normalizeList } from "@/lib/normalize-list";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -51,7 +52,7 @@ export const getAttendance = async ({
       method: "GET",
     },
   );
-  return { data: res.data, meta: res.meta };
+  return normalizeList<AttendanceResponse>(res);
 };
 
 export const getTodayAttendance = async ({
@@ -65,7 +66,7 @@ export const getTodayAttendance = async ({
       method: "GET",
     },
   );
-  return { data: res.data, meta: res.meta };
+  return normalizeList<AttendanceResponse>(res);
 };
 
 export const getRangeAttendance = async ({
@@ -81,7 +82,7 @@ export const getRangeAttendance = async ({
       method: "GET",
     },
   );
-  return { data: res.data, meta: res.meta };
+  return normalizeList<AttendanceResponse>(res);
 };
 
 export const checkInApi = async () => {

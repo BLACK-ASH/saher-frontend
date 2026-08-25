@@ -36,7 +36,7 @@ export function AttendanceChart({
   const { attendancesList } = useAttendance();
   const { data, isLoading } = attendancesList;
 
-  const chartData = data?.data.map((a) => ({
+  const chartData = data?.items.map((a) => ({
     date: a.date,
     workHours: a.workHours,
   }));

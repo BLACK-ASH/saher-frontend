@@ -1,5 +1,6 @@
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-wrapper";
+import { normalizeList } from "@/lib/normalize-list";
 import z from "zod";
 import { dateField, userField } from "@/lib/common-zod-schema";
 import { AttendanceCorrectionViewType } from "@/features/attendance-correction/attendance-correction-view";
@@ -53,7 +54,7 @@ export const getAttendanceCorrection = async ({
       method: "GET",
     },
   );
-  return { data: res.data, meta: res.meta };
+  return normalizeList<AttendanceCorrectionResponse>(res);
 };
 
 export const getAttendanceCorrectionById = async (correctionId: string) => {
@@ -78,7 +79,7 @@ export const getAttendanceCorrectionAll = async ({
       method: "GET",
     },
   );
-  return { data: res.data, meta: res.meta };
+  return normalizeList<AttendanceCorrectionResponse>(res);
 };
 
 export const submitAttendanceCorrection = async (

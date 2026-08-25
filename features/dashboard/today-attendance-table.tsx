@@ -17,9 +17,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { formatDate, formatHours, formatTime } from "@/lib/utils/time";
+import { formatIstDate, formatIstDateTime, formatHours } from "@/lib/date";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, ArrowRight, MoreHorizontal, RotateCw } from "lucide-react";
+import { MoreHorizontal, RotateCw } from "lucide-react";
 import { useState } from "react";
 import { attendanceStatusVariant } from "../attendance/attendance-table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -38,10 +38,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Select } from "@/components/ui/select";
 import { toast } from "sonner";
 import z from "zod";
 import { changeAttendanceStatus } from "@/services/attendance-correction.api";
+import { PaginationFooter } from "@/components/pagination-footer";
 
 const markSchema = z.object({
   id: z.string(),
@@ -66,7 +66,7 @@ export function TodayAttendanceTable({
     queryFn: () => getTodayAttendance({ limit, page, sort }),
   });
 
-  const attendances = data?.data;
+  const attendances = data?.items;
 
   if (isLoading) return <DefaultLoader className={className} />;
   if (!attendances || attendances.length === 0)
@@ -108,21 +108,11 @@ export function TodayAttendanceTable({
           >
             <RotateCw />
           </Button>
-          <Select></Select>
-          <Button
-            variant={"outline"}
-            disabled={1 > page - 1}
-            onClick={() => setPage((prev) => prev - 1)}
-          >
-            <ArrowLeft />
-          </Button>
-          <Button
-            disabled={Number(data?.meta?.total) < page + 1}
-            onClick={() => setPage((prev) => prev + 1)}
-            variant={"outline"}
-          >
-            <ArrowRight />
-          </Button>
+          <PaginationFooter
+            page={data?.page ?? page}
+            totalPages={data?.totalPages ?? 0}
+            onPageChange={setPage}
+          />
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -140,7 +130,7 @@ export function TodayAttendanceTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {attendances?.map((attendance) => (
+            {attendances.map((attendance) => (
               <TableRow className="cursor-pointer" key={attendance.id}>
                 <TableCell>
                   <div className="flex gap-3 items-center max-w-sm">
@@ -162,13 +152,13 @@ export function TodayAttendanceTable({
                   </div>
                 </TableCell>
                 <TableCell className="font-medium">
-                  {formatDate(attendance.date)}
+                  {formatIstDate(attendance.date)}
                 </TableCell>
                 <TableCell className="text-center">
-                  {formatTime(attendance.inTime)}
+                  {formatIstDateTime(attendance.inTime)}
                 </TableCell>
                 <TableCell className="text-center">
-                  {formatTime(attendance.outTime)}
+                  {formatIstDateTime(attendance.outTime)}
                 </TableCell>
                 <TableCell className="text-center">
                   {formatHours(attendance.workHours)}

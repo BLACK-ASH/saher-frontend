@@ -26,10 +26,11 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction";
-import { formatDate } from "@/lib/utils/time";
+import { formatIstDate } from "@/lib/date";
 import AttendanceComparision from "./attendance-comparision";
-import { ArrowLeft, ArrowRight, RotateCw } from "lucide-react";
+import { RotateCw } from "lucide-react";
 import { useState } from "react";
+import { PaginationFooter } from "@/components/pagination-footer";
 
 export const attendanceCorrectionStatusVariant: Record<
   "pending" | "on-hold" | "approve" | "reject",
@@ -52,7 +53,7 @@ const AttendanceCorrectionRequests = () => {
   } = allCorrections;
 
   if (isLoading) return <DefaultLoader />;
-  if (!corrections || corrections.data.length === 0)
+  if (!corrections || corrections.items.length === 0)
     return (
       <NoData
         title="No Attendance Correction Request."
@@ -72,20 +73,11 @@ const AttendanceCorrectionRequests = () => {
           >
             <RotateCw />
           </Button>
-          <Button
-            variant={"outline"}
-            disabled={1 > page - 1}
-            onClick={() => setPage((prev) => prev - 1)}
-          >
-            <ArrowLeft />
-          </Button>
-          <Button
-            disabled={Number(corrections?.meta?.total) < page + 1}
-            onClick={() => setPage((prev) => prev + 1)}
-            variant={"outline"}
-          >
-            <ArrowRight />
-          </Button>
+          <PaginationFooter
+            page={corrections.page}
+            totalPages={corrections.totalPages}
+            onPageChange={setPage}
+          />
         </CardAction>
       </CardHeader>
       <CardContent>
@@ -98,7 +90,7 @@ const AttendanceCorrectionRequests = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {corrections.data?.map((correction) => (
+            {corrections.items.map((correction) => (
               <TableRow className="cursor-pointer" key={correction.id}>
                 <TableCell className="font-medium">
                   <Badge
@@ -110,7 +102,7 @@ const AttendanceCorrectionRequests = () => {
                   </Badge>
                 </TableCell>
                 <TableCell className="text-center">
-                  {formatDate(correction.attendance.date)}
+                  {formatIstDate(correction.attendance.date)}
                 </TableCell>
                 <TableCell className="text-center">
                   <Dialog>

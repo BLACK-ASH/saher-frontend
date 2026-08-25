@@ -9,7 +9,7 @@ import AttendanceToolbar from "./attendance-toolbar";
 import AttendanceSummary from "./attendance-summary";
 import { AttendanceRow } from "./types";
 import AttendanceTable from "./attendance-table";
-import AttendancePagination from "./attendance-pagination";
+import { PaginationFooter } from "@/components/pagination-footer";
 
 function formatDate(date: Date) {
   return date.toISOString().split("T")[0];
@@ -64,11 +64,11 @@ export default function AttendanceDashboard() {
   );
 
   const grouped = useMemo<AttendanceRow[]>(() => {
-    if (!attendance.data?.data) return [];
+    if (!attendance.data?.items) return [];
 
     const map = new Map<string, AttendanceRow>();
 
-    attendance.data.data.forEach((record) => {
+    attendance.data.items.forEach((record) => {
       if (!map.has(record.user.id)) {
         map.set(record.user.id, {
           user: record.user,
@@ -88,7 +88,7 @@ export default function AttendanceDashboard() {
     let halfDay = 0;
     let late = 0;
 
-    attendance.data?.data.forEach((record) => {
+    attendance.data?.items.forEach((record) => {
       switch (record.status) {
         case "present":
           present++;
@@ -175,11 +175,10 @@ export default function AttendanceDashboard() {
         rows={grouped}
       />
 
-      {attendance.data?.meta && (
-        <AttendancePagination
-          page={attendance.data.meta.page}
-          total={attendance.data.meta.total}
-          limit={attendance.data.meta.limit}
+      {attendance.data && (
+        <PaginationFooter
+          page={attendance.data.page}
+          totalPages={attendance.data.totalPages}
           onPageChange={setPage}
         />
       )}
