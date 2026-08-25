@@ -76,6 +76,17 @@ export const formatIstDateTime = (
 // INPUT/ISO CONVERTERS
 // ========================
 
+export const istTime = (iso?: string | null | Date): string => {
+  const d = ISTFormat(iso ?? null, {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+  if (!d) return "";
+  const p = istParts(d, { hour: "2-digit", minute: "2-digit", hour12: false });
+  return `${p.hour}:${p.minute}`;
+};
+
 export const isoToIstInput = (iso: string): string => {
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";

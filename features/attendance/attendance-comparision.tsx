@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { imageUrl } from "@/lib/image-url";
-import { formatTime } from "@/lib/utils/time";
+import { formatIstDateTime } from "@/lib/date";
 import { attendanceStatusVariant } from "./attendance-table";
 import { Badge } from "@/components/ui/badge";
 import { AttendanceCorrectionResponse } from "@/services/attendance-correction.api";
@@ -40,9 +40,9 @@ const AttendanceComparision = ({
           {(correction?.previous?.inTime || correction?.changes?.inTime) && (
             <TableRow>
               <TableCell>Check In</TableCell>
-              <TableCell>{formatTime(correction?.previous?.inTime)}</TableCell>
+              <TableCell>{formatIstDateTime(correction?.previous?.inTime)}</TableCell>
               <TableCell>
-                {formatTime(correction?.changes?.inTime as unknown as string)}
+                {formatIstDateTime(correction?.changes?.inTime as unknown as string)}
               </TableCell>
             </TableRow>
           )}
@@ -51,9 +51,9 @@ const AttendanceComparision = ({
           {(correction?.previous?.outTime || correction?.changes?.outTime) && (
             <TableRow>
               <TableCell>Check Out</TableCell>
-              <TableCell>{formatTime(correction?.previous?.outTime)}</TableCell>
+              <TableCell>{formatIstDateTime(correction?.previous?.outTime)}</TableCell>
               <TableCell>
-                {formatTime(correction?.changes?.outTime as unknown as string)}
+                {formatIstDateTime(correction?.changes?.outTime as unknown as string)}
               </TableCell>
             </TableRow>
           )}

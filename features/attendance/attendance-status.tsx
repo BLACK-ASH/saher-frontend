@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { useAttendance } from "@/hooks/use-attendance";
-import { formatDate, formatHours, transformTime } from "@/lib/utils/time";
+import { formatIstDate, formatHours, istTime } from "@/lib/date";
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -50,7 +50,7 @@ const AttendanceStatus = () => {
   return (
     <Card className="h-full">
       <CardHeader>
-        <CardTitle>{formatDate(data.date)}</CardTitle>
+        <CardTitle>{formatIstDate(data.date)}</CardTitle>
 
         <CardAction>
           <span className="rounded-md bg-muted px-3 py-1 text-sm font-medium">
@@ -66,7 +66,7 @@ const AttendanceStatus = () => {
             Check In
           </span>
 
-          <Input disabled type="time" value={transformTime(data.inTime)} />
+          <Input disabled type="time" value={istTime(data.inTime)} />
         </div>
 
         <div className="grid grid-cols-[150px_1fr] items-center gap-3">
@@ -75,7 +75,7 @@ const AttendanceStatus = () => {
             Check Out
           </span>
 
-          <Input disabled type="time" value={transformTime(data.outTime)} />
+          <Input disabled type="time" value={istTime(data.outTime)} />
         </div>
 
         <div className="grid grid-cols-[150px_1fr] items-center gap-3">

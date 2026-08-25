@@ -7,10 +7,11 @@ vi.mock("sonner", () => ({
 }));
 
 function fakeQueryClient() {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return {
     cancelQueries: vi.fn().mockResolvedValue(undefined),
     clear: vi.fn(),
-  };
+  } as any;
 }
 
 describe("handleSessionDeath", () => {

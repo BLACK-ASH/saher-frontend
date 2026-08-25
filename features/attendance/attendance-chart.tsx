@@ -16,7 +16,7 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { useAttendance } from "@/hooks/use-attendance";
-import { getMonthYear } from "@/lib/utils/time";
+import { getMonthYear } from "@/lib/date";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 

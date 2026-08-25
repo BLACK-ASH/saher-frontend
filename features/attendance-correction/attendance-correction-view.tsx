@@ -15,7 +15,7 @@ import {
   InputGroupTextarea,
 } from "@/components/ui/input-group";
 import { useAdminAttendanceCorrection } from "@/hooks/use-admin-attendance-correction";
-import { formatDate, timeToDateString, transformTime } from "@/lib/utils/time";
+import { formatIstDate, combineDateAndTimeToIso, istTime } from "@/lib/date";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -122,8 +122,8 @@ const AttendanceCorrectionView = ({
         status: correction.status,
         reason: correction.reason ?? "",
         changes: {
-          inTime: transformTime(correction?.changes?.inTime) ?? "",
-          outTime: transformTime(correction?.changes?.outTime) ?? "",
+          inTime: istTime(correction?.changes?.inTime) ?? "",
+          outTime: istTime(correction?.changes?.outTime) ?? "",
           status: correction?.changes?.status ?? correction.previous.status,
           isLate: correction?.changes?.isLate ?? correction.previous.isLate,
         },
@@ -153,11 +153,11 @@ const AttendanceCorrectionView = ({
       status,
       changes: {
         ...formData.changes,
-        inTime: timeToDateString(
+        inTime: combineDateAndTimeToIso(
           correction.attendance.date,
           formData.changes?.inTime as string,
         ),
-        outTime: timeToDateString(
+        outTime: combineDateAndTimeToIso(
           correction.attendance.date,
           formData.changes?.outTime as string,
         ),
@@ -190,7 +190,7 @@ const AttendanceCorrectionView = ({
           <SheetTitle>Attendance Correction Details</SheetTitle>
           <SheetDescription className="flex items-center justify-between px-4">
             <p>
-              {correction.user.name} - {formatDate(correction.attendance.date)}
+              {correction.user.name} - {formatIstDate(correction.attendance.date)}
             </p>
             {isAdmin ? (
               <X
