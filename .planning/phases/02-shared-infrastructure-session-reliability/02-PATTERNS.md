@@ -363,7 +363,7 @@ Session-death redirect assertions need `vi.stubGlobal("location", {...})` (RESEA
 Plus ~21 more files using raw `new Date`/`toLocale*` per RESEARCH FNDT-02 row — sweep during implementation.
 
 **Paginated consumers to move onto footer + normalizer (D-02):**
-`features/attendance/attendance-table.tsx:90` · `features/attendance/attendance-correction-requests.tsx:83` · `features/dashboard/range-attendance-table.tsx:189` · `features/dashboard/today-attendance-table.tsx:120` · `features/attendance-correction/corrections/data-table.tsx:77` · `features/dashboard/attendance-grid/attendance-dashboard.tsx:181` (passes `meta.total` as records into the old footer — delete the Math.ceil interpretation entirely).
+`features/attendance/attendance-table.tsx:90` · `features/attendance/attendance-correction-requests.tsx:83` · `features/dashboard/range-attendance-table.tsx:189` · `features/dashboard/today-attendance-table.tsx:120` · `features/attendance-correction/corrections/data-table.tsx:77` · `features/dashboard/attendance-grid/attendance-dashboard.tsx:181` (passes `meta.total` as records into the old footer — delete the Math.ceil interpretation entirely) · `components/data-table.tsx:157-178` (generic client-side TanStack DataTable with raw Previous/Next Buttons — sole consumer `features/holiday/holiday-table.tsx`; same client-side footer recipe as users-admin, no server meta involved).
 
 **Hooks consolidated (D-21):** `use-workshops`, `use-sessions`, `use-programs`, `use-participant`, `use-leave`, `use-admin-attendance-correction`.
 

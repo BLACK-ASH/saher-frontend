@@ -55,6 +55,9 @@ created: 2026-08-24
 | 02-06-T1 | 06 | 3 | FNDT-05/02 | T-2-15 | TanStack pageCount normalized; footer wired | full gates | `pnpm test && pnpm build` | ✅ | ⬜ pending |
 | 02-06-T2 | 06 | 3 | FNDT-03 (D-21) | T-2-15/16 | six hooks → one factory; prefix invalidation | full gates | `pnpm lint && pnpm typecheck && pnpm test && pnpm build` | ✅ | ⬜ pending |
 | 02-06-T3 | 06 | 3 | FNDT-02 (D-18) | T-2-17 | time.ts deleted; zero stale imports | grep + build | repo grep + `pnpm build` | n/a (deletion) | ⬜ pending |
+| 02-07-T1 | 07 | 4 | FNDT-02 | — | swept display surfaces render canonical IST formats; zero toLocale*String in swept dirs incl. calendar + attendance-chart | gates + grep | `pnpm lint && pnpm typecheck && pnpm build && ! grep -rEn "toLocale(Date\|Time)?String\(" --include="*.tsx" --include="*.ts" app/\(main\)/mail app/\(main\)/calendar features/leave features/holiday features/profile features/attendance features/dashboard app/\(main\)/program` | ✅ | ⬜ pending |
+| 02-07-T2 | 07 | 4 | FNDT-02 (D-10/D-12) | T-2-18/19 | date-only helper boundary round-trips; session-editor sends +05:30 ISO | unit + gates | `pnpm test lib/date.test.ts && pnpm lint && pnpm typecheck && pnpm build` | ❌ co-located w/ task | ⬜ pending |
+| 02-07-T3 | 07 | 4 | FNDT-02 (D-01 exit) | — | repo-wide raw-pattern gate clean; Grep C audit classified in summary | grep + full gates | `! grep -rEn "toLocale(Date\|Time)String\(" … \| grep -v "^components/ui/" && ! grep -rEn "new Date\([^)]" … \| grep -v "^components/ui/" \| grep -v "^lib/date" \| grep -v "\.test\." && pnpm lint && pnpm typecheck && pnpm test && pnpm build` | n/a (grep gate) | ⬜ pending |
 
 *Status: ⬜ pending · ✅ green · ❌ red · ⚠️ flaky*
 
