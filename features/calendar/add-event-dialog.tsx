@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toLocalInput } from "@/lib/utils/time";
+import { isoToIstInput } from "@/lib/date";
 import { CalendarSelection } from "./calendar";
 import { addDays, parseISO } from "date-fns";
 import { useCalendar } from "@/hooks/use-calendar";
@@ -133,7 +133,7 @@ function AddEventDialog({ data, visible, setVisible }: Props) {
                   <Input
                     id="start"
                     type="datetime-local"
-                    value={toLocalInput(start)}
+                    value={isoToIstInput(start)}
                     onChange={(e) => field.onChange(parseISO(e.target.value))}
                     aria-invalid={fieldState.invalid}
                   />
@@ -153,7 +153,7 @@ function AddEventDialog({ data, visible, setVisible }: Props) {
                   <Input
                     id="end"
                     type="datetime-local"
-                    value={toLocalInput(end)}
+                    value={isoToIstInput(end)}
                     onChange={(e) => field.onChange(parseISO(e.target.value))}
                     aria-invalid={fieldState.invalid}
                   />

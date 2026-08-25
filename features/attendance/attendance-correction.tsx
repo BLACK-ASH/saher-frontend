@@ -12,7 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useAttendanceCorrection } from "@/hooks/use-attendance-correction";
-import { formatDate, timeToDateString, transformTime } from "@/lib/utils/time";
+import { formatIstDate, combineDateAndTimeToIso, istTime } from "@/lib/date";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Edit2 } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -63,8 +63,8 @@ export function AttendanceCorrectionSide({
     defaultValues: {
       attendanceId: attendance.id || "",
       message: "",
-      inTime: transformTime(attendance?.inTime) || "",
-      outTime: transformTime(attendance?.outTime) || "",
+      inTime: istTime(attendance?.inTime) || "",
+      outTime: istTime(attendance?.outTime) || "",
     },
   });
 
@@ -72,8 +72,8 @@ export function AttendanceCorrectionSide({
     if (attendance) {
       form.reset({
         attendanceId: attendance.id,
-        inTime: transformTime(attendance.inTime), // ✅ MUST be HH:mm
-        outTime: transformTime(attendance.outTime), // ✅ MUST be HH:mm
+        inTime: istTime(attendance.inTime), // ✅ MUST be HH:mm
+        outTime: istTime(attendance.outTime), // ✅ MUST be HH:mm
         message: "",
       });
     }
@@ -84,8 +84,8 @@ export function AttendanceCorrectionSide({
   const onSubmit = async (data: AttendanceCorrectionCreateT) => {
     const payload: AttendanceCorrectionCreateT = {
       attendanceId: data.attendanceId,
-      inTime: timeToDateString(attendance.date, data.inTime),
-      outTime: timeToDateString(attendance.date, data.outTime),
+      inTime: combineDateAndTimeToIso(attendance.date, data.inTime),
+      outTime: combineDateAndTimeToIso(attendance.date, data.outTime),
       message: data.message,
       proof: data.proof,
     };
@@ -112,7 +112,7 @@ export function AttendanceCorrectionSide({
       <SheetContent className="overflow-scroll">
         <SheetHeader>
           <SheetTitle>Attendance Correction</SheetTitle>
-          <SheetTitle>{formatDate(attendance.date)}</SheetTitle>
+          <SheetTitle>{formatIstDate(attendance.date)}</SheetTitle>
           <SheetDescription>
             Request changes to your attendance here. Click save when you&apos;re
             done.

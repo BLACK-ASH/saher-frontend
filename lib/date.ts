@@ -87,8 +87,8 @@ export const istTime = (iso?: string | null | Date): string => {
   return `${p.hour}:${p.minute}`;
 };
 
-export const isoToIstInput = (iso: string): string => {
-  const d = new Date(iso);
+export const isoToIstInput = (iso: string | Date): string => {
+  const d = typeof iso === "string" ? new Date(iso) : iso;
   if (Number.isNaN(d.getTime())) return "";
   const p = istParts(d, {
     year: "numeric",

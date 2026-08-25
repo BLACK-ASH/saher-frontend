@@ -124,7 +124,7 @@ export default function EventsCalendar() {
       </CardHeader>
       <CardContent>
         <FullCalendar
-          timeZone="local"
+          timeZone="Asia/Kolkata"
           contentHeight="auto"
           expandRows={true}
           ref={calendarRef}
