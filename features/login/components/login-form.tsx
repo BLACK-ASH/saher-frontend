@@ -53,7 +53,6 @@ export function LoginForm({
     mutate(data, {
       onSuccess: (res) => {
         toast.success(res.message);
-        router.refresh();
         const raw = params.get("next") ?? "/";
         const next = raw.startsWith("/") && !raw.startsWith("//") ? raw : "/";
         router.push(next);
