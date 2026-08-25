@@ -10,7 +10,7 @@ import {
   formatHours,
   calculateWorkHours,
   getMonthYear,
-} from "./date";
+} from "@/lib/date";
 
 describe("formatIstDate", () => {
   it("before IST midnight boundary", () => {

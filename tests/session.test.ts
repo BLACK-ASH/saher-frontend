@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { handleSessionDeath, performLogoutCleanup, resetSessionGuard } from "./session";
+import { handleSessionDeath, performLogoutCleanup, resetSessionGuard } from "@/lib/session";
 import { toast } from "sonner";
 
 vi.mock("sonner", () => ({

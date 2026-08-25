@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { can, ROLE_PERMISSIONS } from "./permissions";
-import type { UserRole, PermissionAction, PermissionResource } from "./permissions";
+import { can, ROLE_PERMISSIONS } from "@/lib/permissions";
+import type { UserRole, PermissionAction, PermissionResource } from "@/lib/permissions";
 
 describe("ROLE_PERMISSIONS", () => {
   it("admin has 42 entries", () => {

@@ -76,8 +76,8 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 02-01-PLAN.md — Central session-death module + api-wrapper sentinel rewiring + provider cache onError wiring (FNDT-04, AUTH-01)
-- [ ] 02-02-PLAN.md — IST date module (lib/date.ts) + attendance/correction/calendar consumer migration (FNDT-02)
+- [x] 02-01-PLAN.md — Central session-death module + api-wrapper sentinel rewiring + provider cache onError wiring (FNDT-04, AUTH-01)
+- [x] 02-02-PLAN.md — IST date module (lib/date.ts) + attendance/correction/calendar consumer migration (FNDT-02)
 - [ ] 02-03-PLAN.md — Permissions matrix mirror + can() gating unification + manager-nav fix + D-15 probe checkpoint (FNDT-06)
 
 **Wave 2** *(blocked on Wave 1 completion)*

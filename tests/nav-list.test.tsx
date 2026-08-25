@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { NavItem } from "./nav-list";
+import { NavItem } from "@/components/sidebar/nav-list";
 import React from "react";
 
 const mockUseMe = vi.fn();
@@ -16,7 +16,7 @@ vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: mockPush }),
 }));
 
-vi.mock("../ui/sidebar", () => {
+vi.mock("@/components/ui/sidebar", () => {
   return {
     SidebarProvider: ({ children }: { children: React.ReactNode }) => (
       <div data-testid="sidebar-provider">{children}</div>
