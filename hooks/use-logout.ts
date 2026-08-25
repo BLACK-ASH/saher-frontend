@@ -1,20 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api-wrapper";
-import { useRouter } from "next/navigation";
+import { performLogoutCleanup } from "@/lib/session";
 
 export const useLogout = () => {
   const queryClient = useQueryClient();
-  const router = useRouter();
 
   return useMutation({
     mutationFn: async () => {
-      return await apiFetch(`/api/auth/logout`, {
-        method: "POST",
-      });
+      try {
+        await apiFetch(`/api/auth/logout`, {
+          method: "POST",
+        });
+      } catch {
+        // Best-effort: network failure or already-dead session must not trap user
+      }
     },
     onSuccess: () => {
-      queryClient.removeQueries({ queryKey: [] });
-      router.push("/");
+      performLogoutCleanup(queryClient);
     },
   });
 };

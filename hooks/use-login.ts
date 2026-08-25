@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api-wrapper";
+import { resetSessionGuard } from "@/lib/session";
 
 export const useLogin = () => {
   const queryClient = useQueryClient();
@@ -12,7 +13,8 @@ export const useLogin = () => {
       });
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [] });
+      resetSessionGuard();
+      queryClient.invalidateQueries({ queryKey: ["user", "me"] });
     },
   });
 };

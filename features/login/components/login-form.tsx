@@ -22,7 +22,7 @@ import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useLogin } from "@/hooks/use-login";
 import Link from "next/link";
@@ -34,6 +34,7 @@ export function LoginForm({
   const [visible, setVisible] = useState<boolean>(false);
   const { mutate, isPending } = useLogin();
   const router = useRouter();
+  const params = useSearchParams();
 
   const loginFromSchema = z.object({
     email: z.email(),
@@ -53,7 +54,9 @@ export function LoginForm({
       onSuccess: (res) => {
         toast.success(res.message);
         router.refresh();
-        router.push("/");
+        const raw = params.get("next") ?? "/";
+        const next = raw.startsWith("/") && !raw.startsWith("//") ? raw : "/";
+        router.push(next);
       },
       onError: (err: Error) => {
         toast.error(err.message);

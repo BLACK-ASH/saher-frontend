@@ -12,6 +12,7 @@ vi.mock("next/navigation", () => ({
     refresh: vi.fn(),
     back: vi.fn(),
   }),
+  useSearchParams: () => new URLSearchParams(),
 }));
 
 test("LoginForm renders email, password fields and submit button", () => {
