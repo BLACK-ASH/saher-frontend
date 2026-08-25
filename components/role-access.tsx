@@ -2,19 +2,18 @@
 
 import { ReactNode } from "react";
 import { useMe } from "@/hooks/use-me";
-
-type Role = "admin" | "manager" | "user";
+import type { UserRole } from "@/lib/permissions";
 
 type RoleAccessProps = {
   children: ReactNode;
-  roles: Role[];
+  allow: (role: UserRole) => boolean;
   fallback?: ReactNode;
   loading?: ReactNode;
 };
 
 const RoleAccess = ({
   children,
-  roles,
+  allow,
   fallback = null,
   loading = null,
 }: RoleAccessProps) => {
@@ -24,7 +23,7 @@ const RoleAccess = ({
     return <>{loading}</>;
   }
 
-  if (!user || !roles.includes(user.role)) {
+  if (!user || !allow(user.role)) {
     return <>{fallback}</>;
   }
 

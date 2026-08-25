@@ -79,7 +79,7 @@ function ProgramView() {
                   >
                     View
                   </DropdownMenuItem>
-                  <RoleAccess roles={["admin"]}>
+                  <RoleAccess allow={(r) => r === "admin"}>
                     <DropdownMenuItem
                       onClick={() => {
                         setSelectedProgram(program);
@@ -90,7 +90,7 @@ function ProgramView() {
                       Update
                     </DropdownMenuItem>
                   </RoleAccess>
-                  <RoleAccess roles={["admin"]}>
+                  <RoleAccess allow={(r) => r === "admin"}>
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => {

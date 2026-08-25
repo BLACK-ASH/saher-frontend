@@ -63,7 +63,7 @@ function SessionHeader() {
           <ArrowRight />
         </Button>
       </div>
-      <RoleAccess roles={["manager", "admin"]}>
+      <RoleAccess allow={(r) => r === "manager" || r === "admin"}>
         <AddSession />
       </RoleAccess>
     </div>

@@ -110,7 +110,7 @@ function ParticipantView() {
                     Update
                   </DropdownMenuItem>
 
-                  <RoleAccess roles={["admin"]}>
+                  <RoleAccess allow={(r) => r === "admin"}>
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => {

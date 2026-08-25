@@ -83,7 +83,7 @@ function WorkshopView() {
                   >
                     View
                   </DropdownMenuItem>
-                  <RoleAccess roles={["admin", "manager"]}>
+                  <RoleAccess allow={(r) => r === "admin" || r === "manager"}>
                     <DropdownMenuItem
                       onClick={() => {
                         setSelectedWorkshop(workshop);
@@ -94,7 +94,7 @@ function WorkshopView() {
                       Update
                     </DropdownMenuItem>
                   </RoleAccess>
-                  <RoleAccess roles={["admin"]}>
+                  <RoleAccess allow={(r) => r === "admin"}>
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => {

@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { useQuery } from "@tanstack/react-query";
+import type { UserRole } from "@/lib/permissions";
 
 export type UserT = {
   readonly name: string;
@@ -9,7 +10,7 @@ export type UserT = {
     alt: string;
     src: string;
   };
-  readonly role: "user" | "manager" | "admin";
+  readonly role: UserRole;
   readonly pushNotificationsEnabled: boolean;
   readonly email: string;
   readonly id: string;
@@ -21,7 +22,7 @@ export type UserT = {
     | {
         name: string;
         image: string;
-        role: "user" | "manager" | "admin";
+        role: UserRole;
         email: string;
         displayName: string | undefined;
       }
@@ -31,7 +32,7 @@ export type UserT = {
     | {
         name: string;
         image: string;
-        role: "user" | "manager" | "admin";
+        role: UserRole;
         email: string;
         displayName: string | undefined;
       }

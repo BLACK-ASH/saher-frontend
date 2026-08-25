@@ -63,7 +63,7 @@ function WorkshopHeader() {
           <ArrowRight />
         </Button>
       </div>
-      <RoleAccess roles={["admin", "manager"]}>
+      <RoleAccess allow={(r) => r === "admin" || r === "manager"}>
         <AddWorkshop />
       </RoleAccess>
     </div>

@@ -9,6 +9,8 @@ import {
   SidebarMenuSkeleton,
 } from "../ui/sidebar";
 import { useMe } from "@/hooks/use-me";
+import { can } from "@/lib/permissions";
+import type { UserRole } from "@/lib/permissions";
 import {
   Calendar,
   CalendarCheck,
@@ -93,6 +95,21 @@ const adminRoutes = [
   },
 ];
 
+const canSeeManagerGroup = (role: UserRole): boolean => {
+  return managerRoutes.some((r) => {
+    if (r.url === "/dashboard") return can(role, "read", "user");
+    if (r.url === "/users") return can(role, "read", "user");
+    if (r.url === "/attendance-correction")
+      return can(role, "read", "attendance-correction");
+    if (r.url === "/leave-management") return can(role, "read", "leave");
+    return false;
+  });
+};
+
+const canSeeAdminGroup = (role: UserRole): boolean => {
+  return can(role, "delete", "account");
+};
+
 const NavSkeleton = () => {
   return (
     <>
@@ -124,12 +141,10 @@ export function NavItem() {
     router.push(url);
   };
 
-  // 🔄 Loading state
   if (isLoading) {
     return <NavSkeleton />;
   }
 
-  // ❌ Not logged in (extra safety)
   if (!user) {
     return null;
   }
@@ -155,29 +170,28 @@ export function NavItem() {
           </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-      {user?.role === "manager" ||
-        (user?.role === "admin" && (
-          <SidebarGroup>
-            <SidebarGroupLabel>Manager</SidebarGroupLabel>
-            <SidebarGroupContent>
-              <SidebarMenu>
-                {managerRoutes.map((item) => (
-                  <SidebarMenuItem key={item.url}>
-                    <SidebarMenuButton
-                      isActive={isActive(item.url)}
-                      onClick={() => navigateLink(item.url)}
-                      tooltip={item.label}
-                    >
-                      {item.icon && <item.icon />}
-                      <span>{item.label}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        ))}
-      {user?.role === "admin" && (
+      {canSeeManagerGroup(user.role) && (
+        <SidebarGroup>
+          <SidebarGroupLabel>Manager</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {managerRoutes.map((item) => (
+                <SidebarMenuItem key={item.url}>
+                  <SidebarMenuButton
+                    isActive={isActive(item.url)}
+                    onClick={() => navigateLink(item.url)}
+                    tooltip={item.label}
+                  >
+                    {item.icon && <item.icon />}
+                    <span>{item.label}</span>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      )}
+      {canSeeAdminGroup(user.role) && (
         <SidebarGroup>
           <SidebarGroupLabel>Admin</SidebarGroupLabel>
           <SidebarGroupContent>

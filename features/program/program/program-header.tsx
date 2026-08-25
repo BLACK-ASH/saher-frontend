@@ -63,7 +63,7 @@ function ProgramHeader() {
           <ArrowRight />
         </Button>
       </div>
-      <RoleAccess roles={["admin"]}>
+      <RoleAccess allow={(r) => r === "admin"}>
         <AddProgram />
       </RoleAccess>
     </div>

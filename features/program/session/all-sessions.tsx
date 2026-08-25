@@ -83,7 +83,7 @@ function SessionView() {
                   >
                     View
                   </DropdownMenuItem>
-                  <RoleAccess roles={["admin", "manager"]}>
+                  <RoleAccess allow={(r) => r === "admin" || r === "manager"}>
                     <DropdownMenuItem
                       onClick={() => {
                         setSelectedSession(session);
@@ -108,7 +108,7 @@ function SessionView() {
                   >
                     Add Review
                   </DropdownMenuItem>
-                  <RoleAccess roles={["admin"]}>
+                  <RoleAccess allow={(r) => r === "admin"}>
                     <DropdownMenuItem
                       className="text-destructive"
                       onClick={() => {
