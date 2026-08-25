@@ -18,7 +18,7 @@ Per owner directives: every module is delivered **complete** within its phase (n
 Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Quality Gates & Test Infrastructure** - Lint/typecheck/test gates exist before any mass changes; vitest + testing-library + msw wired at the apiFetch boundary (completed 2026-08-24)
-- [ ] **Phase 2: Shared Infrastructure & Session Reliability** - IST date utils, envelope normalization factory, session-death handler, safe pagination footer, RBAC helper — each tested; auth refresh/logout flows verified against contract
+- [x] **Phase 2: Shared Infrastructure & Session Reliability** - IST date utils, envelope normalization factory, session-death handler, safe pagination footer, RBAC helper — each tested; auth refresh/logout flows verified against contract (completed 2026-08-25)
 - [ ] **Phase 3: Noticeboard Pilot** - First complete module proves the Slice Contract end-to-end; promotes trash-tabs and pagination footer to shared components
 - [ ] **Phase 4: Staff Self-Service — Mail & Leave** - Staff run daily personal workflows in-app: read/write internal mail, apply for leave with balances, managers review applications
 - [ ] **Phase 5: Money & Approval — Reimbursement & Payroll** - The org's full money pipeline (bills → handle → settle, advances, payroll installments, generation trigger) runs in-app with double-submit-proof actions
@@ -78,20 +78,20 @@ Plans:
 
 - [x] 02-01-PLAN.md — Central session-death module + api-wrapper sentinel rewiring + provider cache onError wiring (FNDT-04, AUTH-01)
 - [x] 02-02-PLAN.md — IST date module (lib/date.ts) + attendance/correction/calendar consumer migration (FNDT-02)
-- [ ] 02-03-PLAN.md — Permissions matrix mirror + can() gating unification + manager-nav fix + D-15 probe checkpoint (FNDT-06)
+- [x] 02-03-PLAN.md — Permissions matrix mirror + can() gating unification + manager-nav fix + D-15 probe checkpoint (FNDT-06)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 02-04-PLAN.md — Auth flows contract: repaired login/logout hooks, ?next= return nav, D-19 single-flight/retry tests (AUTH-01)
-- [ ] 02-05-PLAN.md — normalizeList factory + safe PaginationFooter + attendance-family screen retrofit (FNDT-03, FNDT-05, FNDT-02)
+- [x] 02-04-PLAN.md — Auth flows contract: repaired login/logout hooks, ?next= return nav, D-19 single-flight/retry tests (AUTH-01)
+- [x] 02-05-PLAN.md — normalizeList factory + safe PaginationFooter + attendance-family screen retrofit (FNDT-03, FNDT-05, FNDT-02)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 02-06-PLAN.md — Corrections + dashboard-grid retrofit + six-hook factory collapse with service/consumer adoption (D-21) + delete lib/utils/time.ts (FNDT-03, FNDT-02, FNDT-05)
+- [x] 02-06-PLAN.md — Corrections + dashboard-grid retrofit + six-hook factory collapse with service/consumer adoption (D-21) + delete lib/utils/time.ts (FNDT-03, FNDT-02, FNDT-05)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 02-07-PLAN.md — Raw-date sweep of the 15 remaining surfaces onto lib/date + phase-final raw-pattern gate completing D-01 (FNDT-02)
+- [x] 02-07-PLAN.md — Raw-date sweep of the 15 remaining surfaces onto lib/date + phase-final raw-pattern gate completing D-01 (FNDT-02)
 
 ### Phase 3: Noticeboard Pilot
 
@@ -210,7 +210,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Quality Gates & Test Infrastructure | 3/3 | Complete   | 2026-08-24 |
-| 2. Shared Infrastructure & Session Reliability | 0/? | Not started | - |
+| 2. Shared Infrastructure & Session Reliability | 7/7 | Complete | 2026-08-25 |
 | 3. Noticeboard Pilot | 0/? | Not started | - |
 | 4. Staff Self-Service — Mail & Leave | 0/? | Not started | - |
 | 5. Money & Approval — Reimbursement & Payroll | 0/? | Not started | - |

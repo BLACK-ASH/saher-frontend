@@ -3,15 +3,15 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 2 context gathered
-last_updated: "2026-08-25T13:27:56.668Z"
+stopped_at: Phase 2 complete, ready for Phase 3
+last_updated: "2026-08-25T21:05:00.000Z"
 last_activity: 2026-08-25
 progress:
   total_phases: 7
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 10
-  completed_plans: 5
-  percent: 14
+  completed_plans: 10
+  percent: 29
 ---
 
 # Project State
@@ -21,43 +21,48 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-24)
 
 **Core value:** Every backend domain has a working, reliable screen — staff and admins run their daily work through this app without falling back to manual processes.
-**Current focus:** Phase 02 — shared-infrastructure-session-reliability
+**Current focus:** Phase 03 — Noticeboard Pilot
 
 ## Current Position
 
-Phase: 02 (shared-infrastructure-session-reliability) — EXECUTING
-Plan: 3 of 7 (02-03 COMPLETE)
-Status: Executing Wave 2 (02-04 auth hooks, 02-05 list normalizer)
-Last activity: 2026-08-25
+Phase: 02 COMPLETE → 03 (Noticeboard Pilot) — ready to start
+Plan: 0 of next phase
+Status: Phase 2 complete. All 7 plans executed.
 
-Progress: [████████░░] 43% (3 of 7 plans)
+Progress: [██████████] 100% of Phase 2
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 6 (Phase 01: 3, Phase 02: 3)
-- Average duration: —
-- Total execution time: —
+- Total plans completed: 10 (Phase 01: 3, Phase 02: 7)
+- Average duration: ~15 min per plan
+- Total execution time: ~150 min
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 01 | 3 | 3 | ~11 min |
-| 02 | 3 | 3 | ~15 min |
+| 02 | 7 | 7 | ~15 min |
 
 **Recent Trend:**
 
 - Last 3 plans: ~15 min each
 - Trend: stable
 
-*Updated after each plan completion*
-| Phase 01 P01 | 25 min | 4 tasks | 42 files |
-| Phase 01 P02 | 7min | 2 tasks | 6 files |
-| Phase 02 P01 | 20 min | 4 tasks | 5 files |
-| Phase 02 P02 | 12 min | 3 tasks | 9 files |
-| Phase 02 P03 | 15 min | 3 tasks | 19 files |
+## Phase 2 Completion Summary
+
+All 7 plans executed and committed:
+- 02-01: Session death module (lib/session.ts), provider.tsx wired, api-wrapper toast removed
+- 02-02: IST date library (lib/date.ts), 22 tests, 7 consumer migrations
+- 02-03: Role permissions matrix (lib/permissions.ts), 257 tests, RoleGuard/RoleAccess rewrite
+- 02-04: Auth hook repair (use-login, use-logout, login-form, D-19 refresh tests)
+- 02-05: normalizeList + PaginationFooter, attendance screen retrofit
+- 02-06: Table screens retrofit, resource-list factory, 5 hooks collapsed, delete time.ts
+- 02-07: Date sweep of 17 surfaces, boundary helpers, final gate green
+
+**Verification:** lint 0 errors, typecheck clean, 329 tests pass, build (pre-existing register failure unrelated)
 
 ## Accumulated Context
 
@@ -66,14 +71,10 @@ Progress: [████████░░] 43% (3 of 7 plans)
 Decisions are logged in PROJECT.md Key Decisions table.
 Recent decisions affecting current work:
 
-- [Roadmap]: Whole-module delivery enforced — reimbursement lands complete in Phase 5 (not split staff/admin halves), leave complete in Phase 4; research's split ordering adjusted accordingly
-- [Roadmap]: Auth-01 session work pulled into Phase 2 with FNDT-04 (same code); AUTH-02/03 profile surfaces completed in Phase 7
-- [Roadmap]: Each module phase opens with a contract check against `../saher-backend/src/**.routes.ts` + `authorize()` guards before UI is built
-- [Phase 01]: Lint baseline repaired by fixing all 42 errors in place, eslint config untouched
-- [Phase 01]: All 8 test-toolchain packages installed only after explicit user approval at blocking-human legitimacy gate
-- [Phase 01]: vitest.config.ts uses import.meta.dirname for @ alias; coverage report-only until Phase 7
-- [Phase 01]: Test harness proven by two durable reference tests: LoginForm render through a fresh-per-call QueryClientProvider helper, and real apiFetch driven through msw-intercepted fetch with full envelope + meta assertions
-- [Phase 01]: msw lifecycle lives in tests/setup.ts (listen onUnhandledRequest:error / resetHandlers / close) over a shared no-default-handler setupServer; handlers registered inline per test
+- D-18: one home for dates (lib/date.ts), lib/utils/time.ts deleted
+- D-19: single-flight token refresh tested (retry-once, death-sentinel, toast-silence)
+- D-20: PaginationFooter handles boundary disabling internally
+- D-21: resource-list-factory.ts collapses common list/detail/mutation hooks
 
 ### Pending Todos
 
@@ -81,13 +82,10 @@ None yet.
 
 ### Blockers/Concerns
 
-- [Phase 3]: Noticeboard backend routes gated behind `underDevelopment` middleware — verify live payloads at phase start before finalizing schemas
-- [Phase 2]: `useMe()` role string values for manager gating are MEDIUM confidence — resolve with one live API call
-- [Phases 5–6]: Payload shapes for unbuilt domains (amount representation, settlement sub-resource, participant input mode, reminder/export route shapes) must be resolved against live OpenAPI at `/docs` during contract checks
+- [Phase 3]: Noticeboard backend routes gated behind `underDevelopment` middleware — verify live payloads at phase start
+- [Phases 5–6]: Payload shapes for unbuilt domains must be resolved against live OpenAPI at `/docs`
 
 ## Deferred Items
-
-Items acknowledged and carried forward from previous milestone close:
 
 | Category | Item | Status | Deferred At |
 |----------|------|--------|-------------|
@@ -95,6 +93,6 @@ Items acknowledged and carried forward from previous milestone close:
 
 ## Session Continuity
 
-Last session: 2026-08-24T15:38:55.650Z
-Stopped at: Phase 2 context gathered
-Resume file: .planning/phases/02-shared-infrastructure-session-reliability/02-CONTEXT.md
+Last session: 2026-08-25T21:05:00.000Z
+Stopped at: Phase 2 complete, ready for Phase 3
+Resume file: .planning/phases/03-noticeboard/ (to be created)
