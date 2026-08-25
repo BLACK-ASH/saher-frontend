@@ -71,11 +71,23 @@ Plans:
   4. Pagination footer renders safely when meta is missing or malformed (disabled controls, never crashes)
   5. UI affordances gate consistently through `can(action, resource)` derived from the user's role
 
-**Plans**: TBD
+**Plans**: 6 plans
 
 Plans:
+**Wave 1**
 
-- [ ] 02-01: TBD during plan-phase
+- [ ] 02-01-PLAN.md — Central session-death module + api-wrapper sentinel rewiring + provider cache onError wiring (FNDT-04, AUTH-01)
+- [ ] 02-02-PLAN.md — IST date module (lib/date.ts) + attendance/correction/calendar consumer migration (FNDT-02)
+- [ ] 02-03-PLAN.md — Permissions matrix mirror + can() gating unification + manager-nav fix + D-15 probe checkpoint (FNDT-06)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 02-04-PLAN.md — Auth flows contract: repaired login/logout hooks, ?next= return nav, D-19 single-flight/retry tests (AUTH-01)
+- [ ] 02-05-PLAN.md — normalizeList factory + safe PaginationFooter + attendance-family screen retrofit (FNDT-03, FNDT-05, FNDT-02)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 02-06-PLAN.md — Corrections TanStack retrofit + six-hook factory collapse (D-21) + delete lib/utils/time.ts (FNDT-03, FNDT-02, FNDT-05)
 
 ### Phase 3: Noticeboard Pilot
 
