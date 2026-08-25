@@ -85,7 +85,7 @@ export async function apiFetch<T>(
     const ok = await refreshPromise;
 
     if (!ok) {
-      toast.error("Session expired. Please login again.");
+      // Delegated to lib/session.ts via provider QueryCache/MutationCache onError filter.
       throw new Error("Unauthorized");
     }
 
