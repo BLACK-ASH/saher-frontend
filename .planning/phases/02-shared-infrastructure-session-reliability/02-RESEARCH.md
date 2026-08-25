@@ -443,14 +443,14 @@ onSuccess: () => performLogoutCleanup(queryClient), // cancel + clear + redirect
 | A5 | Every backend paginated endpoint emits page-count semantics under `total`/`totalPages` (verified in ALL endpoints found by grep today; future endpoints could differ) | Pattern 2 | Normalizer mislabels counts; mitigated because normalizer derives from `count` and both fields are read as pages uniformly |
 | A6 | "Invalid Session." sentinel (CONTEXT wording) matches backend string `Invalid Session` (no trailing period, `protected-route.ts:13,31`) — frontend never string-matches it anyway (behavior keyed on 401 status + failed refresh) | AUTH-01 | None — frontend keys on HTTP status, not message text; noted for doc accuracy |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Live probe logistics for D-15**
+1. **Live probe logistics for D-15** — RESOLVED in Plan 02-03 Task 3: a blocking human-verify checkpoint offers Option A (start `../saher-backend` locally, observe `/api/auth/me` role strings) or Option B (explicitly accept static evidence A1); matrix keys corrected before wave merge if observed strings differ.
    - What we know: Roles verified statically (`intern`,`user`,`manager`,`admin`). No backend running locally right now (ports 3000/4000 checked — down); backend default port 4000, started via its own dev command; production instance reachable only behind deployment.
    - What's unclear: Whether the executor will run `../saher-backend` locally or probe the deployed origin for the ONE `/api/auth/me` call.
    - Recommendation: Plan a checkpoint task "start backend locally (port 4000), curl /api/auth/me with seeded credentials, assert role strings vs matrix" — static evidence means even skipping the probe degrades gracefully.
 
-2. **Should mutations route through the death handler too?**
+2. **Should mutations route through the death handler too?** — RESOLVED in Plan 01 Task 3 (`app/provider.tsx`): BOTH `QueryCache` and `MutationCache` onError are wired to the same `"Unauthorized"` sentinel filter, so mutations bypassing useQuery funnel into `handleSessionDeath`; Plan 02-04's D-19 msw tests cover the mutation-path death contract.
    - What we know: `MutationCache.onError` verified; some mutations call `apiFetch` (which throws `Unauthorized` sentinel on death) but others may swallow differently.
    - What's unclear: Whether any mutation paths bypass `apiFetch` (grep says no bare-fetch API calls exist; INTEGRATIONS confirms single funnel).
    - Recommendation: Wire both caches to the same sentinel filter; covered by D-19 tests.

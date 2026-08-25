@@ -71,7 +71,7 @@ Plans:
   4. Pagination footer renders safely when meta is missing or malformed (disabled controls, never crashes)
   5. UI affordances gate consistently through `can(action, resource)` derived from the user's role
 
-**Plans**: 6 plans
+**Plans**: 7 plans
 
 Plans:
 **Wave 1**
@@ -87,7 +87,11 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 02-06-PLAN.md — Corrections TanStack retrofit + six-hook factory collapse (D-21) + delete lib/utils/time.ts (FNDT-03, FNDT-02, FNDT-05)
+- [ ] 02-06-PLAN.md — Corrections + dashboard-grid retrofit + six-hook factory collapse with service/consumer adoption (D-21) + delete lib/utils/time.ts (FNDT-03, FNDT-02, FNDT-05)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] 02-07-PLAN.md — Raw-date sweep of the 15 remaining surfaces onto lib/date + phase-final raw-pattern gate completing D-01 (FNDT-02)
 
 ### Phase 3: Noticeboard Pilot
 
