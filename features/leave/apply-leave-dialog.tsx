@@ -92,12 +92,10 @@ export default function ApplyLeaveDialog({
   }, [leave, form]);
 
   const handleError = (err: Error) => {
-    // Overlap errors surface inline below the dates; everything else toasts.
-
+    // Overlap errors surface inline below the dates; every other failure is
+    // already toasted by apiFetch before it throws.
     if (err.message.toLowerCase().includes("overlap")) {
       setOverlapError(err.message);
-    } else {
-      toast.error(err.message);
     }
   };
 

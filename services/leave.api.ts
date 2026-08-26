@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { normalizeList } from "@/lib/normalize-list";
 import { DefaultUserT, userField } from "@/lib/common-zod-schema";
-import { toast } from "sonner";
 import { z } from "zod";
 
 /* -------------------------------------------------------------------------- */
@@ -193,8 +192,6 @@ export const getLeaveTypes = async () => {
     method: "GET",
   });
 
-  if (!res.success) toast.error(res.message);
-
   return res.data;
 };
 
@@ -204,11 +201,7 @@ export const createLeaveType = async (data: CreateLeaveTypePayload) => {
     body: JSON.stringify(data),
   });
 
-  if (!res.success) toast.error(res.message);
-  else toast.success(res.message);
-
-  return res;
-};
+  return res;};
 
 export const updateLeaveType = async ({
   id,
@@ -222,11 +215,7 @@ export const updateLeaveType = async ({
     body: JSON.stringify(data),
   });
 
-  if (!res.success) toast.error(res.message);
-  else toast.success(res.message);
-
-  return res;
-};
+  return res;};
 
 /* -------------------------------------------------------------------------- */
 /*                           LEAVE APPLICATIONS                               */
@@ -238,11 +227,7 @@ export const applyLeave = async (data: CreateLeavePayload) => {
     body: JSON.stringify(data),
   });
 
-  if (!res.success) toast.error(res.message);
-  else toast.success(res.message);
-
-  return res;
-};
+  return res;};
 
 export const updateLeaveApplication = async ({
   id,
@@ -256,11 +241,7 @@ export const updateLeaveApplication = async ({
     body: JSON.stringify(data),
   });
 
-  if (!res.success) toast.error(res.message);
-  else toast.success(res.message);
-
-  return res;
-};
+  return res;};
 
 export const reviewLeaveApplication = async ({
   id,
@@ -273,9 +254,6 @@ export const reviewLeaveApplication = async ({
     method: "PUT",
     body: JSON.stringify(data),
   });
-
-  if (!res.success) toast.error(res.message);
-  else toast.success(res.message);
 
   return res.data;
 };
@@ -294,8 +272,6 @@ export const getLeaveApplications = async ({
     },
   );
 
-  if (!res.success) toast.error(res.message);
-
   return normalizeList<LeaveT>(res);
 };
 
@@ -313,8 +289,6 @@ export const getAllLeaveApplications = async ({
     },
   );
 
-  if (!res.success) toast.error(res.message);
-
   return normalizeList<LeaveT>(res);
 };
 
@@ -326,8 +300,6 @@ export const getLeaveBalance = async () => {
   const res = await apiFetch<LeaveBalanceT>("/api/leave/balance", {
     method: "GET",
   });
-
-  if (!res.success) toast.error(res.message);
 
   return res.data;
 };
