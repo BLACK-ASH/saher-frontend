@@ -1,26 +1,30 @@
 {
-  "version": "1.0",
-  "timestamp": "2026-08-25T21:30:00.000Z",
-  "phase": 3,
-  "phase_name": "noticeboard-pilot",
-  "phase_dir": ".planning/phases/03-noticeboard",
-  "plan": 0,
-  "task": 0,
-  "total_tasks": 0,
-  "status": "between_phases",
-  "completed_tasks": [],
-  "remaining_tasks": [],
-  "blockers": [],
-  "human_actions_pending": [],
-  "decisions": [
-    {"decision": "Phase 2 complete — all 7 plans executed", "rationale": "Shared infrastructure landed: lib/date.ts (IST), lib/permissions.ts (RBAC), lib/session.ts (session death), lib/normalize-list.ts, hooks/resource-list-factory.ts, components/pagination-footer.tsx", "phase": "02"},
-    {"decision": "Login uses window.location.href, not router.push", "rationale": "Client-side nav races with useMe invalidation causing handleSessionDeath redirect loop", "phase": "02"},
-    {"decision": "handleSessionDeath skips redirect on public routes", "rationale": "Prevents infinite loop where hard nav resets died flag on /login", "phase": "02"},
-    {"decision": "performLogoutCleanup goes directly to /login", "rationale": "Avoids unnecessary proxy bounce through /", "phase": "02"},
-    {"decision": "docker-compose.dev.yml lives in saher/ (parent), not saher-frontend/", "rationale": "Needs both services + nginx for production-like routing", "phase": "02"},
-    {"decision": "resource-list-factory uses noop fallback for optional mutations", "rationale": "Avoids non-null-assertion lint errors on config.mutations?.add!", "phase": "02"}
-  ],
-  "uncommitted_files": ["docker-compose.dev.yml (deleted from saher-frontend)"],
-  "next_action": "Run /gsd-new-milestone or manually plan Phase 3 (Noticeboard Pilot) — verify backend notice routes + authorize() guards before building",
-  "context_notes": "Phase 2 fully complete. 329 tests pass, 0 lint errors, 0 type errors. Backend has no users yet — seed via `docker exec <backend-container> pnpm seed`. Dev compose at saher/docker-compose.dev.yml uses Dockerfile.dev for both services."
+ "version": "1.0",
+ "timestamp": "2026-08-26T16:15:00Z",
+ "phase": "05",
+ "phase_name": "money-approval-reimbursement-payroll",
+ "phase_dir": ".planning/phases/05-money-approval-reimbursement-payroll",
+ "plan": "05-04",
+ "task": 1,
+ "total_tasks": 3,
+ "status": "paused",
+ "completed_tasks": [
+  {"id": "05-01", "name": "Reimbursement Data Layer", "status": "done", "commit": "3a65b9f"},
+  {"id": "05-02", "name": "Payroll Data Layer", "status": "done", "commit": "3e8a941"},
+  {"id": "05-03", "name": "Staff My Bills slice", "status": "done", "commit": "4dd5f8a"}
+ ],
+ "remaining_tasks": [
+  {"id": "05-04", "name": "Admin payroll slice", "status": "in_progress"},
+  {"id": "05-05", "name": "Finance Bill Management", "status": "not_started"},
+  {"id": "05-06", "name": "Money depth", "status": "not_started"}
+ ],
+ "blockers": [],
+ "human_actions_pending": [],
+ "decisions": [
+  {"decision": "Payroll payroll/:id array-by-id", "rationale": "Quirk 7", "phase": "05"},
+  {"decision": "D-17 timeline amendment", "rationale": "Backend does not record actor/time for Handled step", "phase": "05"}
+ ],
+ "uncommitted_files": [".planning/phases/05-money-approval-reimbursement-payroll/05-04-PLAN.md"],
+ "next_action": "Resume execution of 05-04",
+ "context_notes": "Executor for 05-04 was cancelled. Resuming agent should re-verify state and retry 05-04."
 }
