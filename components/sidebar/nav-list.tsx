@@ -12,6 +12,7 @@ import { useMe } from "@/hooks/use-me";
 import { can } from "@/lib/permissions";
 import type { UserRole } from "@/lib/permissions";
 import {
+  Bell,
   Calendar,
   CalendarCheck,
   ClockAlert,
@@ -61,6 +62,11 @@ const userRoutes = [
     label: "Program",
     url: "/program",
     icon: CalendarCheck,
+  },
+  {
+    label: "Noticeboard",
+    url: "/noticeboard",
+    icon: Bell,
   },
 ];
 
