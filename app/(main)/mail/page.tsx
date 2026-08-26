@@ -26,7 +26,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { imageUrl } from "@/lib/image-url";
-import { outBoxColumns } from "@/features/mail/outbox-colunm";
+import { outBoxColumns } from "@/features/mail/outbox-column";
 import { formatIstDateTime } from "@/lib/date";
 
 /* ---------------- TYPES ---------------- */

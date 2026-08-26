@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { normalizeList } from "@/lib/normalize-list";
 import { DefaultUserT } from "@/lib/common-zod-schema";
-import { isActive } from "@tiptap/core";
 import { toast } from "sonner";
 import { z } from "zod";
 
