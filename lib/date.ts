@@ -178,7 +178,10 @@ export const istDateOnlyToDate = (value: string): Date => {
 // MONTH/YEAR
 // ========================
 
-export const getMonthYear = (date: string | Date): string => {
+export const getMonthYear = (
+  date?: string | Date | null,
+): string => {
+  if (!date) return "";
   const d = typeof date === "string" ? new Date(date) : date;
   if (Number.isNaN(d.getTime())) return "";
   const p = istParts(d, { month: "long", year: "numeric" });

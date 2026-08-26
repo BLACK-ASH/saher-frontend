@@ -42,7 +42,7 @@ export function AttendanceChart({
   }));
 
   if (isLoading) return <DefaultLoader className="col-span-2" />;
-  if (!chartData)
+  if (!chartData || chartData.length === 0)
     return (
       <NoData
         className="col-span-2"

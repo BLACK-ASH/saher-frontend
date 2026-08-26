@@ -148,6 +148,12 @@ describe("getMonthYear", () => {
   it("returns month and year in IST", () => {
     expect(getMonthYear("2026-08-24T18:30:00Z")).toBe("August 2026");
   });
+
+  it("returns empty string for undefined/null/invalid input", () => {
+    expect(getMonthYear(undefined)).toBe("");
+    expect(getMonthYear(null)).toBe("");
+    expect(getMonthYear("not-a-date")).toBe("");
+  });
 });
 
 describe("dateToIstDateOnly", () => {
