@@ -1,6 +1,12 @@
 "use client";
 
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { UserSearchPicker } from "@/components/user-search-picker";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { mailColumns } from "@/features/mail/column";
@@ -11,12 +17,16 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 import { useState } from "react";
-import { Send, X } from "lucide-react";
+import { Reply, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@base-ui/react";
 import { Input as SuInput } from "@/components/ui/input";
 import { toast } from "sonner";
-import { InboxMailT, OutboxMailT } from "@/services/mail.api";
+import {
+  InboxMailT,
+  MailUser,
+  OutboxMailT,
+  SendMailInput,
+} from "@/services/mail.api";
 import {
   Dialog,
   DialogContent,
@@ -29,46 +39,28 @@ import { imageUrl } from "@/lib/image-url";
 import { outBoxColumns } from "@/features/mail/outbox-column";
 import { formatIstDateTime } from "@/lib/date";
 
-/* ---------------- TYPES ---------------- */
-
-export type MailUser = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  image: {
-    id: string;
-    src: string;
-    alt: string;
-  };
-};
-
 /* ---------------- SCHEMA ---------------- */
 
 const mailInputSchema = z.object({
-  to: z.array(z.any()),
+  to: z.array(z.any()).min(1, "At least one recipient required"),
   cc: z.array(z.any()),
   bcc: z.array(z.any()),
-  subject: z.string(),
-  body: z.string(),
+  subject: z.string().min(1, "Subject is required"),
+  body: z.string().min(1, "Body is required"),
 });
+
+const escapeHtml = (t: string) =>
+  t
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 
 /* ---------------- PAGE ---------------- */
 
 const Page = () => {
   const { inbox, sent, send } = useMail();
-
-  const [toKeyword, setToKeyword] = useState("");
-  const [ccKeyword, setCcKeyword] = useState("");
-  const [bccKeyword, setBccKeyword] = useState("");
-
-  const { user: toUser } = useMail(toKeyword);
-  const { user: ccUser } = useMail(ccKeyword);
-  const { user: bccUser } = useMail(bccKeyword);
-
-  const { data: toData = [] } = toUser;
-  const { data: ccData = [] } = ccUser;
-  const { data: bccData = [] } = bccUser;
 
   const { data: inData, refetch: inRefetch } = inbox;
   const { data: seData, refetch: seRefetch } = sent;
@@ -77,6 +69,7 @@ const Page = () => {
     InboxMailT | OutboxMailT | null
   >(null);
   const [open, setOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("inbox");
 
   const form = useForm<z.infer<typeof mailInputSchema>>({
     resolver: zodResolver(mailInputSchema),
@@ -90,7 +83,7 @@ const Page = () => {
   });
 
   const onSubmit = (data: z.infer<typeof mailInputSchema>) => {
-    const payload = {
+    const payload: SendMailInput = {
       subject: data.subject,
       body: data.body,
       to: data.to.map((u: MailUser) => u.id),
@@ -102,13 +95,14 @@ const Page = () => {
       onSuccess: (res) => {
         toast.success(res.message);
         form.reset();
+        setActiveTab("sent");
       },
     });
   };
 
   return (
     <section className="p-4 container mx-auto">
-      <Tabs defaultValue="inbox">
+      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v)}>
         <TabsList>
           <TabsTrigger value="inbox">Inbox</TabsTrigger>
           <TabsTrigger value="sent">Sent</TabsTrigger>
@@ -151,59 +145,13 @@ const Page = () => {
                 control={form.control}
                 render={({ field }) => (
                   <Field>
-                    <FieldLabel htmlFor="to">To</FieldLabel>
-
-                    {/* chips */}
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {field.value.map((user: MailUser) => (
-                        <div
-                          key={user.id}
-                          className="flex items-center gap-2 rounded-full bg-muted px-2 py-1 text-sm"
-                        >
-                          {user.name} ({user.email})
-                          <button
-                            type="button"
-                            onClick={() =>
-                              field.onChange(
-                                field.value.filter(
-                                  (u: MailUser) => u.id !== user.id,
-                                ),
-                              )
-                            }
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-
-                    <Input
-                      id="to"
+                    <FieldLabel>To</FieldLabel>
+                    <UserSearchPicker
+                      value={field.value}
+                      onChange={field.onChange}
                       placeholder="Search users..."
-                      value={toKeyword}
-                      onChange={(e) => setToKeyword(e.target.value)}
                     />
-
-                    <div className="border mt-2 rounded-md max-h-40 overflow-auto">
-                      {toData.map((user: MailUser) => (
-                        <div
-                          key={user.id}
-                          className="px-3 py-2 hover:bg-muted cursor-pointer"
-                          onClick={() => {
-                            if (
-                              !field.value.some(
-                                (u: MailUser) => u.id === user.id,
-                              )
-                            ) {
-                              field.onChange([...field.value, user]);
-                              setToKeyword("");
-                            }
-                          }}
-                        >
-                          {user.name} — {user.email}
-                        </div>
-                      ))}
-                    </div>
+                    <FieldError errors={[form.formState.errors.to]} />
                   </Field>
                 )}
               />
@@ -214,57 +162,13 @@ const Page = () => {
                 control={form.control}
                 render={({ field }) => (
                   <Field>
-                    <FieldLabel htmlFor="cc">Cc</FieldLabel>
-
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {field.value.map((user: MailUser) => (
-                        <div
-                          key={user.id}
-                          className="flex items-center gap-2 rounded-full bg-muted px-2 py-1 text-sm"
-                        >
-                          {user.name} ({user.email})
-                          <button
-                            type="button"
-                            onClick={() =>
-                              field.onChange(
-                                field.value.filter(
-                                  (u: MailUser) => u.id !== user.id,
-                                ),
-                              )
-                            }
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-
-                    <Input
-                      id="cc"
+                    <FieldLabel>Cc</FieldLabel>
+                    <UserSearchPicker
+                      value={field.value}
+                      onChange={field.onChange}
                       placeholder="Search users..."
-                      value={ccKeyword}
-                      onChange={(e) => setCcKeyword(e.target.value)}
                     />
-
-                    <div className="border mt-2 rounded-md max-h-40 overflow-auto">
-                      {ccData.map((user: MailUser) => (
-                        <div
-                          key={user.id}
-                          className="px-3 py-2 hover:bg-muted cursor-pointer"
-                          onClick={() => {
-                            if (
-                              !field.value.some(
-                                (u: MailUser) => u.id === user.id,
-                              )
-                            ) {
-                              field.onChange([...field.value, user]);
-                            }
-                          }}
-                        >
-                          {user.name} — {user.email}
-                        </div>
-                      ))}
-                    </div>
+                    <FieldError errors={[form.formState.errors.cc]} />
                   </Field>
                 )}
               />
@@ -275,57 +179,13 @@ const Page = () => {
                 control={form.control}
                 render={({ field }) => (
                   <Field>
-                    <FieldLabel htmlFor="bcc">Bcc</FieldLabel>
-
-                    <div className="flex flex-wrap gap-2 mb-2">
-                      {field.value.map((user: MailUser) => (
-                        <div
-                          key={user.id}
-                          className="flex items-center gap-2 rounded-full bg-muted px-2 py-1 text-sm"
-                        >
-                          {user.name} ({user.email})
-                          <button
-                            type="button"
-                            onClick={() =>
-                              field.onChange(
-                                field.value.filter(
-                                  (u: MailUser) => u.id !== user.id,
-                                ),
-                              )
-                            }
-                          >
-                            <X className="h-3 w-3" />
-                          </button>
-                        </div>
-                      ))}
-                    </div>
-
-                    <Input
-                      id="bcc"
+                    <FieldLabel>Bcc</FieldLabel>
+                    <UserSearchPicker
+                      value={field.value}
+                      onChange={field.onChange}
                       placeholder="Search users..."
-                      value={bccKeyword}
-                      onChange={(e) => setBccKeyword(e.target.value)}
                     />
-
-                    <div className="border mt-2 rounded-md max-h-40 overflow-auto">
-                      {bccData.map((user: MailUser) => (
-                        <div
-                          key={user.id}
-                          className="px-3 py-2 hover:bg-muted cursor-pointer"
-                          onClick={() => {
-                            if (
-                              !field.value.some(
-                                (u: MailUser) => u.id === user.id,
-                              )
-                            ) {
-                              field.onChange([...field.value, user]);
-                            }
-                          }}
-                        >
-                          {user.name} — {user.email}
-                        </div>
-                      ))}
-                    </div>
+                    <FieldError errors={[form.formState.errors.bcc]} />
                   </Field>
                 )}
               />
@@ -343,6 +203,7 @@ const Page = () => {
                       placeholder="Enter Subject"
                       autoComplete="off"
                     />
+                    <FieldError errors={[form.formState.errors.subject]} />
                   </Field>
                 )}
               />
@@ -357,6 +218,7 @@ const Page = () => {
                     <InputGroup>
                       <InputGroupTextarea id="body" {...field} rows={7} />
                     </InputGroup>
+                    <FieldError errors={[form.formState.errors.body]} />
                   </Field>
                 )}
               />
@@ -418,9 +280,9 @@ const Page = () => {
               </div>
             </div>
 
-            {selectedMail?.cc && (
+            {(selectedMail?.cc?.length ?? 0) > 0 && (
               <div>
-                <p className="font-bold">CC</p>
+                <p className="font-bold">Cc</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                   {selectedMail?.cc.map((user) => (
                     <div key={user.email} className="flex items-center gap-3">
@@ -443,9 +305,9 @@ const Page = () => {
               </div>
             )}
 
-            {selectedMail && "bcc" in selectedMail && (
+            {selectedMail && "bcc" in selectedMail && selectedMail.bcc.length > 0 && (
               <div>
-                <p className="font-bold">CC</p>
+                <p className="font-bold">Bcc</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                   {selectedMail?.bcc.map((user) => (
                     <div key={user.email} className="flex items-center gap-3">
@@ -476,8 +338,30 @@ const Page = () => {
             <Separator />
 
             <div className="w-full max-w-full overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-all">
-              {selectedMail?.body}
+              {escapeHtml(selectedMail?.body ?? "")}
             </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => {
+                if (!selectedMail) return;
+                const quotedBody = `\n\nOn ${formatIstDateTime(selectedMail.createdAt)}, ${selectedMail.from.name} wrote:\n> ${(selectedMail.body ?? "").split("\n").join("\n> ")}`;
+                form.setValue("to", [selectedMail.from]);
+                form.setValue(
+                  "subject",
+                  selectedMail.subject.startsWith("Re: ")
+                    ? selectedMail.subject
+                    : `Re: ${selectedMail.subject}`,
+                );
+                form.setValue("body", quotedBody);
+                setOpen(false);
+                setActiveTab("compose");
+              }}
+            >
+              <Reply className="h-4 w-4" /> Reply
+            </Button>
           </div>
         </DialogContent>
       </Dialog>

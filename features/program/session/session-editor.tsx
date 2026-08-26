@@ -1,6 +1,6 @@
 "use client";
 
-import { MailUser } from "@/app/(main)/mail/page";
+import { MailUser } from "@/services/mail.api";
 import TiptapEditor from "@/components/tiptap/editor";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
