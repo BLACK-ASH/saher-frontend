@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@base-ui/react";
 import { Input as SuInput } from "@/components/ui/input";
 import { toast } from "sonner";
-import { MailT } from "@/services/mail.api";
+import { InboxMailT, OutboxMailT } from "@/services/mail.api";
 import {
   Dialog,
   DialogContent,
@@ -73,7 +73,9 @@ const Page = () => {
   const { data: inData, refetch: inRefetch } = inbox;
   const { data: seData, refetch: seRefetch } = sent;
 
-  const [selectedMail, setSelectedMail] = useState<MailT | null>(null);
+  const [selectedMail, setSelectedMail] = useState<
+    InboxMailT | OutboxMailT | null
+  >(null);
   const [open, setOpen] = useState(false);
 
   const form = useForm<z.infer<typeof mailInputSchema>>({
@@ -117,7 +119,7 @@ const Page = () => {
         <TabsContent value="inbox">
           <MailDataTable
             columns={mailColumns}
-            data={inData || []}
+            data={inData?.items ?? []}
             refetch={inRefetch}
             onRowClick={(mail) => {
               setSelectedMail(mail);
@@ -130,7 +132,7 @@ const Page = () => {
         <TabsContent value="sent">
           <MailDataTable
             columns={outBoxColumns}
-            data={seData || []}
+            data={seData?.items ?? []}
             refetch={seRefetch}
             onRowClick={(mail) => {
               setSelectedMail(mail);
@@ -441,7 +443,7 @@ const Page = () => {
               </div>
             )}
 
-            {selectedMail?.bcc && (
+            {selectedMail && "bcc" in selectedMail && (
               <div>
                 <p className="font-bold">CC</p>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

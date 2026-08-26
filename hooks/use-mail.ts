@@ -11,7 +11,7 @@ export const useMail = (keyword?: string) => {
 
   const inbox = useQuery({
     queryKey: ["inbox"],
-    queryFn: getMails,
+    queryFn: () => getMails(),
     staleTime: 60 * 1000,
   });
 
@@ -22,7 +22,7 @@ export const useMail = (keyword?: string) => {
   });
   const sent = useQuery({
     queryKey: ["sent"],
-    queryFn: getSentMails,
+    queryFn: () => getSentMails(),
     staleTime: 60 * 1000,
   });
 

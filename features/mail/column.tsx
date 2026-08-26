@@ -1,13 +1,13 @@
 "use client";
 
-import { MailT } from "@/services/mail.api";
+import { InboxMailT } from "@/services/mail.api";
 import { ColumnDef } from "@tanstack/react-table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { imageUrl } from "@/lib/image-url";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 
-export const mailColumns: ColumnDef<MailT>[] = [
+export const mailColumns: ColumnDef<InboxMailT>[] = [
   {
     accessorKey: "from",
     header: () => <div>From</div>,
