@@ -15,7 +15,7 @@ import {
   type CreateNoticeInput,
 } from "@/services/notice.api";
 import { useNotices } from "@/hooks/use-notice";
-import { dateInputToIso } from "@/lib/date";
+import { dateInputToIso, dateToIstDateOnly } from "@/lib/date";
 
 type Props = {
   mode: "create" | "edit";
@@ -33,12 +33,8 @@ export function NoticeForm({ mode, initialData }: Props) {
 
   // Create pre-fills 7 days out; edit shows the stored date (backend +1 already applied).
   const defaultExpiry = initialData
-    ? new Date(initialData.expiresAt).toISOString().split("T")[0]
-    : (() => {
-        const d = new Date();
-        d.setDate(d.getDate() + 7);
-        return d.toISOString().split("T")[0];
-      })();
+    ? dateToIstDateOnly(new Date(initialData.expiresAt))
+    : dateToIstDateOnly(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
 
   const form = useForm<CreateNoticeInput>({
     resolver: zodResolver(createNoticeSchema),
