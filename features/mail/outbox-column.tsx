@@ -9,10 +9,11 @@ import { imageUrl } from "@/lib/image-url";
 
 export const outBoxColumns: ColumnDef<OutboxMailT>[] = [
   {
-    accessorKey: "from",
+    accessorKey: "to",
     header: () => <div>To</div>,
     cell: ({ row }) => {
-      const user = row.original.to[0];
+      const users = row.original.to;
+      const user = users[0];
 
       return (
         <div className="flex items-center gap-3">
@@ -23,6 +24,11 @@ export const outBoxColumns: ColumnDef<OutboxMailT>[] = [
           <div>
             <p className="font-bold">{user.name}</p>
             <p>{user.email}</p>
+            {users.length > 1 && (
+              <p className="text-xs text-muted-foreground">
+                and {users.length - 1} other{users.length > 2 ? "s" : ""}
+              </p>
+            )}
           </div>
         </div>
       );
