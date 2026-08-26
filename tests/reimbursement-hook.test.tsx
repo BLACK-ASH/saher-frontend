@@ -1,7 +1,6 @@
-import { act, waitFor } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
-import type { ReactNode } from "react";
 import { describe, expect, it, vi } from "vitest";
 import { useReimbursement } from "@/hooks/use-reimbursement";
 import { renderWithProviders } from "@/tests/render-with-providers";
@@ -10,6 +9,10 @@ import { server } from "@/tests/test-server";
 vi.mock("sonner", () => ({
   toast: { error: vi.fn(), success: vi.fn(), warning: vi.fn() },
 }));
+
+// Direct act() calls require the React act environment flag in vitest.
+(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT =
+  true;
 
 const ok = (data: unknown) =>
   HttpResponse.json({ success: true, message: "ok", data });
@@ -132,11 +135,11 @@ describe("useReimbursement mutations (D-29 no optimistic writes)", () => {
       return null;
     }
 
-    renderWithProviders(<Probe />, {
-      wrapper: ({ children }: { children: ReactNode }) => (
-        <QueryClientProvider client={client}>{children}</QueryClientProvider>
-      ),
-    });
+    render(
+      <QueryClientProvider client={client}>
+        <Probe />
+      </QueryClientProvider>,
+    );
 
     await waitFor(() => expect(state?.myBills.isSuccess).toBe(true));
     const s = state as ReturnType<typeof useReimbursement>;
@@ -183,16 +186,24 @@ describe("useReimbursement mutations (D-29 no optimistic writes)", () => {
 describe("useReimbursement handleMany (D-11/D-27)", () => {
   it("processes strictly sequentially, survives a middle failure, fires ONE summary toast", async () => {
     stubReads();
-    const calls: Array<{ id: string; at: number }> = [];
+    const calls: string[] = [];
+    // Gate item 2 behind a deferred rejection so per-item progress is
+    // observable mid-flight deterministically.
+    let releaseSecond: (() => void) | undefined;
     server.use(
       http.post("/api/reimbursement/handle/:billId", ({ request }) => {
-        const url = new URL(request.url);
-        calls.push({ id: url.pathname.split("/").pop() ?? "", at: Date.now() });
-        if (url.pathname.endsWith("b2")) {
-          return HttpResponse.json(
-            { success: false, message: "declined" },
-            { status: 400 },
-          );
+        const id = new URL(request.url).pathname.split("/").pop() ?? "";
+        calls.push(id);
+        if (id === "b2") {
+          return new Promise((resolve) => {
+            releaseSecond = () =>
+              resolve(
+                HttpResponse.json(
+                  { success: false, message: "declined" },
+                  { status: 400 },
+                ),
+              );
+          });
         }
         return ok(null);
       }),
@@ -217,26 +228,27 @@ describe("useReimbursement handleMany (D-11/D-27)", () => {
       { billId: "b3", status: "accept" as const, reason: "receipts ok three" },
     ];
 
-    // Sample progress mid-flight: while item 2 is being attempted, done must
-    // already be ≥1 (proves per-item increments are observable while running).
-    let midFlightDone = -1;
+    // Start the run; act exits flushing the initial {done:0,total:3} render.
+    let run: Promise<void> = Promise.resolve();
     await act(async () => {
-      const run = s.handleMany(items);
-      await waitFor(() => {
-        const progress = state?.bulkProgress;
-        if (progress && progress.done >= 1) midFlightDone = progress.done;
-        return Boolean(progress && progress.done >= 1);
-      });
+      run = s.handleMany(items);
+    });
+
+    // Mid-flight: after item 1 completes, progress must read {done:1,total:3}
+    // while item 2 is still blocked (per-item increments are observable).
+    await waitFor(() =>
+      expect(state?.bulkProgress).toEqual({ done: 1, total: 3 }),
+    );
+
+    // Release the gated middle item and let the run drain to completion.
+    await act(async () => {
+      act(() => releaseSecond?.());
       await run;
     });
 
     // Sequential order: expected visit order with the failing middle item not
-    // aborting its neighbours; timestamps monotonic (never parallel).
-    expect(calls.map((c) => c.id)).toEqual(["b1", "b2", "b3"]);
-    for (let i = 1; i < calls.length; i += 1) {
-      expect(calls[i].at).toBeGreaterThanOrEqual(calls[i - 1].at);
-    }
-    expect(midFlightDone).toBeGreaterThanOrEqual(1);
+    // aborting its neighbours.
+    expect(calls).toEqual(["b1", "b2", "b3"]);
 
     // Progress ended null and exactly one summary toast reported the outcome.
     await waitFor(() => expect(state?.bulkProgress).toBeNull());
