@@ -162,15 +162,17 @@ export default function LeaveTypeDialog({
             <Controller
               name="maxCarryForwardDays"
               control={form.control}
-              render={({ field }) => (
-                <Field>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.error ? "true" : undefined}>
                   <FieldLabel>Carry Forward</FieldLabel>
 
                   <Input
                     type="number"
                     value={field.value}
+                    aria-invalid={!!fieldState.error}
                     onChange={(e) => field.onChange(Number(e.target.value))}
                   />
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />

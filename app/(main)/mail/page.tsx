@@ -49,14 +49,6 @@ const mailInputSchema = z.object({
   body: z.string().min(1, "Body is required"),
 });
 
-const escapeHtml = (t: string) =>
-  t
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-
 /* ---------------- PAGE ---------------- */
 
 const Page = () => {
@@ -351,7 +343,7 @@ const Page = () => {
             <Separator />
 
             <div className="w-full max-w-full overflow-x-hidden overflow-y-auto whitespace-pre-wrap break-all">
-              {escapeHtml(selectedMail?.body ?? "")}
+              {selectedMail?.body ?? ""}
             </div>
 
             <Button

@@ -2,6 +2,7 @@
 
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 
 import {
   Dialog,
@@ -27,12 +28,14 @@ import { toast } from "sonner";
 
 type Props = {
   leave?: LeaveT;
+  initialStatus?: "approved" | "rejected";
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
 export default function ReviewLeaveDialog({
   leave,
+  initialStatus = "approved",
   open,
   onOpenChange,
 }: Props) {
@@ -42,10 +45,15 @@ export default function ReviewLeaveDialog({
     resolver: zodResolver(reviewLeaveSchema),
 
     defaultValues: {
-      status: "approved",
+      status: initialStatus,
       managerComment: "",
     },
   });
+
+  // 🔥 re-sync decision each time the dialog opens (✓ approves, ✗ rejects)
+  useEffect(() => {
+    if (open) form.reset({ status: initialStatus, managerComment: "" });
+  }, [open, initialStatus, form]);
 
   const onSubmit = (values: ReviewLeaveType) => {
     if (!leave) return;

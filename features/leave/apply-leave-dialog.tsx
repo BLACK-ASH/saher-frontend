@@ -211,11 +211,12 @@ export default function ApplyLeaveDialog({
             <Controller
               name="startDate"
               control={form.control}
-              render={({ field }) => (
-                <Field>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.error ? "true" : undefined}>
                   <FieldLabel>Start Date</FieldLabel>
 
-                  <Input type="date" {...field} />
+                  <Input type="date" {...field} aria-invalid={!!fieldState.error} />
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />
@@ -223,11 +224,12 @@ export default function ApplyLeaveDialog({
             <Controller
               name="endDate"
               control={form.control}
-              render={({ field }) => (
-                <Field>
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.error ? "true" : undefined}>
                   <FieldLabel>End Date</FieldLabel>
 
-                  <Input type="date" {...field} />
+                  <Input type="date" {...field} aria-invalid={!!fieldState.error} />
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
             />

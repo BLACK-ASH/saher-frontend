@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 
 import { useLeave } from "@/hooks/use-leave";
 
@@ -28,32 +27,38 @@ import LeaveDetailsDialog from "./leave-details-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { formatIstDate } from "@/lib/date";
 
+// Backend GET /application/all returns every application unpaginated, so both
+// filtering and paging happen client-side here.
+const PAGE_SIZE = 10;
+
 export default function AdminLeavePage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-
-  const page = Number(searchParams.get("page") ?? 1);
-
-  const limit = Number(searchParams.get("limit") ?? 10);
-
-  const { applications } = useLeave({
-    page,
-    limit,
-    all: true,
-  });
+  const { applications } = useLeave({ all: true });
 
   const [reviewLeave, setReviewLeave] = useState<LeaveT>();
+
+  const [reviewStatus, setReviewStatus] = useState<"approved" | "rejected">(
+    "approved",
+  );
 
   const [viewLeave, setViewLeave] = useState<LeaveT>();
 
   const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
-  // 🔥 client-side status filter over the full applications list
+  const [page, setPage] = useState(1);
 
   const filteredItems =
     applications.data?.items?.filter(
       (item) => !statusFilter || item.status === statusFilter,
     ) ?? [];
+
+  const totalPages = Math.max(Math.ceil(filteredItems.length / PAGE_SIZE), 1);
+
+  const pageItems = filteredItems.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
+  // 🔥 auto-clamp when filtering shrinks the list
+  if (page > totalPages) {
+    setPage(totalPages);
+  }
 
   return (
     <div className="container space-y-6 py-8">
@@ -107,7 +112,16 @@ export default function AdminLeavePage() {
             </TableHeader>
 
             <TableBody>
-              {filteredItems.length === 0 ? (
+              {applications.isLoading ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="py-10 text-center text-muted-foreground"
+                  >
+                    Loading...
+                  </TableCell>
+                </TableRow>
+              ) : filteredItems.length === 0 ? (
                 <TableRow>
                   <TableCell
                     colSpan={5}
@@ -117,7 +131,7 @@ export default function AdminLeavePage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredItems.map((leave) => (
+                pageItems.map((leave) => (
                 <TableRow key={leave.id}>
                   <TableCell>
                     <div className="flex items-center gap-4">
@@ -179,7 +193,11 @@ export default function AdminLeavePage() {
                           <Button
                             size="icon"
                             variant="ghost"
-                            onClick={() => setReviewLeave(leave)}
+                            aria-label="Approve"
+                            onClick={() => {
+                              setReviewStatus("approved");
+                              setReviewLeave(leave);
+                            }}
                           >
                             <Check />
                           </Button>
@@ -187,7 +205,11 @@ export default function AdminLeavePage() {
                           <Button
                             size="icon"
                             variant="ghost"
-                            onClick={() => setReviewLeave(leave)}
+                            aria-label="Reject"
+                            onClick={() => {
+                              setReviewStatus("rejected");
+                              setReviewLeave(leave);
+                            }}
                           >
                             <X />
                           </Button>
@@ -205,20 +227,19 @@ export default function AdminLeavePage() {
 
       {/* Pagination */}
 
-      {applications.data && applications.data.totalPages > 1 && (
+      {totalPages > 1 && (
         <div className="flex justify-end px-4 py-4">
           <PaginationFooter
-            page={applications.data.page}
-            totalPages={applications.data.totalPages}
-            onPageChange={(p) =>
-              router.push(`/leave-management?page=${p}&limit=${limit}`)
-            }
+            page={page}
+            totalPages={totalPages}
+            onPageChange={setPage}
           />
         </div>
       )}
 
       <ReviewLeaveDialog
         leave={reviewLeave}
+        initialStatus={reviewStatus}
         open={!!reviewLeave}
         onOpenChange={(open) => {
           if (!open) setReviewLeave(undefined);
