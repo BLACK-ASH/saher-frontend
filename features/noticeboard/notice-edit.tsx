@@ -6,14 +6,16 @@ import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 
 export function NoticeEdit({ noticeId }: { noticeId: string }) {
-  // No GET /notice/:id endpoint — resolved from the cached list.
-  const { notice } = useNotices({ id: noticeId });
+  // No GET /notice/:id endpoint — resolved from the cached active list.
+  const { notices } = useNotices();
 
-  if (notice.isLoading) {
+  if (notices.isLoading) {
     return <DefaultLoader className="min-h-[50vh]" />;
   }
 
-  if (!notice.data) {
+  const n = (notices.data ?? []).find((x) => x._id === noticeId);
+
+  if (!n) {
     return (
       <div className="p-4">
         <NoData
@@ -23,8 +25,6 @@ export function NoticeEdit({ noticeId }: { noticeId: string }) {
       </div>
     );
   }
-
-  const n = notice.data;
 
   return (
     <div className="p-4">

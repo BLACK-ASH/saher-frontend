@@ -16,7 +16,6 @@ import { formatIstDate, formatIstDateTime } from "@/lib/date";
 import { ArrowLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-// TODO: use GET /notice/:id when backend adds single-notice endpoint
 export function NoticeDetail({ noticeId }: { noticeId: string }) {
   const router = useRouter();
   const { notices } = useNotices();

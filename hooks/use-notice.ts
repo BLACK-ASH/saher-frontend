@@ -9,7 +9,7 @@ import {
   type CreateNoticeInput,
 } from "@/services/notice.api";
 
-export const useNotices = ({ id }: { id?: string } = {}) => {
+export const useNotices = () => {
   const queryClient = useQueryClient();
 
   // Backend returns old docs on update — always refetch via invalidation.
@@ -20,13 +20,6 @@ export const useNotices = ({ id }: { id?: string } = {}) => {
   const notices = useQuery({
     queryKey: ["notices", "active"],
     queryFn: getNotices,
-  });
-
-  // No GET /notice/:id endpoint exists — resolve detail from the full list.
-  const notice = useQuery({
-    queryKey: ["notices", "detail", id],
-    queryFn: async () => (await getNotices()).find((n) => n._id === id),
-    enabled: !!id,
   });
 
   const addNotice = useMutation({
@@ -57,7 +50,6 @@ export const useNotices = ({ id }: { id?: string } = {}) => {
 
   return {
     notices,
-    notice,
     addNotice,
     editNotice,
     removeNotice,
