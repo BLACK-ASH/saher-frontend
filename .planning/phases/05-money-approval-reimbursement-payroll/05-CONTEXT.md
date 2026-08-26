@@ -38,7 +38,7 @@ The org's full money pipeline runs in-app — bill submit→handle→settle life
 
 ### Reimbursement — Bill Detail & Timeline
 - **D-16:** Bill detail dialog shows: receipt images as thumbnail grid with lightbox (full-size overlay on click), lifecycle timeline, and audit log section.
-- **D-17:** Lifecycle timeline: vertical timeline with status nodes — Submitted → (Handled: Approved/Rejected/Hold) → Settled. Each node shows timestamp, actor name, and notes. Uses colored status badges.
+- **D-17:** Lifecycle timeline: vertical timeline with status nodes — Submitted → (Handled: Approved/Rejected/Hold) → Settled. Each node shows timestamp, actor name, and notes **wherever the backend records them** (Amended 2026-08-26: backend records no handler/actor/timestamp for the Handled step — Quirk 9 — so those sub-lines render only when source data exists; never fabricate). Uses colored status badges.
 - **D-18:** Image upload in create/edit form reuses `components/image-upload` component (dropzone + crop, uploads to `/api/upload/image`). Proven in Phase 4 leave proof upload.
 
 ### Settlement Flow

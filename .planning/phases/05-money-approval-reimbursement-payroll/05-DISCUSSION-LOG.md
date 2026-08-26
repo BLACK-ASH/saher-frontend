@@ -379,3 +379,13 @@
 ## Deferred Ideas
 
 None — discussion stayed within phase scope.
+
+---
+
+## Execution-Recovery Sign-offs (2026-08-26, /gsd-execute-phase session)
+
+Recorded during phase-5 recovery after plan-checker iteration 1. User decisions via interactive checkpoint:
+
+1. **D-17 amended** (timeline nodes): "Each node shows timestamp, actor name, and notes **wherever the backend records them**" — backend records no handler/actor/time for the Handled step (Quirk 9); never fabricate. Applied to 05-CONTEXT.md.
+2. **D-05 ↔ D-30 guard conflict**: user chose **"Ship UI, record caveat"** — staff Restore button ships per locked D-05 even though D-30's `write:preReimbursement` backend guard would 403 pure-staff roles until the backend owner adjusts it. Recorded as an explicit backend deploy dependency in 05-01 Step 0 + threat row T-05-01-07.
+3. **Nyquist validation disabled** for this phase (`workflow.nyquist_validation: false` in config.json) — no 05-VALIDATION.md; all tasks carry runnable `<verify>` commands instead.
