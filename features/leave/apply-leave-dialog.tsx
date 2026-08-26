@@ -104,9 +104,20 @@ export default function ApplyLeaveDialog({
   const onSubmit = (values: ApplyLeaveType) => {
     setOverlapError(null);
 
+    const { type, startDate, endDate, reason, proof } = values;
+
     if (leave) {
+      // Backend update resolves the leave type by _id via payload.leaveCode;
+      // only the create endpoint matches by code.
+      const leaveCode = leaveTypes.data?.find((lt) => lt.code === type)?.id;
+
+      if (!leaveCode) {
+        toast.error("Selected leave type is no longer available");
+        return;
+      }
+
       updateApplication.mutate(
-        { id: leave.id, data: values },
+        { id: leave.id, data: { startDate, endDate, reason, proof, leaveCode } },
         {
           onSuccess: () => {
             toast.success("Leave updated successfully");
