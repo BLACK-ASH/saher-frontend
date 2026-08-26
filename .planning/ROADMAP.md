@@ -139,12 +139,22 @@ Plans:
   4. Staff see their applications with status badges and edit their own pending ones
   5. Managers/admins review applications (approve/reject with note) from a filterable queue, and admins create/edit leave type definitions
 
-**Plans**: TBD
+**Plans**: 4 plans
 **UI hint**: yes
 
 Plans:
+**Wave 1**
 
-- [ ] 04-01: TBD during plan-phase
+- [ ] 04-01-PLAN.md — Code quality foundation: zod schemas for mail/leave services, filename fixes, shared UserSearchPicker component (MAIL-01..04, LEAV-01..06)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 04-02-PLAN.md — Complete mail experience: compose with validation, reply, sanitized body, pagination, outbox multi-recipient display (MAIL-01, MAIL-02, MAIL-03, MAIL-04)
+- [ ] 04-03-PLAN.md — Staff leave: apply with balance cards, proof upload, edit pending, overlap errors, pagination (LEAV-01, LEAV-02, LEAV-03, LEAV-04)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 04-04-PLAN.md — Admin leave: status filter buttons, PaginationFooter, leave type CRUD verification (LEAV-05, LEAV-06)
 
 ### Phase 5: Money & Approval — Reimbursement & Payroll
 
@@ -222,7 +232,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 1. Quality Gates & Test Infrastructure | 3/3 | Complete   | 2026-08-24 |
 | 2. Shared Infrastructure & Session Reliability | 7/7 | Complete | 2026-08-25 |
 | 3. Noticeboard Pilot | 0/3 | Not started | - |
-| 4. Staff Self-Service — Mail & Leave | 0/? | Not started | - |
+| 4. Staff Self-Service — Mail & Leave | 0/4 | Planned | - |
 | 5. Money & Approval — Reimbursement & Payroll | 0/? | Not started | - |
 | 6. Admin Bank/Accounts & Events Depth | 0/? | Not started | - |
 | 7. Existing Modules Audit-and-Fix | 0/? | Not started | - |
