@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
 
 import {
   Dialog,
@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -25,18 +26,32 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import ImageUpload from "@/components/image-upload";
+
 import { useLeave } from "@/hooks/use-leave";
 
 import { toast } from "sonner";
-import { applyLeaveSchema, ApplyLeaveType } from "@/services/leave.api";
+import {
+  applyLeaveSchema,
+  ApplyLeaveType,
+  LeaveT,
+} from "@/services/leave.api";
+import { dateToIstDateOnly } from "@/lib/date";
 
 type Props = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  leave?: LeaveT;
 };
 
-export default function ApplyLeaveDialog({ open, onOpenChange }: Props) {
-  const { leaveTypes, apply } = useLeave();
+export default function ApplyLeaveDialog({
+  open,
+  onOpenChange,
+  leave,
+}: Props) {
+  const { leaveTypes, balance, apply, updateApplication } = useLeave();
+
+  const [overlapError, setOverlapError] = useState<string | null>(null);
 
   const form = useForm<ApplyLeaveType>({
     resolver: zodResolver(applyLeaveSchema),
@@ -50,26 +65,105 @@ export default function ApplyLeaveDialog({ open, onOpenChange }: Props) {
     },
   });
 
-  const onSubmit = (values: ApplyLeaveType) => {
-    apply.mutate(values, {
-      onSuccess: () => {
-        toast.success("Leave applied successfully");
+  // 🔥 pre-fill on edit, clear on create
 
-        form.reset();
+  useEffect(() => {
+    if (leave) {
+      form.reset({
+        type: leave.type.code,
 
-        onOpenChange(false);
-      },
-    });
+        startDate: dateToIstDateOnly(new Date(leave.startDate)),
+
+        endDate: dateToIstDateOnly(new Date(leave.endDate)),
+
+        reason: leave.reason,
+
+        proof: leave.proof || undefined,
+      });
+    } else {
+      form.reset({
+        type: "",
+        startDate: "",
+        endDate: "",
+        reason: "",
+        proof: undefined,
+      });
+    }
+  }, [leave, form]);
+
+  const handleError = (err: Error) => {
+    // Overlap errors surface inline below the dates; everything else toasts.
+
+    if (err.message.toLowerCase().includes("overlap")) {
+      setOverlapError(err.message);
+    } else {
+      toast.error(err.message);
+    }
   };
+
+  const onSubmit = (values: ApplyLeaveType) => {
+    setOverlapError(null);
+
+    if (leave) {
+      updateApplication.mutate(
+        { id: leave.id, data: values },
+        {
+          onSuccess: () => {
+            toast.success("Leave updated successfully");
+
+            form.reset();
+
+            onOpenChange(false);
+
+            setOverlapError(null);
+          },
+
+          onError: handleError,
+        },
+      );
+    } else {
+      apply.mutate(values, {
+        onSuccess: () => {
+          toast.success("Leave applied successfully");
+
+          form.reset();
+
+          onOpenChange(false);
+
+          setOverlapError(null);
+        },
+
+        onError: handleError,
+      });
+    }
+  };
+
+  const isPending = apply.isPending || updateApplication.isPending;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-xl">
         <DialogHeader>
-          <DialogTitle>Apply For Leave</DialogTitle>
+          <DialogTitle>
+            {leave ? "Edit Leave Application" : "Apply For Leave"}
+          </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+          {/* Balance */}
+
+          {balance.data && (
+            <div className="grid gap-3 sm:grid-cols-3">
+              {Object.entries(balance.data.balance).map(([key, value]) => (
+                <div key={key} className="rounded-lg border p-3">
+                  <p className="text-sm font-medium capitalize">{key}</p>
+
+                  <Badge variant="secondary">{value.remaining} Left</Badge>
+                </div>
+              ))}
+            </div>
+          )}
+
           {/* Leave Type */}
 
           <Controller
@@ -126,6 +220,10 @@ export default function ApplyLeaveDialog({ open, onOpenChange }: Props) {
             />
           </div>
 
+          {overlapError && (
+            <p className="text-sm text-destructive">{overlapError}</p>
+          )}
+
           {/* Reason */}
 
           <Controller
@@ -149,20 +247,23 @@ export default function ApplyLeaveDialog({ open, onOpenChange }: Props) {
             control={form.control}
             render={({ field }) => (
               <Field>
-                <FieldLabel>Proof</FieldLabel>
+                <FieldLabel>Proof Document (optional)</FieldLabel>
 
-                <Input
-                  type="text"
-                  placeholder="Upload file id"
-                  value={field.value ?? ""}
-                  onChange={field.onChange}
+                <ImageUpload
+                  altName="leave-proof"
+                  url={field.value}
+                  onUploadSuccess={(file) => field.onChange(file.src)}
                 />
               </Field>
             )}
           />
 
-          <Button type="submit" disabled={apply.isPending} className="w-full">
-            {apply.isPending ? "Submitting..." : "Apply Leave"}
+          <Button type="submit" disabled={isPending} className="w-full">
+            {isPending
+              ? "Submitting..."
+              : leave
+                ? "Update Application"
+                : "Apply Leave"}
           </Button>
         </form>
       </DialogContent>

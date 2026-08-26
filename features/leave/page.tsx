@@ -10,7 +10,7 @@ import { Plus } from "lucide-react";
 import { useLeave } from "@/hooks/use-leave";
 import LeaveBalanceCard from "./leave-balance-card";
 import LeaveTable from "./leave-table";
-import ApplyLeaveDialog from "./apply-leave-dailog";
+import ApplyLeaveDialog from "./apply-leave-dialog";
 
 export default function LeavePage() {
   const searchParams = useSearchParams();
