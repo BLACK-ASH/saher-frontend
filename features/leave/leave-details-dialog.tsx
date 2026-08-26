@@ -18,6 +18,7 @@ import {
   Clock3,
   FileImage,
   MessageSquare,
+  Pencil,
   UserCheck,
 } from "lucide-react";
 
@@ -30,12 +31,14 @@ type Props = {
   leave?: LeaveT;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  onEdit?: (leave: LeaveT) => void;
 };
 
 export default function LeaveDetailsDialog({
   leave,
   open,
   onOpenChange,
+  onEdit,
 }: Props) {
   if (!leave) return null;
 
@@ -158,6 +161,26 @@ export default function LeaveDetailsDialog({
                 <a href={leave.proof} target="_blank" rel="noopener noreferrer">
                   View Original
                 </a>
+              </Button>
+            </div>
+          )}
+
+          {/* Actions */}
+
+          {leave.status === "pending" && onEdit && (
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                onClick={() => {
+                  onEdit(leave);
+
+                  onOpenChange(false);
+                }}
+              >
+                <Pencil className="h-4 w-4" />
+                Edit
               </Button>
             </div>
           )}
