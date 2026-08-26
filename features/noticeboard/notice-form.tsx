@@ -4,6 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,9 +33,11 @@ export function NoticeForm({ mode, initialData }: Props) {
   const { addNotice, editNotice } = useNotices();
 
   // Create pre-fills 7 days out; edit shows the stored date (backend +1 already applied).
-  const defaultExpiry = initialData
-    ? dateToIstDateOnly(new Date(initialData.expiresAt))
-    : dateToIstDateOnly(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000));
+  const [defaultExpiry] = useState(() =>
+    initialData
+      ? dateToIstDateOnly(new Date(initialData.expiresAt))
+      : dateToIstDateOnly(new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)),
+  );
 
   const form = useForm<CreateNoticeInput>({
     resolver: zodResolver(createNoticeSchema),
