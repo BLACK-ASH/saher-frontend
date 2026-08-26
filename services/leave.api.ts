@@ -32,17 +32,28 @@ export const createLeaveTypeSchema = z
 
 export type CreateLeaveTypeType = z.infer<typeof createLeaveTypeSchema>;
 
-export const applyLeaveSchema = z.object({
-  type: z.string().min(1, "Please select leave type"),
+// Mirrors ../saher-backend leaveApplicationSchemaBase (reason trim/min/max,
+// endDate >= startDate) so validation errors surface inline, not at submit.
+export const applyLeaveSchema = z
+  .object({
+    type: z.string().min(1, "Please select leave type"),
 
-  startDate: z.string().min(1, "Start date is required"),
+    startDate: z.string().min(1, "Start date is required"),
 
-  endDate: z.string().min(1, "End date is required"),
+    endDate: z.string().min(1, "End date is required"),
 
-  reason: z.string().min(3, "Reason must contain at least 3 characters"),
+    reason: z
+      .string()
+      .trim()
+      .min(5, "Reason must contain at least 5 characters")
+      .max(400, "Reason cannot exceed 400 characters"),
 
-  proof: z.string().optional(),
-});
+    proof: z.string().optional(),
+  })
+  .refine((data) => data.endDate >= data.startDate, {
+    message: "End date cannot be before start date",
+    path: ["endDate"],
+  });
 
 export type ApplyLeaveType = z.infer<typeof applyLeaveSchema>;
 
