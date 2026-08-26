@@ -171,12 +171,28 @@ Plans:
   4. Admin browses paginated payroll records across employees, views per-employee history, records installment payments with paid-vs-total progress, and triggers manual generation ("run now") with check-notifications feedback
   5. Money mutations (handle/settle/installment/bank-affecting) are gated by mutation-pending state with no optimistic updates — server state always reflects truth after any action, verified by hook/mutation tests
 
-**Plans**: TBD
+**Plans**: 6 plans
 **UI hint**: yes
 
 Plans:
 
-- [ ] 05-01: TBD during plan-phase
+**Wave 1**
+
+- [ ] 05-01-PLAN.md — Reimbursement data layer: service module mirroring backend quirks + hook with invalidation-only mutations + sequential bulk engine, msw-tested (REIM-01..12 substrate)
+- [ ] 05-02-PLAN.md — Payroll data layer (incremental installments, sync cron) + useUserMap ID→name resolution (PAYR-01..04 substrate)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 05-03-PLAN.md — Staff My Bills slice: balance card, badge table, create/edit/withdraw, Active|Deleted restore tabs, all three sidebar entries (REIM-01..04, REIM-11 staff half)
+- [ ] 05-04-PLAN.md — Admin payroll slice: guarded page, filtered paged table, history dialog, installment payments, Run Now (PAYR-01..04)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 05-05-PLAN.md — Finance Bill Management: Handle Queue with search/filters, required-notes handling, bulk sequential bar, Recycle Bin (REIM-05, REIM-06, REIM-09, REIM-11 finance half)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
+- [ ] 05-06-PLAN.md — Money depth: lifecycle timeline + audit log in detail dialog, settlement recording, advance bills via picker, async export trigger (REIM-07, REIM-08, REIM-10, REIM-12)
 
 ### Phase 6: Admin Bank/Accounts & Events Depth
 
