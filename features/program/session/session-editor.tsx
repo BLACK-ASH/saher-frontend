@@ -44,7 +44,7 @@ const SessionEditor = ({
   const [wKeyword, setWKeyword] = useState<string>("");
 
   const [userKeyWord, setUserKeyword] = useState("");
-  const { user: users } = useMail(userKeyWord);
+  const { user: users } = useMail({ keyword: userKeyWord });
 
   const { add } = useSessions({});
   const { programs } = usePrograms({ keyword, limit: 3 });
