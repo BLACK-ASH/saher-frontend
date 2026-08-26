@@ -7,7 +7,6 @@ import {
   flexRender,
   getCoreRowModel,
   getFilteredRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   VisibilityState,
   useReactTable,
@@ -38,6 +37,10 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   refetch: () => void;
   onRowClick?: (mail: TData) => void;
+  // Server-side paging state owned by the page component via useMail({ page })
+  page: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
 export function MailDataTable<TData, TValue>({
@@ -45,6 +48,9 @@ export function MailDataTable<TData, TValue>({
   data,
   refetch,
   onRowClick,
+  page,
+  totalPages,
+  onPageChange,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -55,7 +61,6 @@ export function MailDataTable<TData, TValue>({
     columns,
     onSortingChange: setSorting,
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
@@ -166,9 +171,9 @@ export function MailDataTable<TData, TValue>({
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4 mx-4">
         <PaginationFooter
-          page={table.getState().pagination.pageIndex + 1}
-          totalPages={table.getPageCount()}
-          onPageChange={(p) => table.setPageIndex(p - 1)}
+          page={page}
+          totalPages={totalPages}
+          onPageChange={onPageChange}
         />
       </div>
     </div>

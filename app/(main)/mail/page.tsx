@@ -60,7 +60,8 @@ const escapeHtml = (t: string) =>
 /* ---------------- PAGE ---------------- */
 
 const Page = () => {
-  const { inbox, sent, send } = useMail();
+  const [page, setPage] = useState(1);
+  const { inbox, sent, send } = useMail({ page });
 
   const { data: inData, refetch: inRefetch } = inbox;
   const { data: seData, refetch: seRefetch } = sent;
@@ -102,7 +103,13 @@ const Page = () => {
 
   return (
     <section className="p-4 container mx-auto">
-      <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v)}>
+      <Tabs
+        value={activeTab}
+        onValueChange={(v) => {
+          setActiveTab(v);
+          setPage(1);
+        }}
+      >
         <TabsList>
           <TabsTrigger value="inbox">Inbox</TabsTrigger>
           <TabsTrigger value="sent">Sent</TabsTrigger>
@@ -115,6 +122,9 @@ const Page = () => {
             columns={mailColumns}
             data={inData?.items ?? []}
             refetch={inRefetch}
+            page={page}
+            totalPages={inData?.totalPages ?? 1}
+            onPageChange={setPage}
             onRowClick={(mail) => {
               setSelectedMail(mail);
               setOpen(true);
@@ -128,6 +138,9 @@ const Page = () => {
             columns={outBoxColumns}
             data={seData?.items ?? []}
             refetch={seRefetch}
+            page={page}
+            totalPages={seData?.totalPages ?? 1}
+            onPageChange={setPage}
             onRowClick={(mail) => {
               setSelectedMail(mail);
               setOpen(true);
