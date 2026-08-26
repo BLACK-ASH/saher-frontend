@@ -24,6 +24,12 @@ findings:
   warning: 9
   info: 9
   total: 20
+fixed:
+  critical: 2
+  warning: 4
+  info: 0
+  total: 6
+fixed_report: 04-REVIEW-FIX.md
 status: issues_found
 ---
 
