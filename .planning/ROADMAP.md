@@ -19,7 +19,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 
 - [x] **Phase 1: Quality Gates & Test Infrastructure** - Lint/typecheck/test gates exist before any mass changes; vitest + testing-library + msw wired at the apiFetch boundary (completed 2026-08-24)
 - [x] **Phase 2: Shared Infrastructure & Session Reliability** - IST date utils, envelope normalization factory, session-death handler, safe pagination footer, RBAC helper — each tested; auth refresh/logout flows verified against contract (completed 2026-08-25)
-- [ ] **Phase 3: Noticeboard Pilot** - First complete module proves the Slice Contract end-to-end; promotes trash-tabs and pagination footer to shared components
+- [x] **Phase 3: Noticeboard Pilot** - First complete module proves the Slice Contract end-to-end; promotes trash-tabs and pagination footer to shared components (completed 2026-08-26)
 - [ ] **Phase 4: Staff Self-Service — Mail & Leave** - Staff run daily personal workflows in-app: read/write internal mail, apply for leave with balances, managers review applications
 - [ ] **Phase 5: Money & Approval — Reimbursement & Payroll** - The org's full money pipeline (bills → handle → settle, advances, payroll installments, generation trigger) runs in-app with double-submit-proof actions
 - [ ] **Phase 6: Admin Bank/Accounts & Events Depth** - Atomic employee onboarding + bank detail CRUD; full events hierarchy (program→workshop→session→participant), attendance grid, reminders, exports
@@ -114,15 +114,15 @@ Plans:
 
 **Wave 1**
 
-- [ ] 03-01-PLAN.md — TDD: service layer (6 endpoints + zod schemas) + data hook + expiry badge with failing-then-passing tests (NOTC-01)
+- [x] 03-01-PLAN.md — TDD: service layer (6 endpoints + zod schemas) + data hook + expiry badge with failing-then-passing tests (NOTC-01)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 03-02-PLAN.md — Staff noticeboard: paginated card feed, detail view, sidebar nav entry (NOTC-01)
+- [x] 03-02-PLAN.md — Staff noticeboard: paginated card feed, detail view, sidebar nav entry (NOTC-01)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 03-03-PLAN.md — Admin CRUD + shared component promotion (PaginationFooter → shared/, TrashTabPattern) + SLICE-CONTRACT.md (NOTC-02, NOTC-03)
+- [x] 03-03-PLAN.md — Admin CRUD + shared component promotion (PaginationFooter → shared/, TrashTabPattern) + SLICE-CONTRACT.md (NOTC-02, NOTC-03)
 
 ### Phase 4: Staff Self-Service — Mail & Leave
 
@@ -231,7 +231,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 |-------|----------------|--------|-----------|
 | 1. Quality Gates & Test Infrastructure | 3/3 | Complete   | 2026-08-24 |
 | 2. Shared Infrastructure & Session Reliability | 7/7 | Complete | 2026-08-25 |
-| 3. Noticeboard Pilot | 0/3 | Not started | - |
+| 3. Noticeboard Pilot | 3/4 | Complete    | 2026-08-26 |
 | 4. Staff Self-Service — Mail & Leave | 0/4 | Planned | - |
 | 5. Money & Approval — Reimbursement & Payroll | 0/? | Not started | - |
 | 6. Admin Bank/Accounts & Events Depth | 0/? | Not started | - |

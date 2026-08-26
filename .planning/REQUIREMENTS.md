@@ -85,9 +85,9 @@ Internal messaging over 3 endpoints — deliberately not an email client.
 
 Backend module confirmed present (CRUD + restore + permanent delete) but currently gated behind `underDevelopment` middleware — frontend ships against the documented contract; live verification depends on backend lifting the flag.
 
-- [ ] **NOTC-01**: Staff can browse active notices (feed + detail, expiry highlighted, IST-aware)
-- [ ] **NOTC-02**: Admins can create/edit notices (7-day default expiry surfaced in form)
-- [ ] **NOTC-03**: Admins can soft-delete/restore notices and permanently delete with mandatory confirm dialog
+- [x] **NOTC-01**: Staff can browse active notices (feed + detail, expiry highlighted, IST-aware)
+- [x] **NOTC-02**: Admins can create/edit notices (7-day default expiry surfaced in form)
+- [x] **NOTC-03**: Admins can soft-delete/restore notices and permanently delete with mandatory confirm dialog
 
 ### Events
 
@@ -160,9 +160,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | FNDT-05 | Phase 2 | Pending |
 | FNDT-06 | Phase 2 | Pending |
 | AUTH-01 | Phase 2 | Pending |
-| NOTC-01 | Phase 3 | Pending |
-| NOTC-02 | Phase 3 | Pending |
-| NOTC-03 | Phase 3 | Pending |
+| NOTC-01 | Phase 3 | Complete |
+| NOTC-02 | Phase 3 | Complete |
+| NOTC-03 | Phase 3 | Complete |
 | MAIL-01 | Phase 4 | Pending |
 | MAIL-02 | Phase 4 | Pending |
 | MAIL-03 | Phase 4 | Pending |
