@@ -1,6 +1,6 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { normalizeList } from "@/lib/normalize-list";
-import { DefaultUserT } from "@/lib/common-zod-schema";
+import { DefaultUserT, userField } from "@/lib/common-zod-schema";
 import { toast } from "sonner";
 import { z } from "zod";
 
@@ -53,6 +53,50 @@ export const reviewLeaveSchema = z.object({
 });
 
 export type ReviewLeaveType = z.infer<typeof reviewLeaveSchema>;
+
+/* -------------------------------------------------------------------------- */
+/*                           RESPONSE SCHEMAS                                 */
+/* -------------------------------------------------------------------------- */
+
+export const leaveTypeSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  code: z.string(),
+  allocatedDays: z.number(),
+  maxCarryForwardDays: z.number(),
+  requiresProof: z.boolean(),
+  minDaysNotice: z.number(),
+  isActive: z.boolean(),
+  description: z.string().optional(),
+});
+
+export type LeaveTypeResponse = z.infer<typeof leaveTypeSchema>;
+
+export const leaveApplicationSchema = z.object({
+  id: z.string(),
+  user: userField,
+  startDate: z.string(),
+  endDate: z.string(),
+  totalDays: z.number(),
+  reason: z.string(),
+  type: z.object({ name: z.string(), code: z.string() }),
+  status: z.enum(["pending", "approved", "rejected", "cancelled"]),
+  proof: z.string().optional(),
+  approvedBy: z.string().optional(),
+  managerComment: z.string().optional(),
+});
+
+export type LeaveApplicationResponse = z.infer<typeof leaveApplicationSchema>;
+
+export const leaveBalanceSchema = z.object({
+  id: z.string(),
+  user: z.string(),
+  year: z.string(),
+  balance: z.record(z.object({ used: z.number(), remaining: z.number() })),
+});
+
+export type LeaveBalanceResponse = z.infer<typeof leaveBalanceSchema>;
+
 /* -------------------------------------------------------------------------- */
 /*                                   TYPES                                    */
 /* -------------------------------------------------------------------------- */
