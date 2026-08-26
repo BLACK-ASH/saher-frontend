@@ -36,7 +36,7 @@ import {
   ApplyLeaveType,
   LeaveT,
 } from "@/services/leave.api";
-import { dateToIstDateOnly } from "@/lib/date";
+import { dateInputToIso, dateToIstDateOnly } from "@/lib/date";
 
 type Props = {
   open: boolean;
@@ -102,7 +102,11 @@ export default function ApplyLeaveDialog({
   const onSubmit = (values: ApplyLeaveType) => {
     setOverlapError(null);
 
-    const { type, startDate, endDate, reason, proof } = values;
+    // Project convention: dates cross the wire as ISO strings with a +05:30
+    // offset, not raw YYYY-MM-DD input values.
+    const { type, reason, proof } = values;
+    const startDate = dateInputToIso(values.startDate);
+    const endDate = dateInputToIso(values.endDate);
 
     if (leave) {
       // Backend update resolves the leave type by _id via payload.leaveCode;
@@ -131,7 +135,7 @@ export default function ApplyLeaveDialog({
         },
       );
     } else {
-      apply.mutate(values, {
+      apply.mutate({ type, startDate, endDate, reason, proof }, {
         onSuccess: () => {
           toast.success("Leave applied successfully");
 
