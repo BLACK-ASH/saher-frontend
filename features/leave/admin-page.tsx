@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { useLeave } from "@/hooks/use-leave";
 
@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/table";
 
 import { Button } from "@/components/ui/button";
+import { PaginationFooter } from "@/components/pagination-footer";
 
 import { Check, Eye, User, X } from "lucide-react";
 
@@ -29,6 +30,7 @@ import { formatIstDate } from "@/lib/date";
 
 export default function AdminLeavePage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const page = Number(searchParams.get("page") ?? 1);
 
@@ -44,6 +46,15 @@ export default function AdminLeavePage() {
 
   const [viewLeave, setViewLeave] = useState<LeaveT>();
 
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
+  // 🔥 client-side status filter over the full applications list
+
+  const filteredItems =
+    applications.data?.items?.filter(
+      (item) => !statusFilter || item.status === statusFilter,
+    ) ?? [];
+
   return (
     <div className="container space-y-6 py-8">
       <div>
@@ -56,10 +67,30 @@ export default function AdminLeavePage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Pending Leave Requests</CardTitle>
+          <CardTitle>Leave Requests</CardTitle>
         </CardHeader>
 
         <CardContent className="p-0">
+          {/* Status filter */}
+
+          <div className="flex flex-wrap gap-2 px-4 py-2">
+            {[
+              { label: "All", value: null },
+              { label: "Pending", value: "pending" },
+              { label: "Approved", value: "approved" },
+              { label: "Rejected", value: "rejected" },
+            ].map(({ label, value }) => (
+              <Button
+                key={label}
+                size="sm"
+                variant={statusFilter === value ? "default" : "outline"}
+                onClick={() => setStatusFilter(value)}
+              >
+                {label}
+              </Button>
+            ))}
+          </div>
+
           <Table>
             <TableHeader>
               <TableRow>
@@ -76,7 +107,17 @@ export default function AdminLeavePage() {
             </TableHeader>
 
             <TableBody>
-              {applications.data?.items.map((leave) => (
+              {filteredItems.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={5}
+                    className="py-10 text-center text-muted-foreground"
+                  >
+                    No leave applications found.
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredItems.map((leave) => (
                 <TableRow key={leave.id}>
                   <TableCell>
                     <div className="flex items-center gap-4">
@@ -155,11 +196,26 @@ export default function AdminLeavePage() {
                     </div>
                   </TableCell>
                 </TableRow>
-              ))}
+                ))
+              )}
             </TableBody>
           </Table>
         </CardContent>
       </Card>
+
+      {/* Pagination */}
+
+      {applications.data && applications.data.totalPages > 1 && (
+        <div className="flex justify-end px-4 py-4">
+          <PaginationFooter
+            page={applications.data.page}
+            totalPages={applications.data.totalPages}
+            onPageChange={(p) =>
+              router.push(`/leave-management?page=${p}&limit=${limit}`)
+            }
+          />
+        </div>
+      )}
 
       <ReviewLeaveDialog
         leave={reviewLeave}
