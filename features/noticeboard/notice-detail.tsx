@@ -2,6 +2,8 @@
 
 import { NoticeExpiryBadge } from "@/features/noticeboard/notice-expiry-badge";
 import { useNotices } from "@/hooks/use-notice";
+import { useMe } from "@/hooks/use-me";
+import { can } from "@/lib/permissions";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 import { Button } from "@/components/ui/button";
@@ -13,12 +15,14 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { formatIstDate, formatIstDateTime } from "@/lib/date";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 export function NoticeDetail({ noticeId }: { noticeId: string }) {
   const router = useRouter();
   const { notices } = useNotices();
+  const { data: user } = useMe();
+  const canEdit = can(user?.role ?? "user", "update", "notice");
 
   const notice = (notices.data ?? []).find((n) => n._id === noticeId);
 
@@ -40,10 +44,18 @@ export function NoticeDetail({ noticeId }: { noticeId: string }) {
   return (
     <div className="mx-auto max-w-3xl space-y-4 p-4">
       {/* Actions */}
-      <Button variant="outline" onClick={() => router.back()}>
-        <ArrowLeft />
-        Back
-      </Button>
+      <div className="flex gap-2">
+        <Button variant="outline" onClick={() => router.back()}>
+          <ArrowLeft />
+          Back
+        </Button>
+        {canEdit && (
+          <Button variant="outline" onClick={() => router.push(`/noticeboard/${noticeId}/edit`)}>
+            <Pencil />
+            Edit
+          </Button>
+        )}
+      </div>
 
       <Card>
         <CardHeader>
