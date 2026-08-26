@@ -655,22 +655,16 @@ const pageItems = items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
 **If this table is empty:** Not applicable — 5 assumptions documented above.
 
-## Open Questions
+## Open Questions — RESOLVED
 
-1. **Is there a `GET /notice/:id` endpoint for fetching a single notice?**
-   - What we know: `notice.routes.ts` does NOT define a GET by ID route. Only `GET /notice` (list all active).
-   - What's unclear: Whether the detail page (`/noticeboard/[id]`) can fetch a single notice or must find it from the full list.
-   - Recommendation: If no single-notice endpoint exists, the detail page should fetch the full list and find by ID from the array. Alternatively, add a `GET /notice/:id` route to the backend (but Phase 3 constraint says no backend changes). The planner should verify by checking if any other backend route serves individual notices, or implement the "find from list" approach.
+1. **Is there a `GET /notice/:id` endpoint for fetching a single notice? — RESOLVED: No single-notice endpoint exists.**
+   - Decision: Detail page fetches the full list via `GET /notice` and finds by ID from the array. `notice-detail.tsx` uses `(notices.data ?? []).find(n => n._id === noticeId)`. If backend adds `GET /notice/:id` later, switch to direct fetch (documented with TODO comment in the component).
 
-2. **How should the trash tab handle the missing backend endpoint?**
-   - What we know: Backend has no endpoint to list deleted notices.
-   - What's unclear: Whether to (a) skip trash tab entirely, (b) implement tab structure with placeholder, or (c) find a workaround.
-   - Recommendation: Implement the tab structure and card layout for trash (proving the pattern for D-12/D-13/D-14) but show a placeholder message in the trash content area: "Trash view requires backend support to list deleted notices." This proves the Slice Contract pattern while being honest about the gap.
+2. **How should the trash tab handle the missing backend endpoint? — RESOLVED: Structural placeholder with TrashTabPattern.**
+   - Decision: Implement the tab structure (Active/Trash tabs per D-12) with a placeholder message in the trash content area. The `TrashTabPattern` component (`components/shared/trash-tab-pattern.tsx`) provides the reusable wrapper. Trash content shows: "Deleted notices will appear here once the backend supports listing trashed items." This proves the Slice Contract pattern while being honest about the gap. Soft delete from the active feed is the primary delete UX (works today).
 
-3. **Does `notice.model.ts` have Mongoose timestamps enabled?**
-   - What we know: The schema definition does NOT explicitly set `timestamps: true`.
-   - What's unclear: Whether Mongoose adds `createdAt`/`updatedAt` by default (it does NOT — timestamps must be explicitly enabled).
-   - Recommendation: The backend `getNoticeSchema` includes `createdAt`/`updatedAt` in its parse, suggesting they exist. Check the actual API response. If timestamps are missing, the card "created date" display needs a fallback.
+3. **Does `notice.model.ts` have Mongoose timestamps enabled? — RESOLVED: Unknown, but frontend handles gracefully.**
+   - Decision: The backend `getNoticeSchema` includes `createdAt`/`updatedAt` in its Zod parse, suggesting they exist in the API response. If they're missing at runtime, the frontend falls back to `"--"` for display (notice-card.tsx and notice-detail.tsx both use `formatIstDate(notice.createdAt)` with fallback). No blocking dependency — display degrades gracefully.
 
 ## Environment Availability
 
