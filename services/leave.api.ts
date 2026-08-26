@@ -92,7 +92,10 @@ export const leaveBalanceSchema = z.object({
   id: z.string(),
   user: z.string(),
   year: z.string(),
-  balance: z.record(z.object({ used: z.number(), remaining: z.number() })),
+  balance: z.record(
+    z.string(),
+    z.object({ used: z.number(), remaining: z.number() }),
+  ),
 });
 
 export type LeaveBalanceResponse = z.infer<typeof leaveBalanceSchema>;
