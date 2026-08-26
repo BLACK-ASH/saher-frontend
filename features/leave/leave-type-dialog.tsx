@@ -73,7 +73,7 @@ export default function LeaveTypeDialog({
 
         description: leaveType.description ?? "",
 
-        isActive: true,
+        isActive: leaveType.isActive,
       });
     } else {
       form.reset();

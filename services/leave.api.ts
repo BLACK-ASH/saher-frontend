@@ -8,23 +8,28 @@ import { z } from "zod";
 /*                              APPLY LEAVE                                   */
 /* -------------------------------------------------------------------------- */
 
-export const createLeaveTypeSchema = z.object({
-  name: z.string().min(2),
+export const createLeaveTypeSchema = z
+  .object({
+    name: z.string().min(2),
 
-  code: z.string().min(2),
+    code: z.string().min(2),
 
-  allocatedDays: z.number().min(0),
+    allocatedDays: z.number().min(0),
 
-  maxCarryForwardDays: z.number().min(0),
+    maxCarryForwardDays: z.number().min(0),
 
-  requiresProof: z.boolean(),
+    requiresProof: z.boolean(),
 
-  minDaysNotice: z.number().min(0),
+    minDaysNotice: z.number().min(0),
 
-  description: z.string().optional(),
+    description: z.string().optional(),
 
-  isActive: z.boolean(),
-});
+    isActive: z.boolean(),
+  })
+  .refine((data) => data.maxCarryForwardDays <= data.allocatedDays, {
+    message: "Carry forward days cannot exceed allocated days",
+    path: ["maxCarryForwardDays"],
+  });
 
 export type CreateLeaveTypeType = z.infer<typeof createLeaveTypeSchema>;
 
