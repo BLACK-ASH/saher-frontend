@@ -21,6 +21,7 @@ import {
   LayoutDashboard,
   Mailbox,
   NotebookPen,
+  ReceiptText,
   User,
   UserPlus,
   Users,
@@ -67,6 +68,11 @@ const userRoutes = [
     label: "Noticeboard",
     url: "/noticeboard",
     icon: Bell,
+  },
+  {
+    label: "My Bills",
+    url: "/reimbursement/my-bills",
+    icon: ReceiptText,
   },
 ];
 
