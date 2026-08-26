@@ -122,7 +122,7 @@ Plans:
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 03-03-PLAN.md — Admin CRUD: create/edit forms, trash tab placeholder, soft delete + confirmation dialog (NOTC-02, NOTC-03)
+- [ ] 03-03-PLAN.md — Admin CRUD + shared component promotion (PaginationFooter → shared/, TrashTabPattern) + SLICE-CONTRACT.md (NOTC-02, NOTC-03)
 
 ### Phase 4: Staff Self-Service — Mail & Leave
 
