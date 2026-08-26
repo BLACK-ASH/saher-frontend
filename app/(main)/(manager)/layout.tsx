@@ -16,7 +16,8 @@ export default function Layout({
       allow={(r) =>
         can(r, "read", "user") ||
         can(r, "read", "attendance-correction") ||
-        can(r, "read", "leave")
+        can(r, "read", "leave") ||
+        can(r, "write", "leave")
       }
     >
       {" "}
