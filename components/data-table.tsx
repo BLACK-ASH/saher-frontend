@@ -25,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { Button } from "@/components/ui/button";
-import { PaginationFooter } from "@/components/pagination-footer";
+import { PaginationFooter } from "@/components/shared/pagination-footer";
 
 type DataTableProps<TData, TValue> = {
   columns: ColumnDef<TData, TValue>[];

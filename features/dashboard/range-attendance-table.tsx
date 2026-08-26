@@ -47,7 +47,7 @@ import { toast } from "sonner";
 import z from "zod";
 import { changeAttendanceStatus } from "@/services/attendance-correction.api";
 import { Input } from "@/components/ui/input";
-import { PaginationFooter } from "@/components/pagination-footer";
+import { PaginationFooter } from "@/components/shared/pagination-footer";
 
 const markSchema = z.object({
   id: z.string(),

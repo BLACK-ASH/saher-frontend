@@ -29,7 +29,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { AttendanceReportDropdown } from "./attendance-report";
-import { PaginationFooter } from "@/components/pagination-footer";
+import { PaginationFooter } from "@/components/shared/pagination-footer";
 
 export const attendanceStatusVariant: Record<
   "half-day" | "present" | "absent" | "week-off" | "on-leave",

@@ -31,7 +31,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, RotateCw } from "lucide-react";
-import { PaginationFooter } from "@/components/pagination-footer";
+import { PaginationFooter } from "@/components/shared/pagination-footer";
 import { MailT } from "@/services/mail.api";
 
 interface DataTableProps<TData, TValue> {

@@ -9,7 +9,7 @@ import AttendanceToolbar from "./attendance-toolbar";
 import AttendanceSummary from "./attendance-summary";
 import { AttendanceRow } from "./types";
 import AttendanceTable from "./attendance-table";
-import { PaginationFooter } from "@/components/pagination-footer";
+import { PaginationFooter } from "@/components/shared/pagination-footer";
 import { dateToIstDateOnly, istDateOnlyToDate } from "@/lib/date";
 
 function formatDate(date: Date) {

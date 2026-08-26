@@ -6,7 +6,7 @@ import { useMe } from "@/hooks/use-me";
 import { can } from "@/lib/permissions";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
-import { PaginationFooter } from "@/components/pagination-footer";
+import { PaginationFooter } from "@/components/shared/pagination-footer";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,

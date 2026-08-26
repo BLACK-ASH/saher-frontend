@@ -30,7 +30,7 @@ import { formatIstDate } from "@/lib/date";
 import AttendanceComparision from "./attendance-comparision";
 import { RotateCw } from "lucide-react";
 import { useState } from "react";
-import { PaginationFooter } from "@/components/pagination-footer";
+import { PaginationFooter } from "@/components/shared/pagination-footer";
 
 export const attendanceCorrectionStatusVariant: Record<
   "pending" | "on-hold" | "approve" | "reject",

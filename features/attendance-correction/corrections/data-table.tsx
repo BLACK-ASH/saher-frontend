@@ -29,7 +29,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronDown, RotateCw } from "lucide-react";
 import { useAdminAttendanceCorrection } from "@/hooks/use-admin-attendance-correction";
-import { PaginationFooter } from "@/components/pagination-footer";
+import { PaginationFooter } from "@/components/shared/pagination-footer";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 import { CardTitle } from "@/components/ui/card";
