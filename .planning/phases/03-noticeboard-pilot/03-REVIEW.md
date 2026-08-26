@@ -37,6 +37,10 @@ findings:
   warning: 4
   info: 6
   total: 12
+fixed:
+  critical: 2
+  warning: 1
+  info: 1
 status: issues_found
 ---
 
@@ -54,6 +58,8 @@ Reviewed the noticeboard slice (service, hook, feed/detail/edit/trash, admin CRU
 Two blockers: (1) the noticeboard create/edit routes sit under the `(admin)` segment guarded by `user:write` — the one permission the only notice-authorizing role (`"user"`) lacks — so the staff feed's "New Notice" button leads straight to `/forbidden`, while roles who *can* open the route get rejected by the backend on submit; (2) `notice-form.tsx` converts expiry dates via UTC (`toISOString().split("T")[0]`), so every edit round-trip silently shifts a stored IST-midnight expiry back one day when saved — verified against the backend controller, which stores PUT payloads verbatim.
 
 Cross-checked and cleared (no action): permissions matrix is an accurate mirror of `../saher-backend/src/permission/role-permission.ts`; badge variants `outline-success`/`outline-warn` exist; `apiFetch` envelope usage in `notice.api.ts` is correct (`res.data` array); `PaginationFooter` handles `totalPages = 0/NaN` safely ("1 of --", buttons disabled); `getExpiryStatus` boundaries match D-03; nav-list hook ordering is correct; render-phase page clamp in `notice-feed.tsx` is the sanctioned React "adjust state during rendering" pattern and is properly guarded.
+
+**Fix status (2026-08-26):** CR-01 fixed in b447cd1 (both authoring routes moved out of `(admin)` at unchanged URLs, gated by new client layouts on `notice:write` / `notice:update` per the backend matrix). CR-02 fixed in aac7700 + b3ad8b6 (`dateToIstDateOnly` for edit prefill and create default; moved into a `useState` initializer to satisfy render-purity lint). WR-01 fixed in ffe71ad (undefined-returning detail query deleted; `notice-edit` resolves from the shared `["notices","active"]` cache like `notice-detail`; IN-06's TODO removed with it). Not addressed: WR-02, WR-04, IN-01–IN-05 (out of scope this run) and WR-03 (pre-existing, noted only).
 
 ## Critical Issues
 
