@@ -34,6 +34,7 @@ export function NoticeFeed() {
   const items = notices.data ?? [];
   const totalPages = Math.ceil(items.length / PAGE_SIZE);
   const pageItems = items.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+  const canWrite = can(user?.role ?? "user", "write", "notice");
 
   // 🔥 auto-clamp when the list shrinks (e.g. after a delete)
   if (page > totalPages && totalPages > 0) {
@@ -44,25 +45,12 @@ export function NoticeFeed() {
     return <DefaultLoader className="min-h-[50vh]" />;
   }
 
-  if (items.length === 0) {
-    return (
-      <div className="p-4">
-        <h1 className="text-2xl font-bold">Noticeboard</h1>
-        <NoData
-          className="mt-6"
-          title="No active notices"
-          description="There are no notices to show right now. Check back later."
-        />
-      </div>
-    );
-  }
-
   return (
     <div className="space-y-4 p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Noticeboard</h1>
-        {can(user?.role ?? "user", "write", "notice") && (
+        {canWrite && (
           <Button onClick={() => router.push("/noticeboard/new")}>
             <Bell />
             New Notice
@@ -70,21 +58,31 @@ export function NoticeFeed() {
         )}
       </div>
 
-      {/* Card grid */}
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {pageItems.map((notice) => (
-          <NoticeCard
-            key={notice._id}
-            notice={notice}
-            onDelete={canDelete ? () => setDeleteTarget(notice) : undefined}
-          />
-        ))}
-      </div>
+      {items.length === 0 ? (
+        <NoData
+          className="mt-6"
+          title="No active notices"
+          description="There are no notices to show right now. Check back later."
+        />
+      ) : (
+        <>
+          {/* Card grid */}
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {pageItems.map((notice) => (
+              <NoticeCard
+                key={notice._id}
+                notice={notice}
+                onDelete={canDelete ? () => setDeleteTarget(notice) : undefined}
+              />
+            ))}
+          </div>
 
-      {/* Pagination */}
-      <div className="mt-6 flex justify-center">
-        <PaginationFooter page={page} totalPages={totalPages} onPageChange={setPage} />
-      </div>
+          {/* Pagination */}
+          <div className="mt-6 flex justify-center">
+            <PaginationFooter page={page} totalPages={totalPages} onPageChange={setPage} />
+          </div>
+        </>
+      )}
 
       {/* Soft delete confirmation */}
       <Dialog
