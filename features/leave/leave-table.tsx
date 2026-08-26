@@ -174,6 +174,11 @@ export default function LeaveTable({
         onOpenChange={(open) => {
           if (!open) setSelected(undefined);
         }}
+        onEdit={(leave) => {
+          setSelected(undefined);
+
+          onEdit?.(leave);
+        }}
       />
     </>
   );

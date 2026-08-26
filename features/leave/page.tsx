@@ -1,6 +1,6 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
@@ -8,17 +8,20 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 
 import { useLeave } from "@/hooks/use-leave";
+import { LeaveT } from "@/services/leave.api";
 import LeaveBalanceCard from "./leave-balance-card";
 import LeaveTable from "./leave-table";
 import ApplyLeaveDialog from "./apply-leave-dialog";
 
 export default function LeavePage() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const page = Number(searchParams.get("page") ?? "1");
   const limit = Number(searchParams.get("limit") ?? "10");
 
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editLeave, setEditLeave] = useState<LeaveT | undefined>();
 
   const { balance, applications } = useLeave({
     page,
@@ -79,10 +82,22 @@ export default function LeavePage() {
         <LeaveTable
           loading={applications.isLoading}
           data={applications.data?.items ?? []}
+          onEdit={(leave) => setEditLeave(leave)}
+          page={applications.data?.page}
+          totalPages={applications.data?.totalPages}
+          onPageChange={(p) => router.push(`/leave?page=${p}&limit=${limit}`)}
         />
       </section>
 
-      <ApplyLeaveDialog open={dialogOpen} onOpenChange={setDialogOpen} />
+      <ApplyLeaveDialog
+        open={dialogOpen || !!editLeave}
+        onOpenChange={(open) => {
+          setDialogOpen(open);
+
+          if (!open) setEditLeave(undefined);
+        }}
+        leave={editLeave}
+      />
     </div>
   );
 }
