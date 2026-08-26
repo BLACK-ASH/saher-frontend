@@ -17,11 +17,21 @@ import { Button } from "@/components/ui/button";
 import { apiFetch } from "@/lib/api-wrapper";
 import { toast } from "sonner";
 
+// Matches ../saher-backend uploadImageController response envelope data
+type UploadedImage = {
+  id: string;
+  fileName: string;
+  url: string;
+  size: number;
+  width?: number;
+  height?: number;
+  mimetype: string;
+};
+
 type Props = {
   altName: string;
   url?: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- upload payload shape is backend-defined
-  onUploadSuccess?: (data: any) => void;
+  onUploadSuccess?: (data: UploadedImage) => void;
 };
 
 export default function ImageUpload({ altName, url, onUploadSuccess }: Props) {
@@ -112,14 +122,13 @@ export default function ImageUpload({ altName, url, onUploadSuccess }: Props) {
         formData.append("image", file);
         formData.append("name", altName);
 
-        const res = await apiFetch("/api/upload/image", {
+        const res = await apiFetch<UploadedImage>("/api/upload/image", {
           method: "POST",
           body: formData,
         });
 
         if (res?.success) {
-          // @ts-expect-error - this will be present
-          onUploadSuccess?.(res.file);
+          onUploadSuccess?.(res.data);
           toast("Uploaded");
         }
       } finally {

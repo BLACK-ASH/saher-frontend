@@ -252,7 +252,7 @@ export default function ApplyLeaveDialog({
                 <ImageUpload
                   altName="leave-proof"
                   url={field.value}
-                  onUploadSuccess={(file) => field.onChange(file.src)}
+                  onUploadSuccess={(file) => field.onChange(file.url)}
                 />
               </Field>
             )}

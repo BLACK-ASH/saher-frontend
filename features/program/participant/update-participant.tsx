@@ -243,7 +243,7 @@ const UpdateParticipant = ({ participant, open, onOpenChange }: Props) => {
 
                 <ImageUpload
                   altName={form.watch("name") || "participant"}
-                  url={form.watch("uploaded.image")?.src}
+                  url={form.watch("uploaded.image")?.url}
                   onUploadSuccess={(data) => {
                     field.onChange(data.id);
                     form.setValue("uploaded.image", data, {
@@ -272,7 +272,7 @@ const UpdateParticipant = ({ participant, open, onOpenChange }: Props) => {
 
                     form.setValue("uploaded.document", [
                       ...(form.getValues("uploaded.document") ?? []),
-                      { id: data.id, alt: data.alt, src: data.url },
+                      { id: data.id, alt: data.fileName, src: data.url },
                     ]);
                   }}
                 />

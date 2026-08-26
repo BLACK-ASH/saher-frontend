@@ -177,8 +177,8 @@ export function AttendanceCorrectionSide({
                     altName={attendance.id}
                     url={form.getValues("upload")}
                     onUploadSuccess={(data) => {
-                      form.setValue("proof", data.file.id);
-                      form.setValue("upload", data.file.url);
+                      form.setValue("proof", data.id);
+                      form.setValue("upload", data.url);
                     }}
                   />
                   {fieldState.invalid && (

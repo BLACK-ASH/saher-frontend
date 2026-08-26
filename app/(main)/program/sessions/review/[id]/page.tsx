@@ -150,7 +150,10 @@ export default function SessionReportPage() {
         <ImageUpload
           altName={`${data.title}-session`}
           onUploadSuccess={(image) => {
-            setImages((prev) => [...prev, image]);
+            setImages((prev) => [
+              ...prev,
+              { id: image.id, src: image.url, alt: image.fileName },
+            ]);
             toast.success("Image uploaded.");
           }}
         />
