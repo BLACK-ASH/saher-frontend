@@ -119,14 +119,15 @@
 
 **Pattern:** Thin page shells composing feature components.
 
-**See:** `app/(main)/noticeboard/page.tsx`, `app/(main)/noticeboard/[id]/page.tsx`, `app/(main)/(admin)/noticeboard/new/page.tsx`, `app/(main)/(admin)/noticeboard/[id]/edit/page.tsx`
+**See:** `app/(main)/noticeboard/page.tsx`, `app/(main)/noticeboard/[id]/page.tsx`, `app/(main)/noticeboard/new/page.tsx`, `app/(main)/noticeboard/[id]/edit/page.tsx`
 
 **Steps:**
 1. Staff-accessible routes: `app/(main)/<module>/page.tsx`
 2. Detail routes: `app/(main)/<module>/[id]/page.tsx` (async server shell awaiting `params: Promise<{ id }>`)
-3. Admin-only routes: `app/(main)/(admin)/<module>/new/page.tsx`, `app/(main)/(admin)/<module>/[id]/edit/page.tsx` — inherit RoleGuard from the `(admin)` layout
-4. Page files are thin shells (≤15 lines): export default function, render feature component
-5. Add navigation entry to `components/sidebar/nav-list.tsx` in appropriate route group
+3. Authoring routes: `app/(main)/<module>/new/page.tsx` and `app/(main)/<module>/[id]/edit/page.tsx` — same group as staff routes, NOT under `(admin)`
+4. Guard authoring routes with a per-module `"use client"` `layout.tsx` checking `can(r, "write"/"update", "<resource>")` and redirecting to `/forbidden` — do NOT rely on `(admin)` group-layout inheritance (its coarse `user:write` gate breaks per-resource permissions; see phase 03 CR-01)
+5. Page files are thin shells (≤15 lines): export default function, render feature component
+6. Add navigation entry to `components/sidebar/nav-list.tsx` in appropriate route group
 
 ## 10. Testing
 
