@@ -58,6 +58,11 @@ The org's full money pipeline runs in-app — bill submit→handle→settle life
 - **D-28:** Failed mutations: toast error with server message + dialog stays open so user can retry without re-entering data. Server state unchanged — safe to retry.
 - **D-29:** No optimistic updates on any money mutation — server state always reflects truth after any action. Hook/mutation tests verify this.
 
+### Research Resolutions (from Plan-Phase)
+- **D-30:** REIM-11 requires a new backend endpoint: `PATCH /api/reimbursement/:billId/restore` with `authorize('write', 'preReimbursement')` guard. Backend change must happen before or during Phase 5.
+- **D-31:** Backend search schema needs `status` field added to `searchBillQuerySchema` to support handle queue filtering (`GET /?status=pending&isDeleted=false`).
+- **D-32:** User name resolution: Build `useUserMap()` hook that caches user list from search endpoint and maps IDs to names for bill/settlement tables.
+
 ### the agent's Discretion
 - Exact file names for feature components within `features/reimbursement/` and `features/payroll/`
 - Bill management page route structure under `app/(main)/`

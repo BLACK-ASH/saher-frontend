@@ -405,32 +405,26 @@ None — discussion stayed within phase scope.
 
 **If this table is empty:** Not applicable — 5 assumptions flagged for validation.
 
-## Open Questions
+## Resolved Questions
 
-1. **Bill Restore Endpoint Missing (REIM-11 blocker)**
-   - What we know: Backend has `DELETE /:billId` (soft-delete) and `GET /recyclebills` (list deleted), but no restore endpoint.
-   - What's unclear: Whether backend team will add restore endpoint, or if this requirement should be descoped.
-   - Recommendation: Flag to user immediately. Options: (a) backend adds `PATCH /:billId/restore` matching noticeboard pattern, (b) descope REIM-11, (c) leave restore button in UI that calls non-existent endpoint.
+1. **Bill Restore Endpoint (REIM-11) → RESOLVED (D-30):** Backend will add `PATCH /:billId/restore` endpoint with `authorize('write', 'preReimbursement')` guard. Must be implemented before or during Phase 5.
 
-2. **User Name Resolution in Bill Tables**
-   - What we know: Bill/settlement responses contain `user: string` (ObjectId), not populated user objects.
-   - What's unclear: How to display user names in finance tables without N+1 API calls.
-   - Recommendation: Cache user list from `GET /api/admin/users` (admin endpoint) or `GET /api/user/:keyword` (search endpoint). Build a `useUserMap()` hook that maps IDs to names.
+2. **Handle Queue Data Source → RESOLVED (D-31):** Backend `searchBillQuerySchema` will be updated to include `status` field. Finance handle queue uses `GET /?status=pending&isDeleted=false`.
 
-3. **Settlement Availability After Accept**
+3. **User Name Resolution → RESOLVED (D-32):** Build `useUserMap()` hook that caches user list from search endpoint and maps IDs to names for bill/settlement tables.
+
+## Remaining Technical Questions (Non-Blocking)
+
+1. **Settlement Availability After Accept**
    - What we know: Accepting a bill auto-creates a settlement. The settlement ID is needed for "Record Settlement."
-   - What's unclear: Whether the bill detail endpoint (`GET /:billId`) reliably returns the settlement with its `id`.
-   - Recommendation: After accepting, re-fetch bill detail. The controller queries `Settlement.findById(billId)` — this returns the settlement document with `_id`. Verify the response schema includes this field (it does: `getSettleBillResponseSchema` has `id: z.string()`).
+   - Resolution: After accepting, re-fetch bill detail via `GET /:billId` which queries Settlement collection. Response schema includes `id: z.string()`. Settlement ID reliably available.
 
-4. **Export Notification Pattern**
-   - What we know: Backend queues BullMQ job and returns processing/complete message. Download arrives via notification.
-   - What's unclear: The exact notification action shape for download (need to verify `notification-box.tsx` renders download buttons).
-   - Recommendation: Check `features/notification/notification-box.tsx` for action button rendering logic. If not implemented, this is a Phase 7 (AUDT-04) concern — not blocking Phase 5.
+2. **Export Notification Pattern**
+   - What we know: Backend queues BullMQ job. Download arrives via notification action button.
+   - Resolution: Phase 7 (AUDT-04) concern — not blocking Phase 5. Show toast "check notifications for download" after triggering export.
 
-5. **`GET /bills` vs `GET /` for Handle Queue**
-   - What we know: `GET /bills` returns paginated Settlements. `GET /?status=pending&isDeleted=false` should return pending Bills.
-   - What's unclear: Whether the search endpoint reliably supports `status` as a query parameter (it's not in `searchBillQuerySchema`).
-   - Recommendation: The `searchBillQuerySchema` does NOT include `status` — only `description`, `amount`, `user`, `date`, `isDeleted`. For the handle queue, either use `GET /mybills?isDeleted=false` and filter client-side for pending, or use client-side filtering on the full non-deleted list. This is a design decision for the planner.
+3. **`GET /bills` vs `GET /` for Handle Queue → RESOLVED (D-31)**
+   - `searchBillQuerySchema` will include `status` field. Handle queue uses `GET /?status=pending&isDeleted=false`.
 
 ## Sources
 
