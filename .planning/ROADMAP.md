@@ -178,7 +178,7 @@ Plans:
 
 **Wave 1**
 
-- [ ] 05-01-PLAN.md — Reimbursement data layer: service module mirroring backend quirks + hook with invalidation-only mutations + sequential bulk engine, msw-tested (REIM-01..12 substrate)
+- [x] 05-01-PLAN.md — Reimbursement data layer: service module mirroring backend quirks + hook with invalidation-only mutations + sequential bulk engine, msw-tested (REIM-01..12 substrate)
 - [ ] 05-02-PLAN.md — Payroll data layer (incremental installments, sync cron) + useUserMap ID→name resolution (PAYR-01..04 substrate)
 
 **Wave 2** *(blocked on Wave 1 completion)*
@@ -249,7 +249,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 2. Shared Infrastructure & Session Reliability | 7/7 | Complete | 2026-08-25 |
 | 3. Noticeboard Pilot | 3/4 | Complete    | 2026-08-26 |
 | 4. Staff Self-Service — Mail & Leave | 0/4 | Planned | - |
-| 5. Money & Approval — Reimbursement & Payroll | 0/? | Not started | - |
+| 5. Money & Approval — Reimbursement & Payroll | 1/6 | In Progress|  |
 | 6. Admin Bank/Accounts & Events Depth | 0/? | Not started | - |
 | 7. Existing Modules Audit-and-Fix | 0/? | Not started | - |
 

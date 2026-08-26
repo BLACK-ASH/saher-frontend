@@ -43,18 +43,18 @@ Audit-and-complete of existing auth surfaces.
 
 Owner clarifications: normal users can only create bills (advances are admin-issued); the app tracks settlements but does not process payments (no payment gateway).
 
-- [ ] **REIM-01**: Staff can submit an expense bill (amount, description, receipt images ≤10 via uploader)
-- [ ] **REIM-02**: Staff can see their advance-vs-expenses net balance enquiry card
-- [ ] **REIM-03**: Staff can see their own bills with status badges (pending/approved/rejected/held/settled)
-- [ ] **REIM-04**: Staff can edit or withdraw their own pending bills
-- [ ] **REIM-05**: Finance can work a handle queue: approve/reject/hold each bill with required notes
-- [ ] **REIM-06**: Finance can bulk-handle bills (multi-select, sequential calls against the single-bill endpoint)
-- [ ] **REIM-07**: Finance can record how a bill was settled (UPI/bank transfer) — tracking record, not payment processing
-- [ ] **REIM-08**: Bill detail shows a lifecycle timeline (submitted → handled → settled, with who/when/note) composed from bill + audit-log data
-- [ ] **REIM-09**: Finance can search/filter all bills by description, amount, date, user
-- [ ] **REIM-10**: Finance can create/edit/delete advance bills on behalf of a user (user-search picker)
-- [ ] **REIM-11**: Deleted bills are recoverable via recycle bin + restore
-- [ ] **REIM-12**: Finance can view the bill audit log
+- [x] **REIM-01**: Staff can submit an expense bill (amount, description, receipt images ≤10 via uploader)
+- [x] **REIM-02**: Staff can see their advance-vs-expenses net balance enquiry card
+- [x] **REIM-03**: Staff can see their own bills with status badges (pending/approved/rejected/held/settled)
+- [x] **REIM-04**: Staff can edit or withdraw their own pending bills
+- [x] **REIM-05**: Finance can work a handle queue: approve/reject/hold each bill with required notes
+- [x] **REIM-06**: Finance can bulk-handle bills (multi-select, sequential calls against the single-bill endpoint)
+- [x] **REIM-07**: Finance can record how a bill was settled (UPI/bank transfer) — tracking record, not payment processing
+- [x] **REIM-08**: Bill detail shows a lifecycle timeline (submitted → handled → settled, with who/when/note) composed from bill + audit-log data
+- [x] **REIM-09**: Finance can search/filter all bills by description, amount, date, user
+- [x] **REIM-10**: Finance can create/edit/delete advance bills on behalf of a user (user-search picker)
+- [x] **REIM-11**: Deleted bills are recoverable via recycle bin + restore
+- [x] **REIM-12**: Finance can view the bill audit log
 
 ### Payroll (admin-only — no employee endpoint exists)
 
@@ -173,18 +173,18 @@ Which phases cover which requirements. Updated during roadmap creation.
 | LEAV-04 | Phase 4 | Pending |
 | LEAV-05 | Phase 4 | Pending |
 | LEAV-06 | Phase 4 | Pending |
-| REIM-01 | Phase 5 | Pending |
-| REIM-02 | Phase 5 | Pending |
-| REIM-03 | Phase 5 | Pending |
-| REIM-04 | Phase 5 | Pending |
-| REIM-05 | Phase 5 | Pending |
-| REIM-06 | Phase 5 | Pending |
-| REIM-07 | Phase 5 | Pending |
-| REIM-08 | Phase 5 | Pending |
-| REIM-09 | Phase 5 | Pending |
-| REIM-10 | Phase 5 | Pending |
-| REIM-11 | Phase 5 | Pending |
-| REIM-12 | Phase 5 | Pending |
+| REIM-01 | Phase 5 | Complete |
+| REIM-02 | Phase 5 | Complete |
+| REIM-03 | Phase 5 | Complete |
+| REIM-04 | Phase 5 | Complete |
+| REIM-05 | Phase 5 | Complete |
+| REIM-06 | Phase 5 | Complete |
+| REIM-07 | Phase 5 | Complete |
+| REIM-08 | Phase 5 | Complete |
+| REIM-09 | Phase 5 | Complete |
+| REIM-10 | Phase 5 | Complete |
+| REIM-11 | Phase 5 | Complete |
+| REIM-12 | Phase 5 | Complete |
 | PAYR-01 | Phase 5 | Pending |
 | PAYR-02 | Phase 5 | Pending |
 | PAYR-03 | Phase 5 | Pending |
