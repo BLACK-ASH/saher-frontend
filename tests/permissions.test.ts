@@ -3,8 +3,8 @@ import { can, ROLE_PERMISSIONS } from "@/lib/permissions";
 import type { UserRole, PermissionAction, PermissionResource } from "@/lib/permissions";
 
 describe("ROLE_PERMISSIONS", () => {
-  it("admin has 42 entries", () => {
-    expect(ROLE_PERMISSIONS.admin.size).toBe(42);
+  it("admin has 45 entries", () => {
+    expect(ROLE_PERMISSIONS.admin.size).toBe(45);
   });
 
   it("manager has 36 entries", () => {
@@ -33,8 +33,8 @@ describe("can() — verified backend quirks (no-inheritance counterexamples)", (
     expect(can("user", "write", "notice")).toBe(true);
   });
 
-  it("admin CANNOT write notice", () => {
-    expect(can("admin", "write", "notice")).toBe(false);
+  it("admin CAN write notice (granted 2026-08-26, mirrors backend matrix)", () => {
+    expect(can("admin", "write", "notice")).toBe(true);
   });
 
   it("manager CAN write notification (counterexample #3)", () => {
