@@ -15,10 +15,12 @@ import {
 
 import { Button } from "@/components/ui/button";
 
-import { CalendarRange, Eye, FileCheck } from "lucide-react";
+import { CalendarRange, Eye, FileCheck, Pencil } from "lucide-react";
 
 import { MetaResponse } from "@/lib/api-wrapper";
 import { LeaveT } from "@/services/leave.api";
+
+import { PaginationFooter } from "@/components/pagination-footer";
 
 import LeaveStatusBadge from "./leave-status-badge";
 import LeaveDetailsDialog from "./leave-details-dialog";
@@ -28,9 +30,20 @@ type Props = {
   data: LeaveT[];
   loading?: boolean;
   meta?: MetaResponse;
+  onEdit?: (leave: LeaveT) => void;
+  page?: number;
+  totalPages?: number;
+  onPageChange?: (page: number) => void;
 };
 
-export default function LeaveTable({ data, loading }: Props) {
+export default function LeaveTable({
+  data,
+  loading,
+  onEdit,
+  page,
+  totalPages,
+  onPageChange,
+}: Props) {
   const [selected, setSelected] = useState<LeaveT>();
 
   if (loading) {
@@ -118,13 +131,25 @@ export default function LeaveTable({ data, loading }: Props) {
                   </TableCell>
 
                   <TableCell className="text-right">
-                    <Button
-                      size="icon"
-                      variant="ghost"
-                      onClick={() => setSelected(leave)}
-                    >
-                      <Eye className="h-4 w-4" />
-                    </Button>
+                    <div className="flex justify-end gap-1">
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={() => setSelected(leave)}
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+
+                      {leave.status === "pending" && onEdit && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => onEdit(leave)}
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -132,6 +157,16 @@ export default function LeaveTable({ data, loading }: Props) {
           </Table>
         </CardContent>
       </Card>
+
+      {totalPages && totalPages > 1 && (
+        <div className="flex justify-end py-4">
+          <PaginationFooter
+            page={page ?? 1}
+            totalPages={totalPages}
+            onPageChange={onPageChange ?? (() => {})}
+          />
+        </div>
+      )}
 
       <LeaveDetailsDialog
         leave={selected}
