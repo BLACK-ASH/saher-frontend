@@ -5,6 +5,8 @@ import { formatIstDate } from "@/lib/date";
 import type { NoticeResponse } from "@/services/notice.api";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -14,7 +16,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export function NoticeCard({ notice }: { notice: NoticeResponse }) {
+export function NoticeCard({
+  notice,
+  onDelete,
+}: {
+  notice: NoticeResponse;
+  onDelete?: () => void;
+}) {
   const router = useRouter();
 
   const excerpt =
@@ -39,6 +47,19 @@ export function NoticeCard({ notice }: { notice: NoticeResponse }) {
         <span className={cn("text-muted-foreground text-sm")}>
           Expires: {formatIstDate(notice.expiresAt)}
         </span>
+        {onDelete && (
+          <Button
+            variant="ghost"
+            size="icon"
+            aria-label={`Delete ${notice.title}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onDelete();
+            }}
+          >
+            <Trash2 />
+          </Button>
+        )}
       </CardFooter>
     </Card>
   );

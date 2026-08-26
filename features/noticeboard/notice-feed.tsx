@@ -8,17 +8,28 @@ import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 import { PaginationFooter } from "@/components/pagination-footer";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
+import type { NoticeResponse } from "@/services/notice.api";
 
 const PAGE_SIZE = 10;
 
 export function NoticeFeed() {
   const router = useRouter();
   const [page, setPage] = useState(1);
-  const { notices } = useNotices();
+  const [deleteTarget, setDeleteTarget] = useState<NoticeResponse | null>(null);
+  const { notices, removeNotice } = useNotices();
   const { data: user } = useMe();
+  const canDelete = can(user?.role ?? "user", "delete", "notice");
 
   const items = notices.data ?? [];
   const totalPages = Math.ceil(items.length / PAGE_SIZE);
@@ -62,7 +73,11 @@ export function NoticeFeed() {
       {/* Card grid */}
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {pageItems.map((notice) => (
-          <NoticeCard key={notice._id} notice={notice} />
+          <NoticeCard
+            key={notice._id}
+            notice={notice}
+            onDelete={canDelete ? () => setDeleteTarget(notice) : undefined}
+          />
         ))}
       </div>
 
@@ -70,6 +85,38 @@ export function NoticeFeed() {
       <div className="mt-6 flex justify-center">
         <PaginationFooter page={page} totalPages={totalPages} onPageChange={setPage} />
       </div>
+
+      {/* Soft delete confirmation */}
+      <Dialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Delete Notice</DialogTitle>
+          </DialogHeader>
+          <p>Are you sure you want to delete &quot;{deleteTarget?.title}&quot;?</p>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDeleteTarget(null)}>
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              disabled={removeNotice.isPending}
+              onClick={() =>
+                removeNotice.mutate(deleteTarget!._id, {
+                  onSuccess: () => {
+                    toast.success("Notice deleted");
+                    setDeleteTarget(null);
+                  },
+                })
+              }
+            >
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
