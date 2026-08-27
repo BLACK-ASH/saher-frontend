@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { z } from "zod";
 
 // D-08 status enum
@@ -18,3 +19,7 @@ export const getStatusColor = (status: BillStatus): "default" | "secondary" | "d
       return "default";
   }
 };
+
+export function BillStatusBadge({ status }: { status: BillStatus }) {
+  return <Badge variant={getStatusColor(status)}>{status}</Badge>;
+}

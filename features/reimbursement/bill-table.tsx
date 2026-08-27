@@ -29,7 +29,7 @@ export function BillTable({ bills, onView, onEdit, onWithdraw, onRestore, showAc
             <TableCell>{bill.description}</TableCell>
             <TableCell>{bill.amount}</TableCell>
             <TableCell>
-              <BillStatusBadge status={bill.status === "pending" ? "PENDING" : bill.status === "accept" ? "APPROVED" : bill.status === "reject" ? "REJECTED" : "PAID"} />
+              <BillStatusBadge status={bill.status} />
             </TableCell>
             <TableCell>
               <Button variant="ghost" size="sm" onClick={() => onView(bill)}>View</Button>

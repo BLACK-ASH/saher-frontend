@@ -25,6 +25,7 @@ import {
   User,
   UserPlus,
   Users,
+  Wallet,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -104,6 +105,11 @@ const adminRoutes = [
     label: "Register",
     url: "/register",
     icon: UserPlus,
+  },
+  {
+    label: "Payroll",
+    url: "/payroll",
+    icon: Wallet,
   },
 ];
 

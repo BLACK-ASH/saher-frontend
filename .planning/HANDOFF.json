@@ -1,30 +1,43 @@
 {
- "version": "1.0",
- "timestamp": "2026-08-26T16:15:00Z",
- "phase": "05",
- "phase_name": "money-approval-reimbursement-payroll",
- "phase_dir": ".planning/phases/05-money-approval-reimbursement-payroll",
- "plan": "05-04",
- "task": 1,
- "total_tasks": 3,
- "status": "paused",
- "completed_tasks": [
-  {"id": "05-01", "name": "Reimbursement Data Layer", "status": "done", "commit": "3a65b9f"},
-  {"id": "05-02", "name": "Payroll Data Layer", "status": "done", "commit": "3e8a941"},
-  {"id": "05-03", "name": "Staff My Bills slice", "status": "done", "commit": "4dd5f8a"}
- ],
- "remaining_tasks": [
-  {"id": "05-04", "name": "Admin payroll slice", "status": "in_progress"},
-  {"id": "05-05", "name": "Finance Bill Management", "status": "not_started"},
-  {"id": "05-06", "name": "Money depth", "status": "not_started"}
- ],
- "blockers": [],
- "human_actions_pending": [],
- "decisions": [
-  {"decision": "Payroll payroll/:id array-by-id", "rationale": "Quirk 7", "phase": "05"},
-  {"decision": "D-17 timeline amendment", "rationale": "Backend does not record actor/time for Handled step", "phase": "05"}
- ],
- "uncommitted_files": [".planning/phases/05-money-approval-reimbursement-payroll/05-04-PLAN.md"],
- "next_action": "Resume execution of 05-04",
- "context_notes": "Executor for 05-04 was cancelled. Resuming agent should re-verify state and retry 05-04."
+  "version": "1.0",
+  "timestamp": "2026-08-27T13:30:00Z",
+  "phase": "05",
+  "phase_name": "money-approval-reimbursement-payroll",
+  "phase_dir": ".planning/phases/05-money-approval-reimbursement-payroll",
+  "plan": "05-04",
+  "task": 3,
+  "total_tasks": 3,
+  "status": "completed",
+  "completed_tasks": [
+    {"id": "05-01", "name": "Reimbursement Data Layer", "status": "done", "commit": "3a65b9f"},
+    {"id": "05-02", "name": "Payroll Data Layer", "status": "done", "commit": "3e8a941"},
+    {"id": "05-03", "name": "Staff My Bills slice", "status": "done", "commit": "4dd5f8a"},
+    {"id": "05-04", "name": "Admin payroll slice", "status": "done"}
+  ],
+  "remaining_tasks": [
+    {"id": "05-05", "name": "Finance Bill Management", "status": "not_started"},
+    {"id": "05-06", "name": "Money depth", "status": "not_started"}
+  ],
+  "blockers": [
+    {"id": "D-30", "description": "Backend Restore Endpoint - Staff Restore UI will 403 without backend guard fix"},
+    {"id": "D-31", "description": "Backend Search Schema - Filter on isDeleted=false requires status field in searchBillQuerySchema"}
+  ],
+  "human_actions_pending": [],
+  "decisions": [
+    {"decision": "Payroll payroll/:id array-by-id", "rationale": "Quirk 7", "phase": "05"},
+    {"decision": "D-17 timeline amendment", "rationale": "Backend does not record actor/time for Handled step", "phase": "05"},
+    {"decision": "Description field in RecordPaymentDialog stripped by backend zod schema", "rationale": "Backend createPayrollSchema only accepts {mode, paidSalary}", "phase": "05"}
+  ],
+  "uncommitted_files": [
+    "app/(main)/(admin)/payroll/page.tsx",
+    "features/payroll/payroll-table.tsx",
+    "features/payroll/payroll-history-dialog.tsx",
+    "features/payroll/record-payment-dialog.tsx",
+    "components/sidebar/nav-list.tsx",
+    "hooks/use-payroll.ts",
+    "features/reimbursement/bill-status-badge.tsx",
+    ".planning/phases/05-money-approval-reimbursement-payroll/05-04-SUMMARY.md"
+  ],
+  "next_action": "Start plan 05-05: Finance Bill Management",
+  "context_notes": "Plan 05-04 completed. All 3 tasks done: 1) Admin payroll page with RoleGuard/filters/table, 2) Record Payment dialog with incremental amount + progress, 3) Run Now trigger with confirmation + check-notifications toast. Build, typecheck, lint pass. Ready for 05-05."
 }
