@@ -1,43 +1,34 @@
 {
   "version": "1.0",
-  "timestamp": "2026-08-27T13:30:00Z",
-  "phase": "05",
-  "phase_name": "money-approval-reimbursement-payroll",
-  "phase_dir": ".planning/phases/05-money-approval-reimbursement-payroll",
-  "plan": "05-04",
-  "task": 3,
-  "total_tasks": 3,
-  "status": "completed",
+  "timestamp": "2026-08-28T17:32:39.341Z",
+  "phase": "none",
+  "phase_name": "maintenance-adhoc (post Phase 05)",
+  "phase_dir": null,
+  "plan": null,
+  "task": null,
+  "total_tasks": null,
+  "status": "paused",
   "completed_tasks": [
-    {"id": "05-01", "name": "Reimbursement Data Layer", "status": "done", "commit": "3a65b9f"},
-    {"id": "05-02", "name": "Payroll Data Layer", "status": "done", "commit": "3e8a941"},
-    {"id": "05-03", "name": "Staff My Bills slice", "status": "done", "commit": "4dd5f8a"},
-    {"id": "05-04", "name": "Admin payroll slice", "status": "done"}
+    {"id": 1, "name": "Reseed first admin into the DB the app actually reads", "status": "done", "commit": "uncommitted-env-only"},
+    {"id": 2, "name": "Fix admin 403 on POST /api/reimbursement/bill (grant write/delete postReimbursement)", "status": "done", "commit": "2dc576e (backend), 63d8644 (frontend)"}
   ],
   "remaining_tasks": [
-    {"id": "05-05", "name": "Finance Bill Management", "status": "not_started"},
-    {"id": "05-06", "name": "Money depth", "status": "not_started"}
+    {"id": 1, "name": "Phase 6 (admin bank/accounts & events depth) — start planning, next roadmap phase", "status": "not_started"}
   ],
   "blockers": [
-    {"id": "D-30", "description": "Backend Restore Endpoint - Staff Restore UI will 403 without backend guard fix"},
-    {"id": "D-31", "description": "Backend Search Schema - Filter on isDeleted=false requires status field in searchBillQuerySchema"}
+    {"description": "D-30 backend restore endpoint guard can still 403 staff restore", "type": "external", "workaround": "Frontend ships UI; backend must deploy guard fix"},
+    {"description": "D-31 searchBillQuerySchema missing status field for isDeleted=false filtering", "type": "external", "workaround": "Backend change needed before recycle/restore fully reliable"},
+    {"description": "No live-backend E2E in dev loop; verification limited to tsc/lint/vitest/build", "type": "technical", "workaround": "Seed + RBAC verified via docker exec + curl against running container"}
   ],
-  "human_actions_pending": [],
+  "human_actions_pending": [
+    {"action": "Verify admin can now create a bill in the UI (POST /api/reimbursement/bill) using admin@saher.com / ADMIN000ADMIN000", "context": "RBAC fix is live via tsx watch reload of the backend container", "blocking": false}
+  ],
   "decisions": [
-    {"decision": "Payroll payroll/:id array-by-id", "rationale": "Quirk 7", "phase": "05"},
-    {"decision": "D-17 timeline amendment", "rationale": "Backend does not record actor/time for Handled step", "phase": "05"},
-    {"decision": "Description field in RecordPaymentDialog stripped by backend zod schema", "rationale": "Backend createPayrollSchema only accepts {mode, paidSalary}", "phase": "05"}
+    {"decision": "Seed must run inside the backend container (docker exec saher-backend-1 'cd /app && pnpm seed'), not on host", "rationale": "Host pnpm seed resolves the wrong MONGO_URI outside the compose network (ENOTFOUND mongo) and writes nowhere the app reads", "phase": "maintenance"},
+    {"decision": "Granted write+delete postReimbursement to BOTH admin and manager in backend role-permission.ts AND frontend lib/permissions.ts", "rationale": "Frontend matrix is a verbatim mirror (D-13); both roles are intended to submit/withdraw their own bills per 05-RESEARCH matrix", "phase": "maintenance"},
+    {"decision": "delete:bank left intentionally unassigned", "rationale": "Pinned by backend test tests/admin/admin.test.ts:247 ('rejects bank deletion for every role') — deliberate dead route, not a gap", "phase": "maintenance"}
   ],
-  "uncommitted_files": [
-    "app/(main)/(admin)/payroll/page.tsx",
-    "features/payroll/payroll-table.tsx",
-    "features/payroll/payroll-history-dialog.tsx",
-    "features/payroll/record-payment-dialog.tsx",
-    "components/sidebar/nav-list.tsx",
-    "hooks/use-payroll.ts",
-    "features/reimbursement/bill-status-badge.tsx",
-    ".planning/phases/05-money-approval-reimbursement-payroll/05-04-SUMMARY.md"
-  ],
-  "next_action": "Start plan 05-05: Finance Bill Management",
-  "context_notes": "Plan 05-04 completed. All 3 tasks done: 1) Admin payroll page with RoleGuard/filters/table, 2) Record Payment dialog with incremental amount + progress, 3) Run Now trigger with confirmation + check-notifications toast. Build, typecheck, lint pass. Ready for 05-05."
+  "uncommitted_files": ["saher-backend/.env.example (pre-existing change, not ours — left unstaged)"],
+  "next_action": "Start Phase 6 planning (admin bank/accounts + events depth) via /gsd-plan-phase; first run graphify query for account/bank/events backend surfaces",
+  "context_notes": "Phase 05 fully complete (6/6 plans, commits a205c1d + fcbacfb base). This session was ad-hoc: user's DB had 0 users so all logins 403'd/401'd despite valid SEED_ADMIN creds — reseeded inside the container. Then admin got 'You Do Not Have Permission To Write This Postreimbursement' on bill creation — root cause was backend permission matrix gap, not frontend. Full inventory diff confirmed frontend/backend matrices now identical for all 4 roles; every route-guard permission is covered by at least one role except intentional delete:bank. Backend restarted via tsx watch automatically."
 }
