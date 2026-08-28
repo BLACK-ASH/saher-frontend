@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { PaginationFooter } from "@/components/pagination-footer";
-import { CheckCircle2, XCircle, PauseCircle, Eye } from "lucide-react";
+import { CheckCircle2, XCircle, PauseCircle, Eye, Pencil, Trash2 } from "lucide-react";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 import { BillResponse } from "@/services/reimbursement.api";
@@ -22,6 +22,8 @@ interface FinanceBillTableProps {
   onToggleAll: (checked: boolean) => void;
   onHandle: (bill: BillResponse, status: "accept" | "reject" | "on-hold") => void;
   onOpen?: (bill: BillResponse) => void;
+  onEditAdvance?: (bill: BillResponse) => void;
+  onDeleteAdvance?: (bill: BillResponse) => void;
   bulkProgress?: { done: number; total: number } | null;
 }
 
@@ -44,6 +46,8 @@ export function FinanceBillTable({
   onToggleAll,
   onHandle,
   onOpen,
+  onEditAdvance,
+  onDeleteAdvance,
   bulkProgress,
 }: FinanceBillTableProps) {
   const items = data?.items ?? [];
@@ -169,6 +173,28 @@ export function FinanceBillTable({
                   >
                     <Eye className="h-4 w-4" />
                   </Button>
+                  {bill.advance > 0 && (
+                    <>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => { e.stopPropagation(); onEditAdvance?.(bill); }}
+                        disabled={isBulkRunning}
+                        aria-label="Edit advance"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={(e) => { e.stopPropagation(); onDeleteAdvance?.(bill); }}
+                        disabled={isBulkRunning}
+                        aria-label="Delete advance"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </>
+                  )}
                 </div>
               </TableCell>
             </TableRow>

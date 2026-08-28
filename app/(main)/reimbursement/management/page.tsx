@@ -9,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Download } from "lucide-react";
+import { Download, HandCoins } from "lucide-react";
 
 import { useReimbursement, useSearchBills, type HandleStatus } from "@/hooks/use-reimbursement";
 import { useUserMap } from "@/hooks/use-user-map";
@@ -20,6 +20,10 @@ import HandleBillDialog from "@/features/reimbursement/handle-bill-dialog";
 import { BulkActionBar } from "@/features/reimbursement/bulk-action-bar";
 import { RecycleBin } from "@/features/reimbursement/recycle-bin";
 import { BillDetailDialog } from "@/features/reimbursement/bill-detail-dialog";
+import { AdvanceBillDialog } from "@/features/reimbursement/advance-bill-dialog";
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
+import { exportReport } from "@/services/reimbursement.api";
+import { toast } from "sonner";
 
 const DEBOUNCE_MS = 300;
 
@@ -27,6 +31,7 @@ export default function ReimbursementManagementPage() {
   const {
     handleMany,
     bulkProgress,
+    deleteAdvance,
   } = useReimbursement();
 
   const { userMap } = useUserMap();
@@ -47,6 +52,8 @@ export default function ReimbursementManagementPage() {
   // Dialogs
   const [handleDialog, setHandleDialog] = useState<{ bill: BillResponse | null; status: HandleStatus }>({ bill: null, status: "accept" });
   const [detailBill, setDetailBill] = useState<BillResponse | null>(null);
+  const [advanceDialog, setAdvanceDialog] = useState<{ open: boolean; bill: BillResponse | null }>({ open: false, bill: null });
+  const [advanceDelete, setAdvanceDelete] = useState<BillResponse | null>(null);
 
   // Debounce search
   useEffect(() => {
@@ -68,21 +75,23 @@ export default function ReimbursementManagementPage() {
   const data = searchQuery.data;
   const isLoading = searchQuery.isLoading;
 
-  // Reset page when filters change
-  // Note: This is intentional - we only want to reset page when filters change
-  // The exhaustive-deps warning is expected and acceptable here
-  useEffect(() => {
+  // Reset page when filters change (render-phase adjustment, avoids setState-in-effect)
+  const [filterKey, setFilterKey] = useState("");
+  const currentFilterKey = `${debouncedSearch}|${status}|${userId}|${date}`;
+  if (currentFilterKey !== filterKey) {
+    setFilterKey(currentFilterKey);
     setPage(1);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [debouncedSearch, status, userId, date]);
+  }
 
   // Clear selection when data changes significantly
-  useEffect(() => {
+  const [prevItems, setPrevItems] = useState<unknown>(undefined);
+  if (data?.items !== prevItems) {
+    setPrevItems(data?.items);
     if (selectedIds.size > 0 && data?.items) {
       const stillValid = data.items.some((bill) => selectedIds.has(bill.id));
       if (!stillValid) setSelectedIds(new Set());
     }
-  }, [data?.items, selectedIds]);
+  }
 
   const handleToggleSelect = useCallback((id: string, checked: boolean) => {
     setSelectedIds((prev) => {
@@ -93,13 +102,13 @@ export default function ReimbursementManagementPage() {
     });
   }, []);
 
-  const handleToggleAll = useCallback((checked: boolean) => {
+  const handleToggleAll = (checked: boolean) => {
     if (checked && data?.items) {
       setSelectedIds(new Set(data.items.map((b) => b.id)));
     } else {
       setSelectedIds(new Set());
     }
-  }, [data?.items]);
+  };
 
   const handleRowHandle = useCallback((bill: BillResponse, status: HandleStatus) => {
     setHandleDialog({ bill, status });
@@ -120,6 +129,38 @@ export default function ReimbursementManagementPage() {
   const handleClearSelection = useCallback(() => {
     setSelectedIds(new Set());
   }, []);
+
+  const handleCreateAdvance = () => {
+    setAdvanceDialog({ open: true, bill: null });
+  };
+
+  const handleEditAdvance = useCallback((bill: BillResponse) => {
+    setAdvanceDialog({ open: true, bill });
+  }, []);
+
+  const handleDeleteAdvance = useCallback((bill: BillResponse) => {
+    setAdvanceDelete(bill);
+  }, []);
+
+  const confirmDeleteAdvance = () => {
+    if (!advanceDelete) return;
+    deleteAdvance.mutate(advanceDelete.id, {
+      onSuccess: () => {
+        toast.success("Advance bill deleted");
+        setAdvanceDelete(null);
+      },
+    });
+  };
+
+  const handleExport = async () => {
+    try {
+      await exportReport("xlsx");
+      toast.success("Report generation started — check notifications for download");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to start report generation";
+      toast.error(message);
+    }
+  };
 
   return (
     <RoleGuard allow={(r) => can(r, "read", "preReimbursement")}>
@@ -187,8 +228,21 @@ export default function ReimbursementManagementPage() {
                 aria-label="Filter by date"
               />
 
-              {/* Export placeholder */}
-              <Button variant="outline" disabled className="ml-auto gap-2">
+              <Button
+                variant="outline"
+                onClick={handleCreateAdvance}
+                className="gap-2"
+              >
+                <HandCoins className="h-4 w-4" />
+                Create Advance
+              </Button>
+
+              <Button
+                variant="outline"
+                onClick={handleExport}
+                disabled={deleteAdvance.isPending}
+                className="gap-2"
+              >
                 <Download className="h-4 w-4" />
                 Export
               </Button>
@@ -202,6 +256,8 @@ export default function ReimbursementManagementPage() {
               onToggleAll={handleToggleAll}
               onHandle={handleRowHandle}
               onOpen={handleOpenDetail}
+              onEditAdvance={handleEditAdvance}
+              onDeleteAdvance={handleDeleteAdvance}
               bulkProgress={bulkProgress}
             />
 
@@ -237,7 +293,36 @@ export default function ReimbursementManagementPage() {
           onOpenChange={(open: boolean) => {
             if (!open) setDetailBill(null);
           }}
+          viewerCanAudit
         />
+
+        {/* Advance Bill Dialog */}
+        <AdvanceBillDialog
+          mode={advanceDialog.bill ? "edit" : "create"}
+          initialData={advanceDialog.bill}
+          open={advanceDialog.open}
+          onOpenChange={(open: boolean) => {
+            if (!open) setAdvanceDialog({ open: false, bill: null });
+          }}
+        />
+
+        {/* Delete Advance Confirm */}
+        <AlertDialog open={!!advanceDelete} onOpenChange={(open: boolean) => { if (!open) setAdvanceDelete(null); }}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete advance bill?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This advance bill will be soft-deleted and moved to the recycle bin. This action can be restored later.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={confirmDeleteAdvance} disabled={deleteAdvance.isPending}>
+                {deleteAdvance.isPending ? "Deleting…" : "Delete"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
     </RoleGuard>
   );

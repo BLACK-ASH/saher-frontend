@@ -4,24 +4,36 @@ import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BillResponse, getSettlementByBill } from "@/services/reimbursement.api";
+import { BillResponse, SettlementResponse, getSettlementByBill, getAuditLog } from "@/services/reimbursement.api";
 import { LifecycleTimeline } from "./lifecycle-timeline";
 import { SettleDialog } from "./settle-dialog";
-import { formatIstDate } from "@/lib/date";
+import { formatIstDate, formatIstDateTime } from "@/lib/date";
+import { PaginationFooter } from "@/components/pagination-footer";
+import { DefaultLoader } from "@/components/loading";
 
 interface BillDetailDialogProps {
   bill: BillResponse | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  viewerCanAudit?: boolean;
 }
 
-export function BillDetailDialog({ bill, open, onOpenChange }: BillDetailDialogProps) {
+const AUDIT_PAGE_SIZE = 5;
+
+export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = false }: BillDetailDialogProps) {
   const [settleOpen, setSettleOpen] = useState(false);
+  const [auditPage, setAuditPage] = useState(1);
 
   const { data: settlement, isLoading: loadingSettlement } = useQuery({
-    queryKey: ["settlement", bill?.id],
+    queryKey: ["bills", "detail", bill?.id],
     queryFn: () => getSettlementByBill(bill!.id),
-    enabled: open && bill?.status === "accept",
+    enabled: viewerCanAudit && open && !!bill,
+  });
+
+  const { data: audit, isLoading: loadingAudit } = useQuery({
+    queryKey: ["audit-log", auditPage],
+    queryFn: () => getAuditLog(auditPage, AUDIT_PAGE_SIZE),
+    enabled: viewerCanAudit && open && !!bill,
   });
 
   if (!bill) return null;
@@ -43,6 +55,9 @@ export function BillDetailDialog({ bill, open, onOpenChange }: BillDetailDialogP
                 <span className="font-medium">Amount:</span> ₹{bill.amount.toLocaleString()}
               </div>
               <div>
+                <span className="font-medium">Advance:</span> ₹{bill.advance.toLocaleString()}
+              </div>
+              <div>
                 <span className="font-medium">Submitted:</span> {formatIstDate(bill.date)}
               </div>
               <div>
@@ -50,7 +65,7 @@ export function BillDetailDialog({ bill, open, onOpenChange }: BillDetailDialogP
               </div>
             </div>
 
-            {bill.image && (
+            {(bill.image) && (
               <div className="space-y-2">
                 <h4 className="font-medium text-sm">Receipts</h4>
                 <div className="flex gap-2">
@@ -61,19 +76,26 @@ export function BillDetailDialog({ bill, open, onOpenChange }: BillDetailDialogP
               </div>
             )}
 
-            <LifecycleTimeline bill={bill} />
+            {/* Settlement + lifecycle only for finance viewers (endpoint requires preReimbursement:read) */}
+            {viewerCanAudit && (
+              <LifecycleTimeline bill={bill} settlement={settlement ?? null} />
+            )}
 
-            {bill.status === "accept" && (
+            {viewerCanAudit && bill.status === "accept" && (
               <div className="pt-4 border-t">
                 {loadingSettlement ? (
                   <p className="text-sm text-muted-foreground">Loading settlement...</p>
                 ) : settlement ? (
                   <div className="flex justify-between items-center">
                     <div>
-                      <p className="text-sm">Pending Settlement</p>
-                      <p className="text-xs text-muted-foreground">
-                        Expires: {formatIstDate(settlement.expiredAt)}
+                      <p className="text-sm text-muted-foreground">
+                        {settlement.status === "settle" ? "Settlement complete" : "Pending Settlement"}
                       </p>
+                      {settlement.status === "pending" && (
+                        <p className="text-xs text-muted-foreground">
+                          Expires: {formatIstDate(settlement.expiredAt)}
+                        </p>
+                      )}
                     </div>
                     <Button onClick={() => setSettleOpen(true)} disabled={settlement.status === "settle"}>
                       {settlement.status === "settle" ? "Completed" : "Record Settlement"}
@@ -81,6 +103,40 @@ export function BillDetailDialog({ bill, open, onOpenChange }: BillDetailDialogP
                   </div>
                 ) : (
                   <p className="text-sm text-destructive">Settlement record missing</p>
+                )}
+              </div>
+            )}
+
+            {viewerCanAudit && (
+              <div className="pt-4 border-t">
+                <h4 className="font-medium text-sm mb-2">Audit Log</h4>
+                {loadingAudit ? (
+                  <DefaultLoader />
+                ) : !audit?.items.length ? (
+                  <p className="text-sm text-muted-foreground">No audit entries.</p>
+                ) : (
+                  <>
+                    <ul className="space-y-2 text-sm">
+                      {audit!.items.map((entry) => (
+                        <li key={entry.id} className="border rounded-md p-2">
+                          <div className="flex justify-between">
+                            <span className="font-medium">₹{entry.amount.toLocaleString("en-IN")}</span>
+                            <span className="text-muted-foreground">{formatIstDateTime(entry.date)}</span>
+                          </div>
+                          <p className="text-xs text-muted-foreground truncate">{entry.description}</p>
+                        </li>
+                      ))}
+                    </ul>
+                    {(audit?.totalPages ?? 1) > 1 && (
+                      <div className="flex justify-end pt-2">
+                        <PaginationFooter
+                          page={auditPage}
+                          totalPages={audit?.totalPages ?? 1}
+                          onPageChange={setAuditPage}
+                        />
+                      </div>
+                    )}
+                  </>
                 )}
               </div>
             )}

@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import { UserSearchPicker } from "@/components/user-search-picker";
+import type { MailUser } from "@/services/mail.api";
 
 import { 
   adminBillCreateSchema, 
@@ -25,20 +26,23 @@ import {
   adminBillUpdateSchema,
   AdminBillUpdateInput 
 } from "@/services/reimbursement.api";
+import type { BillResponse } from "@/services/reimbursement.api";
 import { useReimbursement } from "@/hooks/use-reimbursement";
 import { dateToIstDateOnly } from "@/lib/date";
 import { toast } from "sonner";
 
 type Props = {
   mode: "create" | "edit";
-  initialData?: AdminBillCreateInput & { id: string; user: string };
+  initialData?: BillResponse | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
 
 export function AdvanceBillDialog({ mode, initialData, open, onOpenChange }: Props) {
   const { createAdvance, updateAdvance } = useReimbursement();
-  const [selectedUserId, setSelectedUserId] = useState<string | null>(initialData?.user || null);
+  const [selectedUser, setSelectedUser] = useState<MailUser | null>(
+    initialData?.user ? { id: initialData.user, name: initialData.user, email: "", role: "", image: { id: "", src: "", alt: "" } } : null
+  );
 
   const form = useForm<AdminBillCreateInput | AdminBillUpdateInput>({
     resolver: zodResolver(mode === "create" ? adminBillCreateSchema : adminBillUpdateSchema),
@@ -49,26 +53,34 @@ export function AdvanceBillDialog({ mode, initialData, open, onOpenChange }: Pro
     },
   });
 
+  // Render-phase resync of selected user when opening with new initialData
+  const [openKey, setOpenKey] = useState<{ open: boolean; id?: string }>({ open, id: initialData?.user });
+  if (openKey.open !== open) {
+    setOpenKey({ open, id: initialData?.user });
+    setSelectedUser(
+      initialData?.user
+        ? { id: initialData.user, name: initialData.user, email: "", role: "", image: { id: "", src: "", alt: "" } }
+        : null,
+    );
+  }
+
   useEffect(() => {
-    if (open) {
-      form.reset({
-        advance: initialData?.advance || 0,
-        date: initialData?.date ? dateToIstDateOnly(new Date(initialData.date)) : dateToIstDateOnly(new Date()),
-        description: initialData?.description || "",
-      });
-      setSelectedUserId(initialData?.user || null);
-    }
-  }, [open, form, initialData]);
+    form.reset({
+      advance: initialData?.advance || 0,
+      date: initialData?.date ? dateToIstDateOnly(new Date(initialData.date)) : dateToIstDateOnly(new Date()),
+      description: initialData?.description || "",
+    });
+  }, [form, initialData]);
 
   const onSubmit = (data: AdminBillCreateInput | AdminBillUpdateInput) => {
     if (mode === "create") {
-      if (!selectedUserId) {
+      if (!selectedUser) {
         toast.error("Please select a user");
         return;
       }
       const createData = data as AdminBillCreateInput;
       createAdvance.mutate(
-        { userId: selectedUserId, data: { ...createData, date: `${createData.date}T00:00:00+05:30` } },
+        { userId: selectedUser.id, data: { ...createData, date: `${createData.date}T00:00:00+05:30` } },
         {
           onSuccess: () => {
             toast.success("Advance created");
@@ -103,9 +115,10 @@ export function AdvanceBillDialog({ mode, initialData, open, onOpenChange }: Pro
           {mode === "create" && (
             <Field>
               <FieldLabel>User</FieldLabel>
-              <UserSearchPicker 
-                multiple={false} 
-                onSelect={(user) => setSelectedUserId(user.id)} 
+              <UserSearchPicker
+                multiple={false}
+                value={selectedUser ? [selectedUser] : []}
+                onChange={(users) => setSelectedUser(users[0] ?? null)}
               />
             </Field>
           )}

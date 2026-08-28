@@ -26,6 +26,7 @@ import {
 
 import { usePayroll } from "@/hooks/use-payroll";
 import { PayrollResponse } from "@/services/payroll.api";
+import { toast } from "sonner";
 
 import { PayrollTable } from "@/features/payroll/payroll-table";
 import PayrollHistoryDialog from "@/features/payroll/payroll-history-dialog";
@@ -57,7 +58,12 @@ export default function AdminPayrollPage() {
   const [viewHistoryPayroll, setViewHistoryPayroll] = useState<PayrollResponse | null>(null);
   const [runConfirmOpen, setRunConfirmOpen] = useState(false);
 
-  const { data, isLoading, run } = usePayroll(year === 0 ? 0 : year, month, page);
+  const { list, runCron } = usePayroll(
+    { year: year === 0 ? undefined : year, month: month === 0 ? undefined : month },
+    page
+  );
+  const data = list.data;
+  const isLoading = list.isLoading;
 
   // Reset page when filters change
   useEffect(() => {
@@ -75,7 +81,12 @@ export default function AdminPayrollPage() {
 
   const handleRunNow = async () => {
     setRunConfirmOpen(false);
-    await run.mutateAsync();
+    try {
+      await runCron.mutateAsync();
+      toast.success("Payroll calculation started — check notifications");
+    } catch (err) {
+      if (err instanceof Error) toast.error(err.message);
+    }
   };
 
   return (
@@ -121,7 +132,7 @@ export default function AdminPayrollPage() {
                 <AlertDialog open={runConfirmOpen} onOpenChange={setRunConfirmOpen}>
                   <AlertDialogTrigger asChild>
                     <Button
-                      disabled={run.isPending}
+                      disabled={runCron.isPending}
                       className="gap-2"
                     >
                       <Play className="h-4 w-4" />
@@ -139,9 +150,9 @@ export default function AdminPayrollPage() {
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={handleRunNow}
-                        disabled={run.isPending}
+                        disabled={runCron.isPending}
                       >
-                        {run.isPending ? (
+                        {runCron.isPending ? (
                           <>
                             <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                             Generating…
@@ -161,7 +172,6 @@ export default function AdminPayrollPage() {
             <PayrollTable
               data={data}
               isLoading={isLoading}
-              filters={{ year: year === 0 ? undefined : year, month: month === 0 ? undefined : month }}
               page={page}
               onPageChange={setPage}
               onRecordPayment={handleRecordPayment}
@@ -179,7 +189,7 @@ export default function AdminPayrollPage() {
         />
 
         <PayrollHistoryDialog
-          payrollId={viewHistoryPayroll?.id ?? null}
+          userId={viewHistoryPayroll?.user ?? null}
           open={!!viewHistoryPayroll}
           onOpenChange={(open: boolean) => {
             if (!open) setViewHistoryPayroll(null);

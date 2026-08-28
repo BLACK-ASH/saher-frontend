@@ -12,21 +12,30 @@ import {
   createAdvanceBill,
   updateAdvanceBill,
   deleteAdvanceBill,
+  settleBill,
   type HandleBillInput,
+  type SearchBillsFilters,
+  type SettleInput,
   type BillResponse,
   type UserBillUpdateInput,
   type AdminBillCreateInput,
   type AdminBillUpdateInput,
 } from "@/services/reimbursement.api";
 import { toast } from "sonner";
-import { NormalizedList } from "@/lib/normalize-list";
 
 export type HandleStatus = "accept" | "reject" | "on-hold";
 
+type HandleManyItem = {
+  billId: string;
+  status: HandleStatus;
+  reason: string;
+};
+
 type BulkProgress = { done: number; total: number } | null;
 
-// Separate hook for search to satisfy react-hooks/rules-of-hooks
-export const useSearchBills = (filters: Parameters<typeof searchBills>[0] = {}, page = 1) =>
+// Separate hook for search to satisfy react-hooks/rules-of-hooks. Key stays under
+// ["bills"] so the shared invalidate() in useReimbursement refetches it.
+export const useSearchBills = (filters: SearchBillsFilters = {}, page = 1) =>
   useQuery({
     queryKey: ["bills", "search", filters, page],
     queryFn: () => searchBills(filters, page),
@@ -38,114 +47,116 @@ export const useRecycleBills = () =>
     queryFn: getRecycleBills,
   });
 
-export const useReimbursement = () => {
+export const useReimbursement = (options?: { isDeleted?: boolean }) => {
   const queryClient = useQueryClient();
   const [bulkProgress, setBulkProgress] = useState<BulkProgress>(null);
 
+  const isDeleted = options?.isDeleted ?? false;
+
+  // Money rule D-29: NO optimistic writes anywhere — every mutation funnels
+  // here; the server refetch after invalidation is the only way cache changes.
+  const invalidate = () => {
+    queryClient.invalidateQueries({ queryKey: ["bills"] });
+    queryClient.invalidateQueries({ queryKey: ["balance"] });
+  };
+
   const myBills = useQuery({
-    queryKey: ["reimbursement", "my-bills"],
-    queryFn: () => getMyBills(),
+    queryKey: ["bills", "my", isDeleted],
+    queryFn: () => getMyBills(isDeleted),
   });
 
   const createBillMutation = useMutation({
     mutationFn: createBill,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reimbursement", "my-bills"] }),
+    onSuccess: invalidate,
   });
 
   const updateBillMutation = useMutation({
     mutationFn: ({ id, data }: { id: string; data: UserBillUpdateInput }) =>
       updateBill(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reimbursement", "my-bills"] }),
+    onSuccess: invalidate,
   });
 
   const withdraw = useMutation({
     mutationFn: deleteBill,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reimbursement", "my-bills"] }),
+    onSuccess: invalidate,
   });
 
   const restore = useMutation({
     mutationFn: restoreBill,
-    onSuccess: () => {
-      toast.success("Bill restored");
-      queryClient.invalidateQueries({ queryKey: ["bills", "search"] });
-      queryClient.invalidateQueries({ queryKey: ["bills", "recycle"] });
-    },
-    onError: (err: Error) => {
-      toast.error(err.message);
-    },
+    onSuccess: invalidate,
   });
 
   const createAdvance = useMutation({
     mutationFn: ({ userId, data }: { userId: string; data: AdminBillCreateInput }) =>
       createAdvanceBill(userId, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reimbursement", "my-bills"] }),
+    onSuccess: invalidate,
   });
 
   const updateAdvance = useMutation({
     mutationFn: ({ id, data }: { id: string; data: AdminBillUpdateInput }) =>
       updateAdvanceBill(id, data),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reimbursement", "my-bills"] }),
+    onSuccess: invalidate,
   });
 
   const deleteAdvance = useMutation({
     mutationFn: deleteAdvanceBill,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reimbursement", "my-bills"] }),
+    onSuccess: invalidate,
   });
 
-  const settle = useMutation({
-    mutationFn: ({ settleId, input }: { settleId: string; input: { mode: string; status: string } }) => {
-      // placeholder
-      return Promise.resolve();
-    },
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["reimbursement", "my-bills"] }),
-  });
-
-  // --- Finance Management ---
+  // ⚠ On accept the backend auto-creates a Settlement but responds with no id
+  // (Pitfall 2) — rely on this invalidation to refetch detail for settle.
   const handleOne = useMutation({
-    mutationFn: ({ billId, status, reason }: { billId: string; status: HandleStatus; reason: string }) =>
-      handleBill(billId, { status, reason }),
-    onSuccess: (_data, variables) => {
-      toast.success(
-        variables.status === "accept"
-          ? "Bill accepted — settlement created automatically"
-          : `Bill ${variables.status === "reject" ? "rejected" : "put on hold"}`
-      );
-      queryClient.invalidateQueries({ queryKey: ["bills", "search"] });
-      queryClient.invalidateQueries({ queryKey: ["bills", "recycle"] });
-    },
+    mutationFn: (item: HandleBillInput & { billId: string }) =>
+      handleBill(item.billId, { status: item.status, reason: item.reason }),
+    onSuccess: invalidate,
     onError: (err: Error) => {
       toast.error(err.message);
     },
   });
 
-  const handleMany = async (items: { billId: string; status: HandleStatus; reason: string }[]) => {
-    setBulkProgress({ done: 0, total: items.length });
-    const errors: string[] = [];
+  const settle = useMutation({
+    mutationFn: ({ settleId, input }: { settleId: string; input: SettleInput }) =>
+      settleBill(settleId, input),
+    onSuccess: invalidate,
+    onError: (err: Error) => {
+      toast.error(err.message);
+    },
+  });
 
-    for (let i = 0; i < items.length; i++) {
+  // D-11/D-27 bulk engine: strictly sequential (never Promise.all), a failed
+  // item never aborts the rest (apiFetch already toasted its error), progress
+  // surfaces per item, ONE summary toast at the end.
+  const handleMany = async (items: HandleManyItem[]) => {
+    setBulkProgress({ done: 0, total: items.length });
+    let succeeded = 0;
+    const failures: string[] = [];
+
+    for (const item of items) {
       try {
-        await handleBill(items[i].billId, { status: items[i].status, reason: items[i].reason });
-      } catch (err) {
-        errors.push(`${items[i].billId.slice(-6)}: ${err instanceof Error ? err.message : "Failed"}`);
+        await handleBill(item.billId, {
+          status: item.status,
+          reason: item.reason,
+        });
+        succeeded += 1;
+      } catch {
+        failures.push(item.billId);
       }
-      setBulkProgress({ done: i + 1, total: items.length });
+      setBulkProgress((p) => p && { ...p, done: p.done + 1 });
     }
 
     setBulkProgress(null);
+    invalidate();
 
-    queryClient.invalidateQueries({ queryKey: ["bills", "search"] });
-    queryClient.invalidateQueries({ queryKey: ["bills", "recycle"] });
-
-    if (errors.length > 0) {
-      toast.error(`Bulk handle completed with ${errors.length} failures`);
+    if (failures.length > 0) {
+      toast.warning(`${succeeded} handled, ${failures.length} failed`);
     } else {
-      toast.success(`Bulk ${items[0]?.status === "accept" ? "accept" : items[0]?.status === "reject" ? "reject" : "hold"} completed`);
+      toast.success(`${succeeded} handled, ${failures.length} failed`);
     }
   };
 
   return {
     bills: myBills,
-    myBills: myBills,
+    myBills,
     createBill: createBillMutation,
     updateBill: updateBillMutation,
     withdraw,
@@ -153,11 +164,8 @@ export const useReimbursement = () => {
     createAdvance,
     updateAdvance,
     deleteAdvance,
-    settle,
-
-    // Finance management - these are hooks, not query results
-    // Components should use useSearchBills and useRecycleBills directly
     handleOne,
+    settle,
     handleMany,
     bulkProgress,
   };

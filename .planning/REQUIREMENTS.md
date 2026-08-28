@@ -185,10 +185,10 @@ Which phases cover which requirements. Updated during roadmap creation.
 | REIM-10 | Phase 5 | Complete |
 | REIM-11 | Phase 5 | Complete |
 | REIM-12 | Phase 5 | Complete |
-| PAYR-01 | Phase 5 | Pending |
-| PAYR-02 | Phase 5 | Pending |
-| PAYR-03 | Phase 5 | Pending |
-| PAYR-04 | Phase 5 | Pending |
+| PAYR-01 | Phase 5 | Complete |
+| PAYR-02 | Phase 5 | Complete |
+| PAYR-03 | Phase 5 | Complete |
+| PAYR-04 | Phase 5 | Complete |
 | ADMN-01 | Phase 6 | Pending |
 | ADMN-02 | Phase 6 | Pending |
 | ADMN-03 | Phase 6 | Pending |

@@ -21,8 +21,9 @@ import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 
 import { Progress } from "@/components/ui/progress";
 
-import { PayrollResponse, payInstallmentSchema, PayInstallmentInput } from "@/services/payroll.api";
+import { PayrollResponse, payrollUpdateInputSchema, PayrollUpdateInput } from "@/services/payroll.api";
 import { usePayroll } from "@/hooks/use-payroll";
+import { useUserMap } from "@/hooks/use-user-map";
 
 import { toast } from "sonner";
 
@@ -37,10 +38,11 @@ export default function RecordPaymentDialog({
   open,
   onOpenChange,
 }: Props) {
-  const { pay } = usePayroll(0, 0);
+  const { payInstallment } = usePayroll({}, 1);
+  const { resolveName } = useUserMap();
 
-  const form = useForm<PayInstallmentInput>({
-    resolver: zodResolver(payInstallmentSchema),
+  const form = useForm<PayrollUpdateInput>({
+    resolver: zodResolver(payrollUpdateInputSchema),
 
     defaultValues: {
       mode: "cash",
@@ -53,10 +55,10 @@ export default function RecordPaymentDialog({
     if (open) form.reset({ mode: "cash", paidSalary: 0 });
   }, [open, form]);
 
-  const onSubmit = (values: PayInstallmentInput) => {
+  const onSubmit = (values: PayrollUpdateInput) => {
     if (!payroll) return;
 
-    pay.mutate(
+    payInstallment.mutate(
       {
         id: payroll.id,
         data: values,
@@ -77,7 +79,7 @@ export default function RecordPaymentDialog({
   };
 
   const progress = payroll
-    ? Math.min(Math.max((payroll.paidSalary / payroll.expectedSalary) * 100, 0), 100)
+    ? Math.min(Math.max(((payroll.paidSalary ?? 0) / payroll.expectedSalary) * 100, 0), 100)
     : 0;
 
   return (
@@ -90,12 +92,12 @@ export default function RecordPaymentDialog({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
           {payroll && (
             <div className="rounded-lg border p-4 space-y-2">
-              <p className="font-semibold">Employee: {payroll.employeeId}</p>
+              <p className="font-semibold">{resolveName(payroll.user)}</p>
               <p className="text-sm text-muted-foreground">
                 Expected: ₹{payroll.expectedSalary.toLocaleString()}
               </p>
               <p className="text-sm text-muted-foreground">
-                Already Paid: ₹{payroll.paidSalary.toLocaleString()}
+                Already Paid: ₹{(payroll.paidSalary ?? 0).toLocaleString()}
               </p>
               <Progress value={progress} className="h-2" />
               <p className="text-xs text-muted-foreground">
@@ -164,8 +166,8 @@ export default function RecordPaymentDialog({
             )}
           />
 
-          <Button type="submit" disabled={pay.isPending} className="w-full">
-            {pay.isPending ? "Recording…" : "Record Payment"}
+          <Button type="submit" disabled={payInstallment.isPending} className="w-full">
+            {payInstallment.isPending ? "Recording…" : "Record Payment"}
           </Button>
         </form>
       </DialogContent>

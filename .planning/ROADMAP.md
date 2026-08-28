@@ -21,7 +21,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 2: Shared Infrastructure & Session Reliability** - IST date utils, envelope normalization factory, session-death handler, safe pagination footer, RBAC helper — each tested; auth refresh/logout flows verified against contract (completed 2026-08-25)
 - [x] **Phase 3: Noticeboard Pilot** - First complete module proves the Slice Contract end-to-end; promotes trash-tabs and pagination footer to shared components (completed 2026-08-26)
 - [ ] **Phase 4: Staff Self-Service — Mail & Leave** - Staff run daily personal workflows in-app: read/write internal mail, apply for leave with balances, managers review applications
-- [ ] **Phase 5: Money & Approval — Reimbursement & Payroll** - The org's full money pipeline (bills → handle → settle, advances, payroll installments, generation trigger) runs in-app with double-submit-proof actions
+- [x] **Phase 5: Money & Approval — Reimbursement & Payroll** - The org's full money pipeline (bills → handle → settle, advances, payroll installments, generation trigger) runs in-app with double-submit-proof actions
 - [ ] **Phase 6: Admin Bank/Accounts & Events Depth** - Atomic employee onboarding + bank detail CRUD; full events hierarchy (program→workshop→session→participant), attendance grid, reminders, exports
 - [ ] **Phase 7: Existing Modules Audit-and-Fix** - Attendance, calendar, users, program, profile, notifications aligned to contract and shared patterns; responsive pass; money/auth test coverage complete
 
@@ -179,20 +179,24 @@ Plans:
 **Wave 1**
 
 - [x] 05-01-PLAN.md — Reimbursement data layer: service module mirroring backend quirks + hook with invalidation-only mutations + sequential bulk engine, msw-tested (REIM-01..12 substrate)
-- [ ] 05-02-PLAN.md — Payroll data layer (incremental installments, sync cron) + useUserMap ID→name resolution (PAYR-01..04 substrate)
+- [x] 05-02-PLAN.md — Payroll data layer (incremental installments, sync cron) + useUserMap ID→name resolution (PAYR-01..04 substrate)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 05-03-PLAN.md — Staff My Bills slice: balance card, badge table, create/edit/withdraw, Active|Deleted restore tabs, all three sidebar entries (REIM-01..04, REIM-11 staff half)
-- [ ] 05-04-PLAN.md — Admin payroll slice: guarded page, filtered paged table, history dialog, installment payments, Run Now (PAYR-01..04)
+- [x] 05-03-PLAN.md — Staff My Bills slice: balance card, badge table, create/edit/withdraw, Active|Deleted restore tabs, all three sidebar entries (REIM-01..04, REIM-11 staff half)
+- [x] 05-04-PLAN.md — Admin payroll slice: guarded page, filtered paged table, history dialog, installment payments, Run Now (PAYR-01..04)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 05-05-PLAN.md — Finance Bill Management: Handle Queue with search/filters, required-notes handling, bulk sequential bar, Recycle Bin (REIM-05, REIM-06, REIM-09, REIM-11 finance half)
+- [x] 05-05-PLAN.md — Finance Bill Management: Handle Queue with search/filters, required-notes handling, bulk sequential bar, Recycle Bin (REIM-05, REIM-06, REIM-09, REIM-11 finance half)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 05-06-PLAN.md — Money depth: lifecycle timeline + audit log in detail dialog, settlement recording, advance bills via picker, async export trigger (REIM-07, REIM-08, REIM-10, REIM-12)
+- [x] 05-06-PLAN.md — Money depth: lifecycle timeline + audit log in detail dialog, settlement recording, advance bills via picker, async export trigger (REIM-07, REIM-08, REIM-10, REIM-12)
+
+> Phase 5 complete 2026-08-28. Note: squash commit `fcbacfb` shipped a broken
+> rewrite; plans 05-02/04/05/06 were re-executed against the verified backend
+> contract (see each plan's SUMMARY). Phase reuse: user-search picker from 04-01.
 
 ### Phase 6: Admin Bank/Accounts & Events Depth
 

@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Plan 05-04 completed
-last_updated: "2026-08-27T13:30:00.000Z"
+stopped_at: Phase 5 completed
+last_updated: "2026-08-28T17:00:00.000Z"
 progress:
   total_phases: 7
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 24
-  completed_plans: 18
-  percent: 33
+  completed_plans: 19
+  percent: 43
 ---
 
 # Project State
@@ -20,15 +20,21 @@ progress:
 See: .planning/PROJECT.md (updated 2026-08-24)
 
 **Core value:** Every backend domain has a working, reliable screen — staff and admins run their daily work through this app without falling back to manual processes.
-**Current focus:** Phase 05 — money-approval-reimbursement-payroll
+**Current focus:** Phase 05 completed — next: Phase 6 (admin bank/accounts & events depth)
 
 ## Current Position
 
-Phase: 05 (money-approval-reimbursement-payroll) — EXECUTING
-Plan: 3 of 6
-Status: Plan 05-04 completed
+Phase: 05 (money-approval-reimbursement-payroll) — COMPLETED
+Plans: 6 of 6 (05-02/04/05/06 re-executed after broken squash `fcbacfb`)
 
-Progress: [████████░░] 75%
+Phase 5 Progress Summary
+
+- 05-01: Reimbursement Data Layer ✓
+- 05-02: Payroll Data Layer + useUserMap ✓
+- 05-03: Staff My Bills slice ✓
+- 05-04: Admin payroll slice ✓
+- 05-05: Finance Bill Management ✓
+- 05-06: Bill detail depth + advance mgmt + export ✓ (COMPLETED)
 
 ## Performance Metrics
 
@@ -67,10 +73,12 @@ All 7 plans executed and committed:
 
 ## Phase 5 Progress Summary
 
-- 05-01: Reimbursement Data Layer ✓
-- 05-02: Payroll Data Layer ✓
+- 05-01: Reimbursement Data Layer ✓ (restored + 28 tests)
+- 05-02: Payroll Data Layer + useUserMap ✓ (re-executed, 9 tests)
 - 05-03: Staff My Bills slice ✓
-- 05-04: Admin payroll slice ✓ (COMPLETED)
+- 05-04: Admin payroll slice ✓ (UI reconciliated to verified contract)
+- 05-05: Finance Bill Management ✓ (verified; no consumer mismatches)
+- 05-06: Bill detail depth + advance mgmt + export ✓ (re-executed; COMPLETED)
 
 ## Accumulated Context
 
@@ -84,21 +92,26 @@ Recent decisions affecting current work:
 - D-20: PaginationFooter handles boundary disabling internally
 - D-21: resource-list-factory.ts collapses common list/detail/mutation hooks
 - D-22: Payroll page at app/(main)/(admin)/payroll with RoleGuard can(read,'payroll')
-- D-23: Year/month filters reset page to 1 via useEffect
+- D-23: Year/month filters reset page to 1 — now via render-phase state adjustment (not useEffect, which tripped set-state-in-effect lint)
 - D-24: Run Now uses AlertDialog confirmation, disabled with spinner during sync cron
-- D-25: Record Payment dialog shows incremental amount with "this installment" helper text
-- D-26: Submit disabled + "Recording…" while pending (money-safety)
-- D-27: Description field in RecordPaymentDialog stripped by backend zod schema
+- D-25: Record Payment dialog sends INCREMENTAL paidSalary (Quirk 8, pinned by test); no description field (backend schema strips it — D-27 dropped)
+- D-26: Submit disabled + "Recording…" while pending (money-safety, applies across settle/payroll/advance/handle/bulk)
 - D-28: On error, dialog stays open with values intact (no auto-close)
+- D-29: NO optimistic writes for money mutations — invalidation-only cache changes
+- D-30: Backend restore endpoint is guarded — Staff Restore can 403 (acknowledged, backend-side)
+- D-31: Backend searchBillQuerySchema needs status field for isDeleted filtering (acknowledged, backend-side)
+- D-32: useUserMap merges cached ["users",*] searches into id→name map; backend has no list-all endpoint — unknown ids render "…{last6}"
+- D-33: Payroll hook split into usePayroll(filters,page) + usePayrollByUser(userId,page) — calling useQuery from returned functions (plan 05-02 draft) violates hooks rules
 
 ### Pending Todos
 
-None yet.
+None yet. (Phase 05 complete; 2 pre-existing out-of-scope failures in tests/session.test.ts.)
 
 ### Blockers/Concerns
 
 - [Phase 3]: Noticeboard backend routes gated behind `underDevelopment` middleware — verify live payloads at phase start
 - [Phases 5–6]: Payload shapes for unbuilt domains must be resolved against live OpenAPI at `/docs`
+- D-30/D-31 (backend restore guard + search status filter) need backend changes before recycle/restore is fully reliable
 
 ## Deferred Items
 
@@ -108,6 +121,6 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-08-27T13:30:00.000Z
-Stopped at: Plan 05-04 completed (Admin payroll slice)
+Last session: 2026-08-28T17:00:00.000Z
+Stopped at: Phase 5 completed (money-approval — 6/6 plans, gates green)
 Resume file: None
