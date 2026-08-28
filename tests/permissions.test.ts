@@ -3,12 +3,12 @@ import { can, ROLE_PERMISSIONS } from "@/lib/permissions";
 import type { UserRole, PermissionAction, PermissionResource } from "@/lib/permissions";
 
 describe("ROLE_PERMISSIONS", () => {
-  it("admin has 45 entries", () => {
-    expect(ROLE_PERMISSIONS.admin.size).toBe(45);
+  it("admin has 47 entries", () => {
+    expect(ROLE_PERMISSIONS.admin.size).toBe(47);
   });
 
-  it("manager has 36 entries", () => {
-    expect(ROLE_PERMISSIONS.manager.size).toBe(36);
+  it("manager has 38 entries", () => {
+    expect(ROLE_PERMISSIONS.manager.size).toBe(38);
   });
 
   it("user has 14 entries", () => {
@@ -43,6 +43,16 @@ describe("can() — verified backend quirks (no-inheritance counterexamples)", (
 
   it("admin CANNOT write notification", () => {
     expect(can("admin", "write", "notification")).toBe(false);
+  });
+
+  it("admin CAN write/delete postReimbursement (own bills, was 403)", () => {
+    expect(can("admin", "write", "postReimbursement")).toBe(true);
+    expect(can("admin", "delete", "postReimbursement")).toBe(true);
+  });
+
+  it("manager CAN write/delete postReimbursement", () => {
+    expect(can("manager", "write", "postReimbursement")).toBe(true);
+    expect(can("manager", "delete", "postReimbursement")).toBe(true);
   });
 });
 
