@@ -41,6 +41,20 @@ export type SessionCreateT = {
   speaker: string[];
 };
 
+// Mirrors backend `updatedSessionSchema` (baseSchema.partial()): program is
+// set via the URL param, not the body. speaker/workshop are bare ObjectIds.
+export type SessionUpdateT = {
+  title?: string;
+  description?: string;
+  date?: string;
+  startTime?: string;
+  endTime?: string;
+  speaker?: string[];
+  workshop?: string;
+  review?: string;
+  images?: string[];
+};
+
 export const getSessions = async ({
   keyword,
   page = 1,
@@ -86,7 +100,7 @@ export const updateSession = async ({
   data,
 }: {
   id: string;
-  data: Partial<Omit<SessionT, "images"> & { images: string[] }>;
+  data: SessionUpdateT;
 }) => {
   const res = await apiFetch<SessionT>(`/api/events/sessions/${id}`, {
     method: "PUT",

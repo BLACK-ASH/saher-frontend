@@ -10,7 +10,12 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Table,
   TableBody,
@@ -19,10 +24,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { useSessions } from "@/hooks/use-sessions";
 import { ArrowLeft, Calendar, Clock3, Clock4, Download, Mail, Users } from "lucide-react";
 import { formatIstDate, formatIstDateTime } from "@/lib/date";
+import { can } from "@/lib/permissions";
+import RoleAccess from "@/components/role-access";
+import SessionEditor from "@/features/program/session/session-editor";
 import Image from "next/image";
+import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -33,6 +50,7 @@ export default function SessionPage() {
     src: string;
     alt: string;
   } | null>(null);
+  const [editing, setEditing] = useState(false);
   const { session } = useSessions({ id });
 
   if (session.isLoading) {
@@ -68,6 +86,36 @@ export default function SessionPage() {
           Back
         </Button>
 
+        <Breadcrumb>
+          <BreadcrumbList>
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href="/program">Programs</Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={`/program/sessions?keyword=${data.program.id}`}>
+                  {data.program.title}
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbLink asChild>
+                <Link href={`/program/sessions?keyword=${data.workshop.id}`}>
+                  {data.workshop.title}
+                </Link>
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage>{data.title}</BreadcrumbPage>
+            </BreadcrumbItem>
+          </BreadcrumbList>
+        </Breadcrumb>
+
         <div className="space-y-4">
           <Badge>Session</Badge>
 
@@ -84,11 +132,17 @@ export default function SessionPage() {
             <Button
               variant="outline"
               onClick={() =>
-                router.push(`/program/workshop/${data.workshop.id}`)
+                router.push(`/program/workshops/${data.workshop.id}`)
               }
             >
               {data.workshop.title}
             </Button>
+
+            <RoleAccess allow={(r) => can(r, "update", "event")}>
+              <Button variant="outline" onClick={() => setEditing(true)}>
+                Edit Session
+              </Button>
+            </RoleAccess>
           </div>
         </div>
       </section>
@@ -367,6 +421,17 @@ export default function SessionPage() {
                 </Button>
               </div>
             </div>
+          )}
+          </DialogContent>
+      </Dialog>
+
+      <Dialog open={editing} onOpenChange={setEditing}>
+        <DialogContent className="min-w-3/4">
+          <DialogHeader>
+            <DialogTitle>Edit {data?.title}</DialogTitle>
+          </DialogHeader>
+          {data && (
+            <SessionEditor setVisble={setEditing} session={data} />
           )}
         </DialogContent>
       </Dialog>

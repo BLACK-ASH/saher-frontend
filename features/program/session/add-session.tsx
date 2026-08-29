@@ -20,12 +20,12 @@ const AddSession = () => {
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"outline"}>
           <Plus />
-          Add Sessions
+          Create Session
         </Button>
       </DialogTrigger>
       <DialogContent className="min-w-3/4">
         <DialogHeader>
-          <DialogTitle>Enter Details To Create A Workshop</DialogTitle>
+          <DialogTitle>Enter Details To Create A Session</DialogTitle>
         </DialogHeader>
         <SessionEditor setVisble={setVisible} />
       </DialogContent>

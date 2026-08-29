@@ -11,7 +11,7 @@ import { usePrograms } from "@/hooks/use-programs";
 import { useSessions } from "@/hooks/use-sessions";
 import { useWorkshops } from "@/hooks/use-workshops";
 import { ProgramsT } from "@/services/program.api";
-import { SessionCreateT } from "@/services/session.api";
+import { SessionCreateT, SessionT } from "@/services/session.api";
 import { WorkshopT } from "@/services/workshop.api";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { X } from "lucide-react";
@@ -19,11 +19,14 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import z from "zod";
-import { combineDateAndTimeToIso } from "@/lib/date";
+import { combineDateAndTimeToIso, isoToIstInput } from "@/lib/date";
+
+type ProgramSel = Pick<ProgramsT, "id" | "title">;
+type WorkshopSel = Pick<WorkshopT, "id" | "title">;
 
 const sessionCreateSchema = z.object({
   program: z.string().min(1, "Program is required."),
-  workshop: z.string().optional(),
+  workshop: z.string().min(1, "Workshop is required."),
   title: z.string().min(3, "Title must be at least 3 characters."),
   description: z.string().min(5, "Description is required."),
   date: z.string().min(1, "Date is required."),
@@ -34,33 +37,52 @@ const sessionCreateSchema = z.object({
 
 const SessionEditor = ({
   setVisble,
+  session,
 }: {
   setVisble: Dispatch<SetStateAction<boolean>>;
+  session?: SessionT;
 }) => {
-  const [program, setProgram] = useState<ProgramsT>();
+  const isEdit = !!session;
+
+  // Prefill from an existing session (edit mode) using IST input helpers.
+  const prefilled = session
+    ? {
+        program: { id: session.program.id, title: session.program.title },
+        workshop: { id: session.workshop.id, title: session.workshop.title },
+        date: isoToIstInput(session.date).split("T")[0],
+        startTime: isoToIstInput(session.startTime).split("T")[1] ?? "",
+        endTime: isoToIstInput(session.endTime).split("T")[1] ?? "",
+      }
+    : null;
+
+  const [program, setProgram] = useState<ProgramSel | undefined>(
+    prefilled?.program,
+  );
   const [keyword, setKeyword] = useState<string>("");
 
-  const [workshop, setWorkshop] = useState<WorkshopT>();
-  const [wKeyword, setWKeyword] = useState<string>("");
+  const [workshop, setWorkshop] = useState<WorkshopSel | undefined>(
+    prefilled?.workshop,
+  );
+  const [wKeyword, setWKeyword] = useState<string>(prefilled?.program.id ?? "");
 
   const [userKeyWord, setUserKeyword] = useState("");
   const { user: users } = useMail({ keyword: userKeyWord });
 
-  const { add } = useSessions({});
+  const { add, update } = useSessions({});
   const { programs } = usePrograms({ keyword, limit: 3 });
   const { workshops } = useWorkshops({ keyword: wKeyword, limit: 5 });
 
   const form = useForm<z.infer<typeof sessionCreateSchema>>({
     resolver: zodResolver(sessionCreateSchema),
     defaultValues: {
-      program: "",
-      workshop: "",
-      title: "",
-      description: "<p>Enter Session Description</p>",
-      date: "",
-      startTime: "",
-      endTime: "",
-      speaker: [],
+      program: prefilled?.program.id ?? "",
+      workshop: prefilled?.workshop.id ?? "",
+      title: session?.title ?? "",
+      description: session?.description ?? "<p>Enter Session Description</p>",
+      date: prefilled?.date ?? "",
+      startTime: prefilled?.startTime ?? "",
+      endTime: prefilled?.endTime ?? "",
+      speaker: (session?.speaker ?? []) as MailUser[],
     },
   });
 
@@ -76,18 +98,53 @@ const SessionEditor = ({
       endTime: new Date(combineDateAndTimeToIso(values.date, values.endTime)),
     };
 
-    add.mutate(
-      {
-        programId: values.program,
-        data: payload,
-      },
-      {
-        onSuccess: (res) => {
-          toast.success((res as { message: string }).message);
-          setVisble(false);
+    const onError = (err: Error) => {
+      // Surface the future-date 400 inline instead of a silent toast.
+      if (err.message.includes("Date must be present or future")) {
+        form.setError("date", {
+          type: "server",
+          message: err.message,
+        });
+      }
+    };
+
+    if (isEdit && session) {
+      update.mutate(
+        {
+          id: session.id,
+          data: {
+            title: payload.title,
+            description: payload.description,
+            date: payload.date,
+            startTime: combineDateAndTimeToIso(values.date, values.startTime),
+            endTime: combineDateAndTimeToIso(values.date, values.endTime),
+            speaker: payload.speaker,
+            workshop: payload.workshop,
+          },
         },
-      },
-    );
+        {
+          onSuccess: (res) => {
+            toast.success((res as { message: string }).message);
+            setVisble(false);
+          },
+          onError,
+        },
+      );
+    } else {
+      add.mutate(
+        {
+          programId: values.program,
+          data: payload,
+        },
+        {
+          onSuccess: (res) => {
+            toast.success((res as { message: string }).message);
+            setVisble(false);
+          },
+          onError,
+        },
+      );
+    }
   };
 
   return (
@@ -100,8 +157,6 @@ const SessionEditor = ({
             render={({ field, fieldState }) => (
               <Field>
                 <FieldLabel>Program</FieldLabel>
-
-                {/* Your existing search/select UI */}
 
                 {program ? (
                   <div className="flex items-center justify-between rounded-md border bg-muted/50 px-3 py-2">
@@ -117,6 +172,7 @@ const SessionEditor = ({
                       onClick={() => {
                         setProgram(undefined);
                         setKeyword("");
+                        field.onChange("");
                       }}
                     >
                       <X className="h-4 w-4" />
@@ -144,9 +200,9 @@ const SessionEditor = ({
                             type="button"
                             className="flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
                             onClick={() => {
-                              setProgram(item);
+                              setProgram({ id: item.id, title: item.title });
                               field.onChange(item.id);
-                              setWKeyword(item.title);
+                              setWKeyword(item.id);
                               setKeyword("");
                             }}
                           >
@@ -176,8 +232,6 @@ const SessionEditor = ({
               <Field>
                 <FieldLabel>Workshop</FieldLabel>
 
-                {/* Your existing search/select UI */}
-
                 {workshop ? (
                   <div className="flex items-center justify-between rounded-md border bg-muted/50 px-3 py-2">
                     <span className="truncate text-sm font-medium">
@@ -191,7 +245,8 @@ const SessionEditor = ({
                       className="h-7 w-7"
                       onClick={() => {
                         setWorkshop(undefined);
-                        setWKeyword("");
+                        setWKeyword(program?.id ?? "");
+                        field.onChange("");
                       }}
                     >
                       <X className="h-4 w-4" />
@@ -201,7 +256,7 @@ const SessionEditor = ({
                   <>
                     <Input
                       id="workshop"
-                      placeholder="Search program..."
+                      placeholder="Search workshops..."
                       value={wKeyword}
                       onChange={(e) => setWKeyword(e.target.value)}
                       autoComplete="off"
@@ -210,7 +265,7 @@ const SessionEditor = ({
                     <div className="mt-2 max-h-56 overflow-y-auto rounded-md border">
                       {workshops.isLoading ? (
                         <div className="px-3 py-4 text-center text-sm text-muted-foreground">
-                          Loading programs...
+                          Loading workshops...
                         </div>
                       ) : workshops.data?.items.length ? (
                         workshops.data.items.map((item) => (
@@ -219,7 +274,7 @@ const SessionEditor = ({
                             type="button"
                             className="flex w-full items-center px-3 py-2 text-left text-sm transition-colors hover:bg-muted"
                             onClick={() => {
-                              setWorkshop(item);
+                              setWorkshop({ id: item.id, title: item.title });
                               field.onChange(item.id);
                               setWKeyword("");
                             }}
@@ -229,7 +284,7 @@ const SessionEditor = ({
                         ))
                       ) : (
                         <div className="px-3 py-4 text-center text-sm text-muted-foreground">
-                          No Workshop found.
+                          No workshops found in this program.
                         </div>
                       )}
                     </div>
@@ -335,6 +390,9 @@ const SessionEditor = ({
               <Field>
                 <FieldLabel htmlFor="date">Date</FieldLabel>
                 <Input {...field} id="date" type="date" />
+                <p className="text-xs text-muted-foreground">
+                  Sessions are future-dated only.
+                </p>
                 {fieldState.error && (
                   <p className="text-sm text-destructive">
                     {fieldState.error.message}
@@ -398,8 +456,15 @@ const SessionEditor = ({
           )}
         />
 
-        <Button type="submit" disabled={add.isPending}>
-          {add.isPending ? "Creating..." : "Create Session"}
+        <Button
+          type="submit"
+          disabled={add.isPending || update.isPending}
+        >
+          {add.isPending || update.isPending
+            ? "Saving..."
+            : isEdit
+              ? "Save Session"
+              : "Create Session"}
         </Button>
       </form>
     </div>

@@ -17,34 +17,44 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { MoreHorizontal } from "lucide-react";
+import { MoreHorizontal, RotateCcw, Trash2 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import TiptapEditor from "@/components/tiptap/editor";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Textarea } from "@/components/ui/textarea";
-import { useRef, useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
 import { toast } from "sonner";
 import { htmlToPreview } from "@/lib/utils/html-preview";
 import { useSessions } from "@/hooks/use-sessions";
 import { SessionT } from "@/services/session.api";
 import { useRouter, useSearchParams } from "next/navigation";
 import RoleAccess from "@/components/role-access";
+import { can } from "@/lib/permissions";
+import SessionEditor from "./session-editor";
 
 function SessionView() {
   const keyword = useSearchParams().get("keyword") || "";
-  const { sessions, update, del } = useSessions({ keyword });
-  const [open, setOpen] = useState(false);
-  const [selectedSession, setSelectedSession] = useState<SessionT | null>(null);
-  const [description, setDescription] = useState<string>("");
-  const titleRef = useRef<HTMLTextAreaElement>(null);
+  const [tab, setTab] = useState<"active" | "deleted">("active");
+  const isDeleted = tab === "deleted" ? "true" : "false";
+  const { sessions, del, restore } = useSessions({ keyword, isDeleted });
+  const [editSession, setEditSession] = useState<SessionT | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<SessionT | null>(null);
   const router = useRouter();
 
-  const { data, isLoading, refetch, isRefetching } = sessions;
+  const { data, isLoading } = sessions;
 
   if (isLoading) return <DefaultLoader className="col-span-2" />;
   if (!data)
@@ -57,126 +67,173 @@ function SessionView() {
     );
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
-      {data.items.map((session) => (
-        <Card key={session.id}>
-          <CardHeader>
-            <CardTitle>{session.title}</CardTitle>
-            <CardDescription>
-              {session.program.title} - {session.workshop.title.slice(0, 20)}
-            </CardDescription>
-            <CardAction>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </Button>
-                </DropdownMenuTrigger>
+    <div className="space-y-4">
+      <Tabs value={tab} onValueChange={(v) => setTab(v as "active" | "deleted")}>
+        <TabsList>
+          <TabsTrigger value="active">Active</TabsTrigger>
+          <TabsTrigger value="deleted">Deleted</TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>Actions</DropdownMenuLabel>
+      {data.items.length === 0 ? (
+        <NoData
+          title={
+            tab === "active"
+              ? keyword
+                ? "No sessions in this workshop"
+                : "No sessions yet"
+              : "No deleted sessions"
+          }
+          description={
+            tab === "active"
+              ? "No sessions in this workshop — the first step is to create one."
+              : "Deleted sessions will appear here."
+          }
+        />
+      ) : (
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+          {data.items.map((session) => (
+            <Card key={session.id}>
+              <CardHeader>
+                <CardTitle>{session.title}</CardTitle>
+                <CardDescription>
+                  {session.program.title} - {session.workshop.title.slice(0, 20)}
+                </CardDescription>
+                <CardAction>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
 
-                  <DropdownMenuItem
-                    onClick={() =>
-                      router.push("/program/sessions/" + session.id)
-                    }
-                  >
-                    View
-                  </DropdownMenuItem>
-                  <RoleAccess allow={(r) => r === "admin" || r === "manager"}>
-                    <DropdownMenuItem
-                      onClick={() => {
-                        setSelectedSession(session);
-                        setDescription(session.description);
-                        setOpen(true);
-                      }}
-                    >
-                      Update
-                    </DropdownMenuItem>
-                  </RoleAccess>
-                  <DropdownMenuItem
-                    onClick={() =>
-                      router.push("/program/sessions/attendance/" + session.id)
-                    }
-                  >
-                    Attendance
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() =>
-                      router.push("/program/sessions/review/" + session.id)
-                    }
-                  >
-                    Add Review
-                  </DropdownMenuItem>
-                  <RoleAccess allow={(r) => r === "admin"}>
-                    <DropdownMenuItem
-                      className="text-destructive"
-                      onClick={() => {
-                        del.mutate(session.id, {
-                          onSuccess: (res) => {
-                            toast.success((res as { message: string }).message);
-                          },
-                        });
-                      }}
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  </RoleAccess>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </CardAction>
-          </CardHeader>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
-          <CardContent>{htmlToPreview(session.description, 100)}</CardContent>
-        </Card>
-      ))}
+                      <DropdownMenuItem
+                        onClick={() =>
+                          router.push("/program/sessions/" + session.id)
+                        }
+                      >
+                        View
+                      </DropdownMenuItem>
 
-      <Dialog open={open} onOpenChange={setOpen}>
+                      {tab === "active" && (
+                        <>
+                          <RoleAccess
+                            allow={(r) => can(r, "update", "event")}
+                          >
+                            <DropdownMenuItem
+                              onClick={() => setEditSession(session)}
+                            >
+                              Update
+                            </DropdownMenuItem>
+                          </RoleAccess>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push(
+                                "/program/sessions/attendance/" + session.id,
+                              )
+                            }
+                          >
+                            Attendance
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              router.push("/program/sessions/review/" + session.id)
+                            }
+                          >
+                            Add Review
+                          </DropdownMenuItem>
+                          <RoleAccess allow={(r) => can(r, "delete", "event")}>
+                            <DropdownMenuItem
+                              className="text-destructive"
+                              onClick={() => setDeleteTarget(session)}
+                            >
+                              Delete
+                            </DropdownMenuItem>
+                          </RoleAccess>
+                        </>
+                      )}
+
+                      {tab === "deleted" && (
+                        <RoleAccess allow={(r) => can(r, "update", "event")}>
+                          <DropdownMenuItem
+                            onClick={() => {
+                              restore.mutate(session.id, {
+                                onSuccess: (res) => {
+                                  toast.success(
+                                    (res as { message: string }).message,
+                                  );
+                                },
+                              });
+                            }}
+                          >
+                            <RotateCcw className="mr-2 h-4 w-4" />
+                            Restore
+                          </DropdownMenuItem>
+                        </RoleAccess>
+                      )}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </CardAction>
+              </CardHeader>
+
+              <CardContent>{htmlToPreview(session.description, 100)}</CardContent>
+            </Card>
+          ))}
+        </section>
+      )}
+
+      <Dialog open={!!editSession} onOpenChange={(v) => !v && setEditSession(null)}>
         <DialogContent className="min-w-3/4">
           <DialogHeader>
-            <DialogTitle>Update {selectedSession?.title}</DialogTitle>
+            <DialogTitle>Edit {editSession?.title}</DialogTitle>
           </DialogHeader>
+          {editSession && (
+            <SessionEditor
+              setVisble={(v) => !v && setEditSession(null)}
+              session={editSession}
+            />
+          )}
+        </DialogContent>
+      </Dialog>
 
-          <div className="space-y-2 min-h-2/3">
-            <Field>
-              <FieldLabel htmlFor="title">Title</FieldLabel>
-              <Textarea
-                id="title"
-                defaultValue={selectedSession?.title}
-                placeholder="Enter Program Title..."
-                ref={titleRef}
-              />
-            </Field>
-            <Field>
-              <FieldLabel htmlFor="description">Description</FieldLabel>
-              <TiptapEditor content={description} setContent={setDescription} />
-            </Field>
-            <Button
+      <AlertDialog
+        open={!!deleteTarget}
+        onOpenChange={(v) => !v && setDeleteTarget(null)}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete session?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This moves {deleteTarget?.title} to the trash. You can restore it
+              later from the Deleted tab.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              variant="destructive"
+              className="flex items-center gap-2"
               onClick={() => {
-                update.mutate(
-                  {
-                    id: selectedSession?.id as string,
-                    data: {
-                      id: selectedSession?.id as string,
-                      title: titleRef.current?.value as string,
-                      description,
-                    },
-                  },
-                  {
+                if (deleteTarget) {
+                  del.mutate(deleteTarget.id, {
                     onSuccess: (res) => {
                       toast.success((res as { message: string }).message);
                     },
-                  },
-                );
-                setOpen(false);
+                  });
+                }
+                setDeleteTarget(null);
               }}
             >
-              Submit
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </section>
+              <Trash2 className="h-4 w-4" />
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </div>
   );
 }
 
