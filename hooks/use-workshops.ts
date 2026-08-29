@@ -4,8 +4,10 @@ import {
   deleteWorkshops,
   getSingleWorkshop,
   getWorkshops,
+  restoreWorkshop,
   updateWorkshops,
 } from "@/services/workshop.api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createResourceListHook } from "./resource-list-factory";
 
 const useWorkshopBase = createResourceListHook({
@@ -22,11 +24,19 @@ const useWorkshopBase = createResourceListHook({
 type Props = { id?: string } & QueryProps;
 
 export const useWorkshops = ({ id, keyword, page, limit }: Props) => {
+  const queryClient = useQueryClient();
   const { list, detail, add, update, del } = useWorkshopBase({
     id,
     keyword,
     page,
     limit,
+  });
+
+  const restore = useMutation({
+    mutationFn: restoreWorkshop,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["workshops"] });
+    },
   });
 
   return {
@@ -35,5 +45,6 @@ export const useWorkshops = ({ id, keyword, page, limit }: Props) => {
     add,
     update,
     del,
+    restore,
   };
 };

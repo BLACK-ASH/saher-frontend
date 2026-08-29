@@ -45,9 +45,11 @@ export const getSessions = async ({
   keyword,
   page = 1,
   limit = 10,
+  isDeleted,
 }: QueryProps) => {
   const res = await apiFetch<SessionT[]>(
-    `/api/events/sessions?keyword=${keyword}&page=${page}&limit=${limit}`,
+    `/api/events/sessions?keyword=${keyword}&page=${page}&limit=${limit}` +
+      (isDeleted ? `&isDeleted=${isDeleted}` : ""),
     {
       method: "GET",
     },
@@ -97,6 +99,14 @@ export const updateSession = async ({
 export const deleteSession = async (id: string) => {
   const res = await apiFetch(`/api/events/sessions/${id}`, {
     method: "DELETE",
+  });
+  if (!res.success) toast.error(res.message);
+  return res;
+};
+
+export const restoreSession = async (id: string) => {
+  const res = await apiFetch(`/api/events/sessions/restore/${id}`, {
+    method: "PATCH",
   });
   if (!res.success) toast.error(res.message);
   return res;

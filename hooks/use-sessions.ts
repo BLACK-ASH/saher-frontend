@@ -6,6 +6,7 @@ import {
   getSessions,
   getSingleSession,
   markSessionAttendance,
+  restoreSession,
   updateSession,
   updateSessionAttendance,
 } from "@/services/session.api";
@@ -55,6 +56,13 @@ export const useSessions = ({ id, keyword, limit, page }: Props) => {
     },
   });
 
+  const restore = useMutation({
+    mutationFn: restoreSession,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sessions"] });
+    },
+  });
+
   return {
     sessions: list,
     session: detail,
@@ -64,5 +72,6 @@ export const useSessions = ({ id, keyword, limit, page }: Props) => {
     markAttendance,
     updateAttendance,
     deleteAttendance,
+    restore,
   };
 };

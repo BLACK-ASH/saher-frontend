@@ -22,9 +22,11 @@ export const getWorkshops = async ({
   keyword,
   page = 1,
   limit = 10,
+  isDeleted,
 }: QueryProps) => {
   const res = await apiFetch<WorkshopT[]>(
-    `/api/events/workshops?keyword=${keyword}&page=${page}&limit=${limit}`,
+    `/api/events/workshops?keyword=${keyword}&page=${page}&limit=${limit}` +
+      (isDeleted ? `&isDeleted=${isDeleted}` : ""),
     {
       method: "GET",
     },
@@ -71,6 +73,14 @@ export const updateWorkshops = async ({ id, data }: UpdateProgramInput) => {
 export const deleteWorkshops = async (id: string) => {
   const res = await apiFetch(`/api/events/workshops/${id}`, {
     method: "DELETE",
+  });
+  if (!res.success) toast.error(res.message);
+  return res;
+};
+
+export const restoreWorkshop = async (id: string) => {
+  const res = await apiFetch(`/api/events/workshops/restore/${id}`, {
+    method: "PATCH",
   });
   if (!res.success) toast.error(res.message);
   return res;
