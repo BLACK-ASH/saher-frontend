@@ -1,7 +1,8 @@
 "use client";
 
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, CalendarDays } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
+import Link from "next/link";
 
 import { useWorkshops } from "@/hooks/use-workshops";
 
@@ -9,6 +10,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 export default function WorkshopPage() {
   const { id } = useParams<{ id: string }>();
@@ -57,6 +66,29 @@ export default function WorkshopPage() {
       >
         <ArrowLeft /> Back
       </Button>
+
+      <Breadcrumb className="mb-8">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/program">Programs</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href={`/program/workshops?keyword=${workshop.program.id}`}>
+                {workshop.program.title}
+              </Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{workshop.title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       <header className="space-y-5">
         <Badge variant="secondary" className="w-fit">
           {workshop.program.title}
@@ -64,6 +96,15 @@ export default function WorkshopPage() {
 
         <h1 className="text-5xl font-bold tracking-tight">{workshop.title}</h1>
       </header>
+
+      <div className="flex flex-wrap gap-3">
+        <Button asChild variant="outline">
+          <Link href={`/program/sessions?keyword=${workshop.id}`}>
+            <CalendarDays className="mr-2 h-4 w-4" />
+            Sessions
+          </Link>
+        </Button>
+      </div>
 
       <Separator className="my-10" />
 
@@ -73,20 +114,14 @@ export default function WorkshopPage() {
           prose-neutral
           dark:prose-invert
           max-w-none
-
           prose-headings:scroll-mt-24
           prose-headings:font-bold
-
           prose-p:text-base
           prose-p:leading-8
-
           prose-li:leading-8
-
           prose-img:rounded-xl
           prose-img:border
-
           prose-pre:rounded-xl
-
           prose-table:w-full
         "
         dangerouslySetInnerHTML={{

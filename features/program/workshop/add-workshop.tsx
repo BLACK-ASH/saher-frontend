@@ -20,7 +20,7 @@ const AddWorkshop = () => {
       <DialogTrigger asChild>
         <Button className="flex items-center gap-2" variant={"outline"}>
           <Plus />
-          Add Workshop
+          Create Workshop
         </Button>
       </DialogTrigger>
       <DialogContent className="min-w-3/4">

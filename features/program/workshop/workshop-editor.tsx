@@ -102,6 +102,7 @@ const WorkshopEditor = ({
         <TiptapEditor content={description} setContent={setDescription} />
       </Field>
       <Button
+        disabled={!program}
         onClick={() => {
           add.mutate(
             {
