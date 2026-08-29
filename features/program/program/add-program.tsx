@@ -18,9 +18,9 @@ const AddProgram = () => {
   return (
     <Dialog open={visible} onOpenChange={setVisible}>
       <DialogTrigger asChild>
-        <Button className="flex items-center gap-2" variant={"outline"}>
+        <Button className="flex items-center gap-2">
           <Plus />
-          Add Program
+          Create Program
         </Button>
       </DialogTrigger>
       <DialogContent className="min-w-3/4">

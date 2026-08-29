@@ -6,6 +6,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import AddProgram from "./add-program";
 import RoleAccess from "@/components/role-access";
+import { can } from "@/lib/permissions";
 
 function ProgramHeader() {
   const queryClient = useQueryClient();
@@ -63,7 +64,7 @@ function ProgramHeader() {
           <ArrowRight />
         </Button>
       </div>
-      <RoleAccess allow={(r) => r === "admin"}>
+      <RoleAccess allow={(r) => can(r, "write", "event")}>
         <AddProgram />
       </RoleAccess>
     </div>
