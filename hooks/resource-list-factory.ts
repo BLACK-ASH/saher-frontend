@@ -5,6 +5,7 @@ type QueryProps = {
   keyword?: string;
   limit?: number;
   page?: number;
+  isDeleted?: string;
 };
 
 type ServiceFn<T = unknown> = (args: T) => Promise<unknown>;
@@ -28,7 +29,7 @@ export function createResourceListHook<T>(config: ResourceListConfig<T>) {
     const queryClient = useQueryClient();
 
     const list = useQuery({
-      queryKey: [...config.baseKey, queryParams.keyword, queryParams.page, queryParams.limit],
+      queryKey: [...config.baseKey, queryParams.keyword, queryParams.page, queryParams.limit, queryParams.isDeleted],
       queryFn: () => config.list(queryParams),
     });
 

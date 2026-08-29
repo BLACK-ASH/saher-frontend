@@ -7,6 +7,7 @@ import {
   getSingleProgram,
   QueryProps,
   removeParticipantFromProgram,
+  restoreProgram,
   updateProgram,
 } from "@/services/program.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -59,12 +60,20 @@ export const usePrograms = ({
     },
   });
 
+  const restore = useMutation({
+    mutationFn: restoreProgram,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["programs"] });
+    },
+  });
+
   return {
     programs: list,
     program: detail,
     add,
     update,
     del,
+    restore,
     participants,
     addParticipants,
     removeParticipant,

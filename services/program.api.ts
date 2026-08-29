@@ -20,15 +20,18 @@ export type QueryProps = {
   keyword?: string;
   limit?: number;
   page?: number;
+  isDeleted?: string;
 };
 
 export const getPrograms = async ({
   keyword,
   page = 1,
   limit = 10,
+  isDeleted,
 }: QueryProps) => {
   const res = await apiFetch<ProgramsT[]>(
-    `/api/events/programs?keyword=${keyword}&page=${page}&limit=${limit}`,
+    `/api/events/programs?keyword=${keyword}&page=${page}&limit=${limit}` +
+      (isDeleted ? `&isDeleted=${isDeleted}` : ""),
     {
       method: "GET",
     },
@@ -83,7 +86,15 @@ export const addParticipantsInProgram = async ({
 }) => {
   const res = await apiFetch("/api/events/programs/participants/" + id, {
     method: "POST",
-    body: JSON.stringify(participants),
+    body: JSON.stringify({ participantIds: participants }),
+  });
+  if (!res.success) toast.error(res.message);
+  return res;
+};
+
+export const restoreProgram = async (id: string) => {
+  const res = await apiFetch(`/api/events/programs/restore/${id}`, {
+    method: "PATCH",
   });
   if (!res.success) toast.error(res.message);
   return res;
