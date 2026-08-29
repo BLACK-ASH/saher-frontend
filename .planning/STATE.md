@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 6 planned (7 plans in 4 waves), execution pending
-last_updated: "2026-08-29T00:00:00.000Z"
+stopped_at: Phase 6 planned (7 plans, 4 waves, frontmatter validated) — execution is next
+last_updated: "2026-08-29T14:45:27.436Z"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 31
-  completed_plans: 19
+  completed_plans: 22
   percent: 43
 ---
 
@@ -25,14 +25,15 @@ See: .planning/PROJECT.md (updated 2024-08-24)
 ## Current Position
 
 Phase: 06 (admin-bank-accounts-events-depth) — PLANNED, awaiting execution
-Plans: 7 of 7 planned (06-01…06-07), 4 waves
+Plans: 7 of 7 planned (06-01…06-07), 5 waves
 
 Phase 6 Wave Structure
 
 - W1: 06-01 (admin onboarding/directory), 06-03 (programs depth), 06-04 (workshop/session depth) — parallel
 - W2: 06-02 (account/bank management, dep 06-01)
 - W3: 06-05 (participant rosters, dep 06-03)
-- W4: 06-06 (attendance diff engine, tdd, dep 06-05, human-verify) + 06-07 (reminder/export, dep 06-04, human-verify) — parallel
+- W4: 06-06 (attendance diff engine, tdd, dep 06-05, human-verify)
+- W5: 06-07 (reminder/export, dep 06-04 + 06-06, human-verify) — sequential after 06-06 for use-sessions.ts ownership
 
 Phase 6 Research Highlights (06-RESEARCH.md)
 
@@ -93,7 +94,7 @@ All 7 plans executed and committed:
 - 06-04: Workshop + session CRUD/trash + IST datetime contract (EVNT-03/04) — W1
 - 06-05: Participant rosters — restore + isDeleted default, populated roster (EVNT-05) — W3, dep 06-03
 - 06-06: Attendance diff engine (TDD, EVNT-06) — W4, dep 06-05, human-verify
-- 06-07: Reminder + export to notifications (EVNT-07/08) — W4, dep 06-04, human-verify
+- 06-07: Reminder + export to notifications (EVNT-07/08) — W5, dep 06-04 + 06-06, human-verify
 
 ## Accumulated Context
 

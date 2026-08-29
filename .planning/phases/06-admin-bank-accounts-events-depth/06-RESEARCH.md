@@ -355,19 +355,19 @@ export const restoreSession = (id: string) => apiFetch(`/api/events/sessions/res
 | A6 | Session speakers must be selected via the user-search picker (users, not participants) | Phase requirements | Verified by `speaker: z.array(objectId()).min(1)` against Users — user-search picker from Phase 4/5 is the intended control |
 | A7 | Manager can view employee account/bank details despite lacking `account:read` (route has no authorize middleware; controller allows admin+manager) | Pitfalls/ADR | UI gating on `can('read','account')` alone would wrongly hide from managers — gate directory pages by group role, not the account read permission |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **How should ADMN-04 "delete bank details" be fulfilled?**
+1. **How should ADMN-04 "delete bank details" be fulfilled?** — RESOLVED: user ruled restore-only. 06-02 ships create/view/update/restore + masking, no delete control; the ruling is recorded in 06-02.
    - What we know: backend `DELETE /api/admin/bank/:id` requires `delete,bank`; **no role in `role-permission.ts` has it** — every caller gets 403. Restore requires `update,bank` (manager only). Backend is out of scope to change.
    - What's unclear: product intent — hide delete entirely, offer it with a graceful 403 surface, or treat "delete" as satisfied by soft-delete semantics that the backend cannot currently express for banks.
    - Recommendation: Do NOT build a bank delete control. Build create/view/update/restore (manager) and read (admin) as the contract allows, and surface the ADMN-04 gap in the plan's acceptance note for the user to rule on.
 
-2. **Session roster + attendance prefill today's live data**
+2. **Session roster + attendance prefill today's live data** — RESOLVED: 06-06 unit-tests the pure `computeAttendanceDiff` regardless of seeded data + human checkpoint for live verification; prefill from `sessions/:id` populated participants.
    - What we know: `GET /api/events/sessions/:id` returns `participants` populated; `GET /api/events/programs/:id` returns program roster populated; the program-participants ID-list endpoint is the wrong source (Pitfall 3).
    - What's unclear: whether already-marked attendance records exist in the dev DB to test the diff path (empty sessions would only exercise the addition path).
    - Recommendation: seed/verify by marking a session manually before the correction tests; the diff engine must be unit-tested regardless (pure function, no msw needed).
 
-3. **Role gating for the admin directory + account/bank pages**
+3. **Role gating for the admin directory + account/bank pages** — RESOLVED: extend the existing `users` directory with account/bank detail + edit drawer; keep register as-is; gate bank forms via `can('write','bank')`; no new route groups (matches checker D7c/plans 06-01/02).
    - What we know: directory = `read,user` (admin+manager); account read allowed for admin+manager by controller; bank writes manager-only; user writes admin+manager.
    - What's unclear: whether the phase should create a distinct bank/accounts admin page or fold into existing `/(manager)/users` and `/(admin)/register` route groups.
    - Recommendation: extend the existing `users` directory (add account/bank detail + edit drawer), keep register as-is, gate bank forms via `can('write','bank')`; no new route groups needed.

@@ -213,18 +213,32 @@ Plans:
   4. Managers/admins attach/detach participants to programs and mark session attendance via a fast checkbox grid with update/delete corrections
   5. One click sends a session reminder; an export request results in a download link arriving via notification action button
 
-**Plans**: 7 plans in 4 waves
+**Plans**: 7 plans in 5 waves
 **UI hint**: yes
 
 Plans:
 
+**Wave 1**
+
 - [ ] 06-01-PLAN.md (W1) — Admin onboarding + directory: employeeType enum, registerAccount + getAdminUsers via apiFetch, wizard rewire, directory list + CTA guard (ADMN-01, ADMN-02)
-- [ ] 06-02-PLAN.md (W2, dep 06-01) — Account/bank management: strict-partial account update, bank create/update/restore (delete blocked backend-side — no role holds delete,bank), masked account numbers, audit-log-safe invalidate-only hooks (ADMN-03, ADMN-04, ADMN-05)
 - [ ] 06-03-PLAN.md (W1) — Programs depth: addParticipantsInProgram {participantIds} fix + test, explicit isDeleted params, restore mutation, trash/restore tabs, drill-down links (EVNT-01, EVNT-02)
 - [ ] 06-04-PLAN.md (W1) — Workshop + session depth: restore/isDeleted services, trash tabs, program/workshop drill-down, IST future-dated session datetime contract (explicit workshop, speaker picker, inline 400) (EVNT-03, EVNT-04)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 06-02-PLAN.md (W2, dep 06-01) — Account/bank management: strict-partial account update, bank create/update/restore (delete blocked backend-side — no role holds delete,bank), masked account numbers, audit-log-safe invalidate-only hooks (ADMN-03, ADMN-04, ADMN-05)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
 - [ ] 06-05-PLAN.md (W3, dep 06-03) — Participant rosters: restore + always-on isDeleted filter, populated roster rendering, attach/detach via {participantIds} (EVNT-05)
+
+**Wave 4** *(blocked on Wave 3 completion)*
+
 - [ ] 06-06-PLAN.md (W4, dep 06-05, tdd) — Attendance diff engine: computeAttendanceDiff TDD, worksheet with prefill/Mark All/Clear All, POST adds + DELETE removals, raw-id roster query removal (EVNT-06)
-- [ ] 06-07-PLAN.md (W4, dep 06-04) — Reminder + export: sendSessionReminder + requestSessionExport, session detail actions, notification download-action verification (EVNT-07, EVNT-08)
+
+**Wave 5** *(blocked on Wave 4 completion)*
+
+- [ ] 06-07-PLAN.md (W5, dep 06-04, 06-06) — Reminder + export: sendSessionReminder + requestSessionExport, session detail actions, notification download-action verification (EVNT-07, EVNT-08)
 
 ### Phase 7: Existing Modules Audit-and-Fix
 
