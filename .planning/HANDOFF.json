@@ -1,34 +1,34 @@
 {
   "version": "1.0",
-  "timestamp": "2026-08-28T17:32:39.341Z",
-  "phase": "none",
-  "phase_name": "maintenance-adhoc (post Phase 05)",
-  "phase_dir": null,
-  "plan": null,
-  "task": null,
-  "total_tasks": null,
+  "timestamp": "2026-08-29T15:25:44.795Z",
+  "phase": "06",
+  "phase_name": "admin-bank-accounts-events-depth",
+  "phase_dir": ".planning/phases/06-admin-bank-accounts-events-depth",
+  "plan": "04",
+  "task": "3",
+  "total_tasks": 3,
   "status": "paused",
   "completed_tasks": [
-    {"id": 1, "name": "Reseed first admin into the DB the app actually reads", "status": "done", "commit": "uncommitted-env-only"},
-    {"id": 2, "name": "Fix admin 403 on POST /api/reimbursement/bill (grant write/delete postReimbursement)", "status": "done", "commit": "2dc576e (backend), 63d8644 (frontend)"}
+    {"id": 1, "name": "06-01: Admin onboarding + directory", "status": "done", "commit": "d2050e9"},
+    {"id": 2, "name": "06-03: Programs depth (CRUD + restore)", "status": "done", "commit": "30e206c"},
+    {"id": 3, "name": "06-04: Workshop + session CRUD", "status": "in_progress", "progress": "3 commits made (workshop CRUD, session CRUD + IST datetime, trash/restore) but SUMMARY.md not created — task cancelled"}
   ],
   "remaining_tasks": [
-    {"id": 1, "name": "Phase 6 (admin bank/accounts & events depth) — start planning, next roadmap phase", "status": "not_started"}
+    {"id": 4, "name": "06-04: Create SUMMARY.md and commit", "status": "not_started"},
+    {"id": 5, "name": "06-02: Account/bank management (dep 06-01)", "status": "not_started"},
+    {"id": 6, "name": "06-05: Participant rosters (dep 06-03)", "status": "not_started"},
+    {"id": 7, "name": "06-06: Attendance diff engine (TDD, dep 06-05)", "status": "not_started"},
+    {"id": 8, "name": "06-07: Reminder + export notifications (dep 06-04+06-06)", "status": "not_started"}
   ],
   "blockers": [
-    {"description": "D-30 backend restore endpoint guard can still 403 staff restore", "type": "external", "workaround": "Frontend ships UI; backend must deploy guard fix"},
-    {"description": "D-31 searchBillQuerySchema missing status field for isDeleted=false filtering", "type": "external", "workaround": "Backend change needed before recycle/restore fully reliable"},
-    {"description": "No live-backend E2E in dev loop; verification limited to tsc/lint/vitest/build", "type": "technical", "workaround": "Seed + RBAC verified via docker exec + curl against running container"}
+    {"description": "Plan 06-04 executor cancelled before creating SUMMARY.md — code commits exist but plan not marked complete", "type": "technical", "workaround": "Resume 06-04, write SUMMARY.md covering the 3 commits, then continue with 06-02 (wave 2)"}
   ],
-  "human_actions_pending": [
-    {"action": "Verify admin can now create a bill in the UI (POST /api/reimbursement/bill) using admin@saher.com / ADMIN000ADMIN000", "context": "RBAC fix is live via tsx watch reload of the backend container", "blocking": false}
-  ],
+  "human_actions_pending": [],
   "decisions": [
-    {"decision": "Seed must run inside the backend container (docker exec saher-backend-1 'cd /app && pnpm seed'), not on host", "rationale": "Host pnpm seed resolves the wrong MONGO_URI outside the compose network (ENOTFOUND mongo) and writes nowhere the app reads", "phase": "maintenance"},
-    {"decision": "Granted write+delete postReimbursement to BOTH admin and manager in backend role-permission.ts AND frontend lib/permissions.ts", "rationale": "Frontend matrix is a verbatim mirror (D-13); both roles are intended to submit/withdraw their own bills per 05-RESEARCH matrix", "phase": "maintenance"},
-    {"decision": "delete:bank left intentionally unassigned", "rationale": "Pinned by backend test tests/admin/admin.test.ts:247 ('rejects bank deletion for every role') — deliberate dead route, not a gap", "phase": "maintenance"}
+    {"decision": "Sequential execution (no worktree isolation) due to runtime limitation", "rationale": "opencode runtime lacks worktree isolation parameter; parallel execution on main tree would conflict", "phase": "06"},
+    {"decision": "Pre-existing 2 test failures in session.test.ts logged to deferred-items.md", "rationale": "Unrelated to current plans; fail on base commit", "phase": "06"}
   ],
-  "uncommitted_files": ["saher-backend/.env.example (pre-existing change, not ours — left unstaged)"],
-  "next_action": "Start Phase 6 planning (admin bank/accounts + events depth) via /gsd-plan-phase; first run graphify query for account/bank/events backend surfaces",
-  "context_notes": "Phase 05 fully complete (6/6 plans, commits a205c1d + fcbacfb base). This session was ad-hoc: user's DB had 0 users so all logins 403'd/401'd despite valid SEED_ADMIN creds — reseeded inside the container. Then admin got 'You Do Not Have Permission To Write This Postreimbursement' on bill creation — root cause was backend permission matrix gap, not frontend. Full inventory diff confirmed frontend/backend matrices now identical for all 4 roles; every route-guard permission is covered by at least one role except intentional delete:bank. Backend restarted via tsx watch automatically."
+  "uncommitted_files": [".planning/STATE.md"],
+  "next_action": "Complete plan 06-04: write SUMMARY.md for the 3 existing commits, commit it, then resume execute-phase for remaining plans (06-02, 06-05, 06-06, 06-07)",
+  "context_notes": "Wave 1 of 4: 06-01 and 06-03 complete with SUMMARYs. 06-04 has 3 feature commits (5fbe31f, 5e3cad8, 5ffde63) covering workshop CRUD, session CRUD with IST datetime contract, trash/restore for both, and tests. Need to finalize with SUMMARY.md. Wave 2 (06-02, 06-05) can proceed after 06-04 summary. Pre-existing 2 session.test.ts failures are unrelated and documented."
 }
