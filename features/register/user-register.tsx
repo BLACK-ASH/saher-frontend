@@ -12,7 +12,7 @@ import BankDetail from "./bank-details";
 import EmployeeDetail from "./employee-details";
 import UploadDocument from "./document-upload";
 import FormPreview from "./form-preview";
-import { apiFetch } from "@/lib/api-wrapper";
+import { registerAccount } from "@/services/admin.api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useQueryClient } from "@tanstack/react-query";
@@ -121,17 +121,9 @@ export default function RegisterUserForm() {
     // 👉 handle API calls here (bank → user)
 
     try {
-      const response = await apiFetch("/api/admin/account", {
-        method: "POST",
-        body: JSON.stringify({
-          user: data.user,
-          account: data.account,
-          bank: data.bank,
-        }),
-      });
+      const res = await registerAccount(data);
 
-      if (!response.success) return toast.error(response.message);
-      toast.success(response.message);
+      toast.success(res.message);
       setStep(1);
       form.reset();
       queryClient.invalidateQueries({ queryKey: ["user", "list"] });
