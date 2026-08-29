@@ -28,7 +28,7 @@ import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
 import { dateToIstDateOnly, formatIstDate } from "@/lib/date";
 
-const employeeType = ["volunteer", "part-time", "full-time"];
+const employeeType = ["free", "intern", "full-time", "part-time", "volunteer"];
 const employeeShift = [
   {
     label: "9:00 AM - 1:00 PM",

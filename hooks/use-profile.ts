@@ -20,7 +20,7 @@ export type AccountT = {
   readonly employeeId: string;
   readonly department: string;
   readonly designation: string;
-  readonly employeeType: "full-time" | "part-time" | "volunteer";
+  readonly employeeType: "free" | "intern" | "full-time" | "part-time" | "volunteer";
   readonly salaryStructure: string;
   readonly address: string;
   readonly id: string;

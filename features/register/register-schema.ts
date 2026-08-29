@@ -68,7 +68,7 @@ const accountSchema = z
     department: z.string().min(2, "Date Of Birth Is Required."),
     designation: z.string().min(2, "Date Of Birth Is Required."),
     employeeType: z.enum(
-      ["full-time", "part-time", "volunteer"],
+      ["free", "intern", "full-time", "part-time", "volunteer"],
       "Employee Type Is Required.",
     ),
     employeeShift: z.enum(["shift-1", "shift-2"]).optional(),
