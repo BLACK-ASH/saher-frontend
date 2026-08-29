@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 5 completed
-last_updated: "2026-08-28T17:00:00.000Z"
+stopped_at: Phase 6 planned (7 plans in 4 waves), execution pending
+last_updated: "2026-08-29T00:00:00.000Z"
 progress:
   total_phases: 7
   completed_phases: 3
-  total_plans: 24
+  total_plans: 31
   completed_plans: 19
   percent: 43
 ---
@@ -17,32 +17,37 @@ progress:
 
 ## Project Reference
 
-See: .planning/PROJECT.md (updated 2026-08-24)
+See: .planning/PROJECT.md (updated 2024-08-24)
 
 **Core value:** Every backend domain has a working, reliable screen — staff and admins run their daily work through this app without falling back to manual processes.
-**Current focus:** Phase 05 completed — next: Phase 6 (admin bank/accounts & events depth)
+**Current focus:** Phase 6 (admin bank/accounts & events depth) — PLAN CREATED, ready to execute
 
 ## Current Position
 
-Phase: 05 (money-approval-reimbursement-payroll) — COMPLETED
-Plans: 6 of 6 (05-02/04/05/06 re-executed after broken squash `fcbacfb`)
+Phase: 06 (admin-bank-accounts-events-depth) — PLANNED, awaiting execution
+Plans: 7 of 7 planned (06-01…06-07), 4 waves
 
-Phase 5 Progress Summary
+Phase 6 Wave Structure
 
-- 05-01: Reimbursement Data Layer ✓
-- 05-02: Payroll Data Layer + useUserMap ✓
-- 05-03: Staff My Bills slice ✓
-- 05-04: Admin payroll slice ✓
-- 05-05: Finance Bill Management ✓
-- 05-06: Bill detail depth + advance mgmt + export ✓ (COMPLETED)
+- W1: 06-01 (admin onboarding/directory), 06-03 (programs depth), 06-04 (workshop/session depth) — parallel
+- W2: 06-02 (account/bank management, dep 06-01)
+- W3: 06-05 (participant rosters, dep 06-03)
+- W4: 06-06 (attendance diff engine, tdd, dep 06-05, human-verify) + 06-07 (reminder/export, dep 06-04, human-verify) — parallel
+
+Phase 6 Research Highlights (06-RESEARCH.md)
+
+- Employee registration is role-based (type enum free/intern/full-time/part-time/volunteer)
+- Banks write ops manager-only; no role holds delete,bank → delete delivered as restore-only (ADMN-04 delete surfaced as backend gap)
+- postgres soft-delete via isDeleted param; ghost rows when param omitted (Pitfall 5), sessions/workshops compare === 'true', programs sloppy cast (Pitfall 10)
+- Attendance mutations are $addToSet merge-only; DELETE removes all → diff engine in 06-06
+- Session workshop auto-create when omitted (Pitfall 7); date/startTime future-only; speaker = users min 1
+- Export request = odd GET route; result lands in notifications as download action
 
 ## Performance Metrics
 
 **Velocity:**
 
-- Total plans completed: 13 (Phase 01: 3, Phase 02: 7)
-- Average duration: ~15 min per plan
-- Total execution time: ~150 min
+- Total plans completed: 19 (Phase 01: 3, Phase 02: 7, Phase 05: 6, plus 3 from early phases)
 
 **By Phase:**
 
@@ -80,6 +85,16 @@ All 7 plans executed and committed:
 - 05-05: Finance Bill Management ✓ (verified; no consumer mismatches)
 - 05-06: Bill detail depth + advance mgmt + export ✓ (re-executed; COMPLETED)
 
+## Phase 6 Plan Summary
+
+- 06-01: Admin onboarding + directory (ADMN-01/02) — W1
+- 06-02: Account/bank management, masked + restore-only delete (ADMN-03/04/05) — W2, dep 06-01
+- 06-03: Programs depth — attach fix, trash/restore, drill-down (EVNT-01/02) — W1
+- 06-04: Workshop + session CRUD/trash + IST datetime contract (EVNT-03/04) — W1
+- 06-05: Participant rosters — restore + isDeleted default, populated roster (EVNT-05) — W3, dep 06-03
+- 06-06: Attendance diff engine (TDD, EVNT-06) — W4, dep 06-05, human-verify
+- 06-07: Reminder + export to notifications (EVNT-07/08) — W4, dep 06-04, human-verify
+
 ## Accumulated Context
 
 ### Decisions
@@ -105,13 +120,15 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet. (Phase 05 complete; 2 pre-existing out-of-scope failures in tests/session.test.ts.)
+None yet. (Phase 6 planned; execute via `/gsd-execute-phase 06`.)
 
 ### Blockers/Concerns
 
 - [Phase 3]: Noticeboard backend routes gated behind `underDevelopment` middleware — verify live payloads at phase start
 - [Phases 5–6]: Payload shapes for unbuilt domains must be resolved against live OpenAPI at `/docs`
-- D-30/D-31 (backend restore guard + search status filter) need backend changes before recycle/restore is fully reliable
+- [Phase 6, ADMN-04]: Bank delete has NO authorized role (guard `delete,bank` matches none) — delete delivered as restore-only; backend gap surfaced in 06-02
+- [Phase 6, EVNT-08]: Export/reminder routes are GET-style oddities on the session path — 06-07 re-verifies exact verbs against the live controller
+- [Phase 6, EVNT-06]: Attendance page migrates off the raw-id roster query this phase — 06-06 removes it repo-wide
 
 ## Deferred Items
 
@@ -121,6 +138,6 @@ None yet. (Phase 05 complete; 2 pre-existing out-of-scope failures in tests/sess
 
 ## Session Continuity
 
-Last session: 2026-08-28T17:00:00.000Z
-Stopped at: Phase 5 completed (money-approval — 6/6 plans, gates green)
+Last session: 2026-08-29T00:00:00.000Z
+Stopped at: Phase 6 planned (7 plans, 4 waves, frontmatter validated) — execution is next
 Resume file: None
