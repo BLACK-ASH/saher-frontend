@@ -9,6 +9,16 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import {
   Dialog,
   DialogContent,
   DialogFooter,
@@ -20,9 +30,17 @@ import { Input } from "@/components/ui/input";
 import { useParticipants } from "@/hooks/use-participant";
 import { usePrograms } from "@/hooks/use-programs";
 import { ParticipantT } from "@/services/participant.api";
-import { ArrowLeft, Plus, Trash2, User, X } from "lucide-react";
+import {
+  ArrowLeft,
+  CalendarDays,
+  Plus,
+  Presentation,
+  Trash2,
+  User,
+  X,
+} from "lucide-react";
 import Image from "next/image";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -75,6 +93,26 @@ export default function ProgramPage() {
         Back
       </Button>
 
+      <Breadcrumb className="mb-8">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/">Home</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbLink asChild>
+              <Link href="/program">Programs</Link>
+            </BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>{data.title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
+
       <header className="border-b pb-8">
         <Badge className="mb-4">Program</Badge>
 
@@ -92,6 +130,21 @@ export default function ProgramPage() {
 
             <p className="font-mono">{data.id}</p>
           </div>
+        </div>
+
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Button asChild variant="outline">
+            <Link href={`/program/workshops?keyword=${data.id}`}>
+              <Presentation className="mr-2 h-4 w-4" />
+              Workshops
+            </Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link href={`/program/sessions?keyword=${data.id}`}>
+              <CalendarDays className="mr-2 h-4 w-4" />
+              Sessions
+            </Link>
+          </Button>
         </div>
       </header>
 
