@@ -21,7 +21,7 @@ import AddEventDialog from "./add-event-dialog";
 import { subDays } from "date-fns";
 import EventDetailsSheet, { CalendarEvent } from "./event-details";
 import { toast } from "sonner";
-import { getMonthYear } from "@/lib/date";
+import { getMonthYear, dateToIstDateOnly, istDateOnlyToDate } from "@/lib/date";
 
 // types/calendar.ts
 
@@ -51,10 +51,10 @@ export default function EventsCalendar() {
   const goToday = () => {
     calendarRef.current?.getApi().today();
   };
-  const [calendarDate, setCalendarDate] = useState(new Date());
+  const [calendarDate, setCalendarDate] = useState(() => dateToIstDateOnly(new Date()));
 
-  const year = calendarDate.getFullYear();
-  const month = calendarDate.getMonth();
+  const year = istDateOnlyToDate(calendarDate).getFullYear();
+  const month = istDateOnlyToDate(calendarDate).getMonth();
 
   // Calendar Nav
   const { calendar, del, update } = useCalendar({ year, month });
@@ -135,7 +135,7 @@ export default function EventsCalendar() {
           ]}
           events={events}
           datesSet={(info) => {
-            setCalendarDate(info.view.calendar.getDate());
+            setCalendarDate(dateToIstDateOnly(info.view.calendar.getDate()));
           }}
           initialView="dayGridMonth"
           editable={true}
