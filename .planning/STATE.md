@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 6 planned (7 plans, 4 waves, frontmatter validated) — execution is next
-last_updated: "2026-08-30T04:20:42.666Z"
+last_updated: "2026-08-30T04:42:33.673Z"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 31
-  completed_plans: 25
+  completed_plans: 26
   percent: 43
 ---
 
@@ -25,7 +25,7 @@ See: .planning/PROJECT.md (updated 2024-08-24)
 ## Current Position
 
 Phase: 06 (admin-bank-accounts-events-depth) — EXECUTING
-Plan: 1 of 7
+Plan: 2 of 7
 Plans: 7 of 7 planned (06-01…06-07), 5 waves
 
 Phase 6 Wave Structure
@@ -63,6 +63,8 @@ Phase 6 Research Highlights (06-RESEARCH.md)
 
 - Last 3 plans: ~15 min each
 - Trend: stable
+
+| Phase 06-admin-bank-accounts-events-depth P02 | 3h47m | 3 tasks | 9 files |
 
 ## Phase 2 Completion Summary
 
@@ -119,6 +121,9 @@ Recent decisions affecting current work:
 - D-31: Backend searchBillQuerySchema needs status field for isDeleted filtering (acknowledged, backend-side)
 - D-32: useUserMap merges cached ["users",*] searches into id→name map; backend has no list-all endpoint — unknown ids render "…{last6}"
 - D-33: Payroll hook split into usePayroll(filters,page) + usePayrollByUser(userId,page) — calling useQuery from returned functions (plan 05-02 draft) violates hooks rules
+- [Phase 06]: accountUpdateSchema excludes bank (backend strict() rejects it) despite plan listing it
+- [Phase 06]: bank restore affordance skipped: bankSchemaFinal has no isDeleted field
+- [Phase 06]: AlertDialog confirm added to user delete (plan premise of existing confirm was false)
 
 ### Pending Todos
 
@@ -140,6 +145,6 @@ None yet. (Phase 6 planned; execute via `/gsd-execute-phase 06`.)
 
 ## Session Continuity
 
-Last session: 2026-08-29T00:00:00.000Z
+Last session: 2026-08-30T04:41:58.019Z
 Stopped at: Phase 6 planned (7 plans, 4 waves, frontmatter validated) — execution is next
 Resume file: None

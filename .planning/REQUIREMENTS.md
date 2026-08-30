@@ -35,9 +35,9 @@ Audit-and-complete of existing auth surfaces.
 
 - [ ] **ADMN-01**: Admin can onboard an employee with a single guided form creating account + bank details atomically
 - [ ] **ADMN-02**: Admin can search and paginate the employee directory
-- [ ] **ADMN-03**: Admin can view and edit account details per employee
-- [ ] **ADMN-04**: Admin can create/view/update/delete bank details per employee (account numbers masked in lists)
-- [ ] **ADMN-05**: Admin can soft-delete and restore users (offboarding without data loss)
+- [x] **ADMN-03**: Admin can view and edit account details per employee
+- [x] **ADMN-04**: Admin can create/view/update/delete bank details per employee (account numbers masked in lists)
+- [x] **ADMN-05**: Admin can soft-delete and restore users (offboarding without data loss)
 
 ### Reimbursement
 
@@ -191,9 +191,9 @@ Which phases cover which requirements. Updated during roadmap creation.
 | PAYR-04 | Phase 5 | Complete |
 | ADMN-01 | Phase 6 | Pending |
 | ADMN-02 | Phase 6 | Pending |
-| ADMN-03 | Phase 6 | Pending |
-| ADMN-04 | Phase 6 | Pending |
-| ADMN-05 | Phase 6 | Pending |
+| ADMN-03 | Phase 6 | Complete |
+| ADMN-04 | Phase 6 | Complete |
+| ADMN-05 | Phase 6 | Complete |
 | EVNT-01 | Phase 6 | Pending |
 | EVNT-02 | Phase 6 | Pending |
 | EVNT-03 | Phase 6 | Pending |

@@ -226,7 +226,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 06-02-PLAN.md (W2, dep 06-01) — Account/bank management: strict-partial account update, bank create/update/restore (delete blocked backend-side — no role holds delete,bank), masked account numbers, audit-log-safe invalidate-only hooks (ADMN-03, ADMN-04, ADMN-05)
+- [x] 06-02-PLAN.md (W2, dep 06-01) — Account/bank management: strict-partial account update, bank create/update/restore (delete blocked backend-side — no role holds delete,bank), masked account numbers, audit-log-safe invalidate-only hooks (ADMN-03, ADMN-04, ADMN-05)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
@@ -274,7 +274,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Noticeboard Pilot | 3/4 | Complete    | 2026-08-26 |
 | 4. Staff Self-Service — Mail & Leave | 0/4 | Planned | - |
 | 5. Money & Approval — Reimbursement & Payroll | 1/6 | In Progress|  |
-| 6. Admin Bank/Accounts & Events Depth | 3/7 | In Progress|  |
+| 6. Admin Bank/Accounts & Events Depth | 4/7 | In Progress|  |
 | 7. Existing Modules Audit-and-Fix | 0/? | Not started | - |
 
 ---
