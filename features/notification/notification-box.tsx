@@ -108,7 +108,9 @@ const Notification = ({
         <AlertAction>
           {action.type === "download" && (
             <Button asChild>
-              <a href={action.url}>{action.label}</a>
+              <a href={action.url} target="_blank" rel="noreferrer">
+                {action.label}
+              </a>
             </Button>
           )}
 
