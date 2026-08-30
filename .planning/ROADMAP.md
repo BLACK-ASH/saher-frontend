@@ -234,7 +234,7 @@ Plans:
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 06-06-PLAN.md (W4, dep 06-05, tdd) — Attendance diff engine: computeAttendanceDiff TDD, worksheet with prefill/Mark All/Clear All, POST adds + DELETE removals, raw-id roster query removal (EVNT-06)
+- [x] 06-06-PLAN.md (W4, dep 06-05, tdd) — Attendance diff engine: computeAttendanceDiff TDD, worksheet with prefill/Mark All/Clear All, POST adds + DELETE removals, raw-id roster query removal (EVNT-06)
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
@@ -274,7 +274,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Noticeboard Pilot | 3/4 | Complete    | 2026-08-26 |
 | 4. Staff Self-Service — Mail & Leave | 0/4 | Planned | - |
 | 5. Money & Approval — Reimbursement & Payroll | 1/6 | In Progress|  |
-| 6. Admin Bank/Accounts & Events Depth | 5/7 | In Progress|  |
+| 6. Admin Bank/Accounts & Events Depth | 6/7 | In Progress|  |
 | 7. Existing Modules Audit-and-Fix | 0/? | Not started | - |
 
 ---
