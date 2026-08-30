@@ -11,12 +11,13 @@ import type { AccountT } from "@/hooks/use-profile";
 
 // Mirrors backend admin/account/schema.ts: accountUpdateSchema =
 // accountBaseSchema.partial().strict() — account fields ONLY. Sending `user`
-// or `bank` keys 400s (strict rejects unknown keys) — T-06-02-03.
+// or `bank` keys 400s (strict rejects unknown keys) — T-06-02-03. Dates stay
+// strings here (register-wizard semantics); backend z.coerce.date accepts them.
 export const accountUpdateSchema = z
   .object({
     gender: z.enum(["male", "female", "other"]),
-    dateOfBirth: z.coerce.date("Date Of Birth Is Required."),
-    dateOfJoining: z.coerce.date("Date Of Joining Is Required."),
+    dateOfBirth: z.string(),
+    dateOfJoining: z.string(),
     phoneNumber: z
       .string()
       .trim()

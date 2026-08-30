@@ -13,9 +13,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { AccountT } from "@/hooks/use-profile";
 import { apiFetch } from "@/lib/api-wrapper";
-import { formatDate } from "@fullcalendar/core/index.js";
+import { formatIstDate } from "@/lib/date";
+import { can } from "@/lib/permissions";
+import RoleAccess from "@/components/role-access";
+import AccountEditDialog from "@/features/admin/account-edit";
+import { maskAccount } from "@/features/admin/bank-details";
 import { useQuery } from "@tanstack/react-query";
-import { MailCheck, ShieldCheck, UserCheck, UserX } from "lucide-react";
+import { useState } from "react";
+import { MailCheck, Pencil, ShieldCheck, UserCheck, UserX } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
@@ -23,6 +28,7 @@ import { useParams } from "next/navigation";
 function ManagerUserPage() {
   const params = useParams<{ id: string }>();
   const { id } = params;
+  const [editOpen, setEditOpen] = useState(false);
 
   const data = useQuery({
     queryKey: ["user", "profile", id],
@@ -118,13 +124,28 @@ function ManagerUserPage() {
             <Field label="Phone" value={account.phoneNumber} />
             <Field
               label="Date of Birth"
-              value={formatDate(account.dateOfBirth)}
+              value={formatIstDate(account.dateOfBirth)}
             />
             <Field label="Address" value={account.address} full />
           </Grid>
         </Section>
 
         <Section title="Employment">
+          <RoleAccess
+            allow={(r) => can(r, "update", "account")}
+            fallback={null}
+          >
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setEditOpen(true)}
+              >
+                <Pencil className="h-3.5 w-3.5 mr-1" />
+                Edit Account
+              </Button>
+            </div>
+          </RoleAccess>
           <Grid>
             <Field label="Department" value={account.department} />
             <Field label="Designation" value={account.designation} />
@@ -135,7 +156,7 @@ function ManagerUserPage() {
             />
             <Field
               label="Date of Joining"
-              value={formatDate(account.dateOfJoining)}
+              value={formatIstDate(account.dateOfJoining)}
             />
             <Field
               label="Salary Structure"
@@ -149,7 +170,7 @@ function ManagerUserPage() {
           <Grid>
             <Field label="Account Holder" value={bank.accountHolderName} />
             <Field label="Bank Name" value={bank.bankName} />
-            <Field label="Account Number" value={bank.accountNumber} />
+            <Field label="Account Number" value={maskAccount(bank.accountNumber)} />
             <Field label="IFSC" value={bank.ifcs} />
             <Field label="Branch" value={bank.branch} />
             <Field label="Mobile" value={bank.mobileNumber} />
@@ -209,6 +230,14 @@ function ManagerUserPage() {
           </Accordion>
         </Section>
       </div>
+
+      {account && (
+        <AccountEditDialog
+          account={account}
+          open={editOpen}
+          onOpenChange={setEditOpen}
+        />
+      )}
     </section>
   );
 }

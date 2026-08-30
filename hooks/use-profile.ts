@@ -17,6 +17,7 @@ export type AccountT = {
   readonly dateOfBirth: Date;
   readonly dateOfJoining: Date;
   readonly phoneNumber: string;
+  readonly secondaryPhoneNumber?: string | undefined;
   readonly employeeId: string;
   readonly department: string;
   readonly designation: string;
