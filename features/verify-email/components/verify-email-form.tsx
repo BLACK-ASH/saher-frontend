@@ -21,10 +21,7 @@ import {
   AlertTitle,
 } from "@/components/ui/alert";
 
-export function VerifyEmailForm({
-  className,
-  ...props
-}: React.ComponentProps<"div">) {
+export function VerifyEmailForm() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const token = searchParams.get("token");
@@ -57,17 +54,24 @@ export function VerifyEmailForm({
     },
   });
 
-  const handleResend = async () => {
-    const res = await apiFetch("/api/auth/verify-email/request", {
-      method: "POST",
-    });
-    if (!res.success) {
-      toast.error(res.message);
-    } else {
-      toast.success("Verification email sent successfully");
+  const resendMutation = useMutation({
+    mutationFn: async () => {
+      const res = await apiFetch("/api/auth/verify-email/request", {
+        method: "POST",
+      });
+      if (!res.success) {
+        throw new Error(res.message);
+      }
+      return res;
+    },
+    onSuccess: (res) => {
+      toast.success(res.message);
       setErrorMessage(null);
-    }
-  };
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
 
   if (verifyEmailMutation.isPending) {
     return (
@@ -96,8 +100,19 @@ export function VerifyEmailForm({
             <AlertTitle>Verification Failed</AlertTitle>
             <AlertDescription>{errorMessage}</AlertDescription>
           </Alert>
-          <Button variant="outline" onClick={handleResend} disabled={!token}>
-            Resend Verification Email
+          <Button
+            variant="outline"
+            onClick={() => resendMutation.mutate()}
+            disabled={!token || resendMutation.isPending}
+          >
+            {resendMutation.isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Sending...
+              </>
+            ) : (
+              "Resend Verification Email"
+            )}
           </Button>
         </CardContent>
       </Card>
