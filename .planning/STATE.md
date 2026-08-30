@@ -4,12 +4,12 @@ milestone: v1.0
 milestone_name: milestone
 status: executing
 stopped_at: Phase 6 planned (7 plans, 4 waves, frontmatter validated) — execution is next
-last_updated: "2026-08-29T14:45:27.436Z"
+last_updated: "2026-08-30T04:20:42.666Z"
 progress:
   total_phases: 7
   completed_phases: 3
   total_plans: 31
-  completed_plans: 22
+  completed_plans: 25
   percent: 43
 ---
 
@@ -20,11 +20,12 @@ progress:
 See: .planning/PROJECT.md (updated 2024-08-24)
 
 **Core value:** Every backend domain has a working, reliable screen — staff and admins run their daily work through this app without falling back to manual processes.
-**Current focus:** Phase 6 (admin bank/accounts & events depth) — PLAN CREATED, ready to execute
+**Current focus:** Phase 06 — admin-bank-accounts-events-depth
 
 ## Current Position
 
-Phase: 06 (admin-bank-accounts-events-depth) — PLANNED, awaiting execution
+Phase: 06 (admin-bank-accounts-events-depth) — EXECUTING
+Plan: 1 of 7
 Plans: 7 of 7 planned (06-01…06-07), 5 waves
 
 Phase 6 Wave Structure

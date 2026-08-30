@@ -220,9 +220,9 @@ Plans:
 
 **Wave 1**
 
-- [ ] 06-01-PLAN.md (W1) — Admin onboarding + directory: employeeType enum, registerAccount + getAdminUsers via apiFetch, wizard rewire, directory list + CTA guard (ADMN-01, ADMN-02)
-- [ ] 06-03-PLAN.md (W1) — Programs depth: addParticipantsInProgram {participantIds} fix + test, explicit isDeleted params, restore mutation, trash/restore tabs, drill-down links (EVNT-01, EVNT-02)
-- [ ] 06-04-PLAN.md (W1) — Workshop + session depth: restore/isDeleted services, trash tabs, program/workshop drill-down, IST future-dated session datetime contract (explicit workshop, speaker picker, inline 400) (EVNT-03, EVNT-04)
+- [x] 06-01-PLAN.md (W1) — Admin onboarding + directory: employeeType enum, registerAccount + getAdminUsers via apiFetch, wizard rewire, directory list + CTA guard (ADMN-01, ADMN-02)
+- [x] 06-03-PLAN.md (W1) — Programs depth: addParticipantsInProgram {participantIds} fix + test, explicit isDeleted params, restore mutation, trash/restore tabs, drill-down links (EVNT-01, EVNT-02)
+- [x] 06-04-PLAN.md (W1) — Workshop + session depth: restore/isDeleted services, trash tabs, program/workshop drill-down, IST future-dated session datetime contract (explicit workshop, speaker picker, inline 400) (EVNT-03, EVNT-04)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -274,7 +274,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Noticeboard Pilot | 3/4 | Complete    | 2026-08-26 |
 | 4. Staff Self-Service — Mail & Leave | 0/4 | Planned | - |
 | 5. Money & Approval — Reimbursement & Payroll | 1/6 | In Progress|  |
-| 6. Admin Bank/Accounts & Events Depth | 0/? | Not started | - |
+| 6. Admin Bank/Accounts & Events Depth | 3/7 | In Progress|  |
 | 7. Existing Modules Audit-and-Fix | 0/? | Not started | - |
 
 ---
