@@ -71,15 +71,24 @@ export const getParticipants = async ({
   keyword,
   page = 1,
   limit = 10,
+  isDeleted = "false",
 }: QueryProps) => {
   const res = await apiFetch<ParticipantT[]>(
-    `/api/events/participants?keyword=${keyword}&page=${page}&limit=${limit}`,
+    `/api/events/participants?keyword=${keyword}&page=${page}&limit=${limit}&isDeleted=${isDeleted}`,
     {
       method: "GET",
     },
   );
   if (!res.success) toast.error(res.message);
   return normalizeList<ParticipantT>(res);
+};
+
+export const restoreParticipant = async (id: string) => {
+  const res = await apiFetch(`/api/events/participants/restore/${id}`, {
+    method: "PATCH",
+  });
+  if (!res.success) toast.error(res.message);
+  return res;
 };
 
 export const getSingleParticipant = async (id: string) => {
