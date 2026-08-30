@@ -32,8 +32,15 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useSessions } from "@/hooks/use-sessions";
-import { ArrowLeft, Calendar, Clock3, Clock4, Download, Mail, Users } from "lucide-react";
+import { ArrowLeft, Calendar, Clock3, Clock4, Download, FileDown, Mail, Users } from "lucide-react";
 import { formatIstDate, formatIstDateTime } from "@/lib/date";
 import { can } from "@/lib/permissions";
 import RoleAccess from "@/components/role-access";
@@ -51,7 +58,7 @@ export default function SessionPage() {
     alt: string;
   } | null>(null);
   const [editing, setEditing] = useState(false);
-  const { session } = useSessions({ id });
+  const { session, sendReminder, requestExport } = useSessions({ id });
 
   if (session.isLoading) {
     return (
@@ -142,6 +149,49 @@ export default function SessionPage() {
               <Button variant="outline" onClick={() => setEditing(true)}>
                 Edit Session
               </Button>
+            </RoleAccess>
+
+            <RoleAccess allow={(r) => can(r, "read", "event")}>
+              <Button
+                variant="secondary"
+                disabled={sendReminder.isPending}
+                onClick={() => sendReminder.mutate(id)}
+              >
+                {sendReminder.isPending ? "Sending…" : "Send Reminder"}
+              </Button>
+            </RoleAccess>
+
+            <RoleAccess allow={(r) => can(r, "read", "event")}>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="outline"
+                    disabled={requestExport.isPending}
+                  >
+                    <FileDown className="mr-2 h-4 w-4" />
+                    {requestExport.isPending ? "Exporting…" : "Export Report"}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>Format</DropdownMenuLabel>
+                  <DropdownMenuItem
+                    disabled={requestExport.isPending}
+                    onClick={() =>
+                      requestExport.mutate({ id, format: "pdf" })
+                    }
+                  >
+                    PDF
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    disabled={requestExport.isPending}
+                    onClick={() =>
+                      requestExport.mutate({ id, format: "xlsx" })
+                    }
+                  >
+                    XLSX
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </RoleAccess>
           </div>
         </div>

@@ -6,11 +6,14 @@ import {
   getSessions,
   getSingleSession,
   markSessionAttendance,
+  requestSessionExport,
   restoreSession,
+  sendSessionReminder,
   updateSession,
   updateSessionAttendance,
 } from "@/services/session.api";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { createResourceListHook } from "./resource-list-factory";
 
 const useSessionBase = createResourceListHook({
@@ -63,6 +66,25 @@ export const useSessions = ({ id, keyword, limit, page }: Props) => {
     },
   });
 
+  // Reminder/export touch only this session's detail (and land as notifications
+  // under their own ["notification"] key) — invalidate ["sessions", id] ONLY.
+  // Do NOT invalidate ["sessions"]: no list data changes here.
+  const sendReminder = useMutation({
+    mutationFn: sendSessionReminder,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sessions", id] });
+      toast.success("Reminder sent to speakers");
+    },
+  });
+
+  const requestExport = useMutation({
+    mutationFn: requestSessionExport,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["sessions", id] });
+      toast.success("Report generating — check notifications");
+    },
+  });
+
   return {
     sessions: list,
     session: detail,
@@ -73,5 +95,7 @@ export const useSessions = ({ id, keyword, limit, page }: Props) => {
     updateAttendance,
     deleteAttendance,
     restore,
+    sendReminder,
+    requestExport,
   };
 };
