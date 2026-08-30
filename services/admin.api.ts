@@ -2,6 +2,69 @@ import { apiFetch, type ApiResponse } from "@/lib/api-wrapper";
 import { normalizeList } from "@/lib/normalize-list";
 import { z } from "zod";
 import type { RegisterFormData } from "@/features/register/register-schema";
+import { bankDetailSchema } from "@/features/register/register-schema";
+import type { AccountT } from "@/hooks/use-profile";
+
+// ========================
+// ACCOUNT UPDATE SCHEMA
+// ========================
+
+// Mirrors backend admin/account/schema.ts: accountUpdateSchema =
+// accountBaseSchema.partial().strict() — account fields ONLY. Sending `user`
+// or `bank` keys 400s (strict rejects unknown keys) — T-06-02-03.
+export const accountUpdateSchema = z
+  .object({
+    gender: z.enum(["male", "female", "other"]),
+    dateOfBirth: z.coerce.date("Date Of Birth Is Required."),
+    dateOfJoining: z.coerce.date("Date Of Joining Is Required."),
+    phoneNumber: z
+      .string()
+      .trim()
+      .regex(/^(?:\+91[\s-]?|91[\s-]?)?[6-9]\d{9}$/, {
+        message: "Invalid Indian Mobile Number",
+      })
+      .transform((val) => val.replace(/^\+91[\s-]?|^91[\s-]?/, "")),
+    secondaryPhoneNumber: z
+      .string()
+      .trim()
+      .regex(/^(?:\+91[\s-]?|91[\s-]?)?[6-9]\d{9}$/, {
+        message: "Invalid Indian Mobile Number",
+      })
+      .transform((val) => val.replace(/^\+91[\s-]?|^91[\s-]?/, ""))
+      .optional(),
+    employeeId: z.string("Employee Id Is Required."),
+    department: z.string("Department Is Required."),
+    designation: z.string("Designation Is Required."),
+    employeeType: z.enum(
+      ["free", "intern", "full-time", "part-time", "volunteer"],
+      "Employee Type Is Required.",
+    ),
+    employeeShift: z.enum(["shift-1", "shift-2"]).optional(),
+    salaryStructure: z.string("Salary Structure Is Required."),
+    address: z.string("Address Is Required."),
+    aadhar: z.string("Aadhar Card Is Required."),
+    pan: z.string("Pan Card Is Required."),
+    resume: z.string("Resume Is Required."),
+  })
+  .partial()
+  .strict()
+  .refine(
+    (data) => {
+      if (data.employeeType === "part-time" && !data.employeeShift) {
+        return false;
+      }
+      return true;
+    },
+    {
+      message: "Employee Shift Is Required For Part Time Employee.",
+      path: ["employeeShift"],
+    },
+  );
+
+export type AccountUpdateInput = z.infer<typeof accountUpdateSchema>;
+
+// Bank input type — reuse the register wizard's bankDetailSchema (do not redefine).
+export type BankInput = z.infer<typeof bankDetailSchema>;
 
 // ========================
 // RESPONSE SCHEMAS
@@ -67,4 +130,59 @@ export const getAdminUsers = async (): Promise<
     { method: "GET" },
   );
   return normalizeList<AdminUserResponse>(res);
+};
+
+// ========================
+// ACCOUNT & BANK ENDPOINTS
+// ========================
+
+// GET /api/admin/user/:id — populated {user, account, bank} detail (ADMN-03).
+// Returns AccountT (the shape the existing detail view already relies on).
+export const getAdminUserDetail = async (id: string): Promise<AccountT> => {
+  const res = await apiFetch<AccountT>(`/api/admin/user/${id}`, {
+    method: "GET",
+  });
+  return res.data;
+};
+
+// PUT /api/admin/account/:id — account fields ONLY. Backend schema is
+// accountBaseSchema.partial().strict(); sending user/bank keys 400s (T-06-02-03).
+export const updateAccount = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: Partial<AccountUpdateInput>;
+}) => {
+  await apiFetch(`/api/admin/account/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+// POST /api/admin/bank — manager-only write (bank:write). Body reuses bankDetailSchema.
+export const createBank = async (data: BankInput) => {
+  await apiFetch(`/api/admin/bank`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+};
+
+// PUT /api/admin/bank/:id — manager-only update (bank:update), strict partial.
+export const updateBank = async ({
+  id,
+  data,
+}: {
+  id: string;
+  data: Partial<BankInput>;
+}) => {
+  await apiFetch(`/api/admin/bank/${id}`, {
+    method: "PUT",
+    body: JSON.stringify(data),
+  });
+};
+
+// PATCH /api/admin/bank/restore/:id — manager-only restore (bank:update).
+export const restoreBank = async (id: string) => {
+  await apiFetch(`/api/admin/bank/restore/${id}`, { method: "PATCH" });
 };
