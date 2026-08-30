@@ -12,6 +12,7 @@ import EmailVerification from "./email-verification";
 import { NotificationCard } from "../notification/register-push";
 import { Button } from "@/components/ui/button";
 import { formatIstDate } from "@/lib/date";
+import { maskAccount } from "@/features/admin/bank-details";
 import {
   Accordion,
   AccordionContent,
@@ -80,7 +81,7 @@ export default function ProfilePage() {
             <Grid>
               <Field label="Account Holder" value={bank.accountHolderName} />
               <Field label="Bank Name" value={bank.bankName} />
-              <Field label="Account Number" value={bank.accountNumber} />
+              <Field label="Account Number" value={maskAccount(bank.accountNumber)} />
               <Field label="IFSC" value={bank.ifcs} />
               <Field label="Branch" value={bank.branch} />
               <Field label="Mobile" value={bank.mobileNumber} />
@@ -249,10 +250,6 @@ function Field({
 function formatDate(date?: Date) {
   if (!date) return "-";
   return formatIstDate(date);
-}
-
-function maskAccount(acc: string) {
-  return `•••• ${acc.slice(-4)}`;
 }
 
 function StatusRow({

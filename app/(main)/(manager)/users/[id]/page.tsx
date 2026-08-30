@@ -17,7 +17,7 @@ import { formatIstDate } from "@/lib/date";
 import { can } from "@/lib/permissions";
 import RoleAccess from "@/components/role-access";
 import AccountEditDialog from "@/features/admin/account-edit";
-import { maskAccount } from "@/features/admin/bank-details";
+import { BankDetailForm, maskAccount } from "@/features/admin/bank-details";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { MailCheck, Pencil, ShieldCheck, UserCheck, UserX } from "lucide-react";
@@ -29,6 +29,7 @@ function ManagerUserPage() {
   const params = useParams<{ id: string }>();
   const { id } = params;
   const [editOpen, setEditOpen] = useState(false);
+  const [bankEditOpen, setBankEditOpen] = useState(false);
 
   const data = useQuery({
     queryKey: ["user", "profile", id],
@@ -49,6 +50,14 @@ function ManagerUserPage() {
   }
   const account = data.data;
   const { user, bank } = account;
+  const {
+    accountHolderName,
+    bankName,
+    accountNumber,
+    ifcs,
+    branch,
+    mobileNumber,
+  } = bank;
   return (
     <section className="w-full md:w-2/3 lg:1/2 mx-auto mt-8 py-8 space-y-2">
       {" "}
@@ -167,13 +176,28 @@ function ManagerUserPage() {
         </Section>
 
         <Section title="Bank Details">
+          <RoleAccess
+            allow={(r) => can(r, "write", "bank") || can(r, "update", "bank")}
+            fallback={null}
+          >
+            <div className="flex justify-end">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setBankEditOpen(true)}
+              >
+                <Pencil className="h-3.5 w-3.5 mr-1" />
+                Edit Bank Details
+              </Button>
+            </div>
+          </RoleAccess>
           <Grid>
-            <Field label="Account Holder" value={bank.accountHolderName} />
-            <Field label="Bank Name" value={bank.bankName} />
-            <Field label="Account Number" value={maskAccount(bank.accountNumber)} />
-            <Field label="IFSC" value={bank.ifcs} />
-            <Field label="Branch" value={bank.branch} />
-            <Field label="Mobile" value={bank.mobileNumber} />
+            <Field label="Account Holder" value={accountHolderName} />
+            <Field label="Bank Name" value={bankName} />
+            <Field label="Account Number" value={maskAccount(accountNumber)} />
+            <Field label="IFSC" value={ifcs} />
+            <Field label="Branch" value={branch} />
+            <Field label="Mobile" value={mobileNumber} />
           </Grid>
         </Section>
 
@@ -232,11 +256,18 @@ function ManagerUserPage() {
       </div>
 
       {account && (
-        <AccountEditDialog
-          account={account}
-          open={editOpen}
-          onOpenChange={setEditOpen}
-        />
+        <>
+          <AccountEditDialog
+            account={account}
+            open={editOpen}
+            onOpenChange={setEditOpen}
+          />
+          <BankDetailForm
+            bank={bank}
+            open={bankEditOpen}
+            onOpenChange={setBankEditOpen}
+          />
+        </>
       )}
     </section>
   );
