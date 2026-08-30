@@ -100,17 +100,6 @@ export const restoreProgram = async (id: string) => {
   return res;
 };
 
-export const getParticipantFromProgram = async (programId: string) => {
-  const res = await apiFetch<ParticipantT[]>(
-    `/api/events/programs/participants/${programId}`,
-    {
-      method: "GET",
-    },
-  );
-  if (!res.success) toast.error(res.message);
-  return res.data;
-};
-
 export const removeParticipantFromProgram = async ({
   programId,
   participantId,

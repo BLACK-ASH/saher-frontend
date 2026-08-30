@@ -2,7 +2,6 @@ import {
   addParticipantsInProgram,
   addProgram,
   deleteProgram,
-  getParticipantFromProgram,
   getPrograms,
   getSingleProgram,
   QueryProps,
@@ -10,7 +9,7 @@ import {
   restoreProgram,
   updateProgram,
 } from "@/services/program.api";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createResourceListHook } from "./resource-list-factory";
 
 const useProgramBase = createResourceListHook({
@@ -38,14 +37,6 @@ export const usePrograms = ({
     keyword,
     page,
     limit,
-  });
-
-  // ponytail: raw-ObjectId roster query — last consumer is the attendance page
-  // (06-06 migrates it to the populated program detail and removes this)
-  const participants = useQuery({
-    queryKey: ["programs", "participants", id],
-    queryFn: () => getParticipantFromProgram(id as string),
-    enabled: !!id,
   });
 
   const addParticipants = useMutation({
@@ -76,7 +67,6 @@ export const usePrograms = ({
     update,
     del,
     restore,
-    participants,
     addParticipants,
     removeParticipant,
   };
