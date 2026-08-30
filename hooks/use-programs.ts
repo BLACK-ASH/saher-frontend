@@ -40,6 +40,8 @@ export const usePrograms = ({
     limit,
   });
 
+  // ponytail: raw-ObjectId roster query — last consumer is the attendance page
+  // (06-06 migrates it to the populated program detail and removes this)
   const participants = useQuery({
     queryKey: ["programs", "participants", id],
     queryFn: () => getParticipantFromProgram(id as string),

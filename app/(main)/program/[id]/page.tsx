@@ -30,6 +30,7 @@ import { Input } from "@/components/ui/input";
 import { useParticipants } from "@/hooks/use-participant";
 import { usePrograms } from "@/hooks/use-programs";
 import { ParticipantT } from "@/services/participant.api";
+import { SingleParticipantT } from "@/services/program.api";
 import {
   ArrowLeft,
   CalendarDays,
@@ -64,7 +65,7 @@ export default function ProgramPage() {
     },
   });
 
-  const { program, addParticipants, removeParticipant, participants: programParticipants } = usePrograms({ id });
+  const { program, addParticipants, removeParticipant } = usePrograms({ id });
 
   if (program.isLoading) {
     return (
@@ -84,7 +85,8 @@ export default function ProgramPage() {
     );
   }
 
-  const data = program.data;
+  const data = program.data as SingleParticipantT;
+  const attached = data.participants ?? [];
 
   return (
     <main className="mx-auto max-w-7xl space-y-12 py-10 p-4">
@@ -122,7 +124,7 @@ export default function ProgramPage() {
           <div>
             <p className="font-medium text-foreground">Participants</p>
 
-            <p>{programParticipants.data?.length ?? 0}</p>
+            <p>{attached.length}</p>
           </div>
 
           <div>
@@ -196,8 +198,13 @@ export default function ProgramPage() {
           </Button>
         </div>
 
+        {attached.length === 0 ? (
+          <div className="rounded-xl border border-dashed p-10 text-center text-muted-foreground">
+            No participants attached yet — add participants to this program.
+          </div>
+        ) : (
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {programParticipants.data?.map((participant) => (
+          {attached.map((participant) => (
             <Card
               key={participant.id}
               className="group relative cursor-pointer transition-all hover:border-primary hover:shadow-md"
@@ -206,9 +213,9 @@ export default function ProgramPage() {
               }
             >
               <Button
-                size="icon"
+                size="sm"
                 variant="ghost"
-                className="absolute right-3 top-3 z-10"
+                className="absolute right-3 top-3 z-10 text-destructive"
                 onClick={(e) => {
                   e.stopPropagation();
 
@@ -218,7 +225,8 @@ export default function ProgramPage() {
                   });
                 }}
               >
-                <Trash2 className="h-4 w-4 text-destructive" />
+                <Trash2 className="h-4 w-4" />
+                Remove
               </Button>
 
               <CardContent className="flex items-center gap-4 p-5">
@@ -262,6 +270,7 @@ export default function ProgramPage() {
             </Card>
           ))}
         </div>
+        )}
       </section>
       <Dialog
         open={open}
@@ -327,9 +336,7 @@ export default function ProgramPage() {
                       ?.items
                       .filter(
                         (participant) =>
-                          !programParticipants.data?.some(
-                            (p) => p.id === participant.id,
-                          ),
+                          !attached.some((p) => p.id === participant.id),
                       )
                       .map((participant) => (
                         <button

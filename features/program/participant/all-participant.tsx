@@ -17,7 +17,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { BadgeInfo, MapPin, MoreHorizontal, Phone, Users } from "lucide-react";
+import {
+  BadgeInfo,
+  MapPin,
+  MoreHorizontal,
+  Phone,
+  RotateCcw,
+  Users,
+} from "lucide-react";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useParticipants } from "@/hooks/use-participant";
@@ -25,15 +32,21 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useState } from "react";
 import { ParticipantT } from "@/services/participant.api";
 import UpdateParticipant from "./update-participant";
+import AddParticipant from "./add-participant";
 import RoleAccess from "@/components/role-access";
+import { can } from "@/lib/permissions";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 function ParticipantView() {
   const keyword = useSearchParams().get("keyword") || "";
   const page = Number(useSearchParams().get("page")) || 1;
-  const { participants, del } = useParticipants({
+  const [tab, setTab] = useState<"active" | "deleted">("active");
+  const isDeleted = tab === "deleted" ? "true" : "false";
+  const { participants, del, restore } = useParticipants({
     keyword,
     limit: 16,
     page,
+    isDeleted,
   });
   const { data, isLoading } = participants;
   const [participant, setParticipant] = useState<ParticipantT | null>(null);
@@ -41,7 +54,7 @@ function ParticipantView() {
   const router = useRouter();
 
   if (isLoading) return <DefaultLoader className="col-span-2" />;
-  if (!data || data.items.length === 0)
+  if (!data)
     return (
       <NoData
         className="col-span-2"
@@ -51,7 +64,32 @@ function ParticipantView() {
     );
 
   return (
-    <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Tabs
+          value={tab}
+          onValueChange={(v) => setTab(v as "active" | "deleted")}
+        >
+          <TabsList>
+            <TabsTrigger value="active">Active</TabsTrigger>
+            <TabsTrigger value="deleted">Deleted</TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        <AddParticipant />
+      </div>
+
+      {data.items.length === 0 ? (
+        <NoData
+          title={tab === "active" ? "No participants yet" : "No deleted participants"}
+          description={
+            tab === "active"
+              ? "No participants yet — the first step is to create one."
+              : "Deleted participants will appear here."
+          }
+        />
+      ) : (
+      <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2">
       {data.items.map((participant) => (
         <Card key={participant.id} className="w-full">
           <CardHeader className="flex flex-row justify-between items-center gap-4">
@@ -101,29 +139,58 @@ function ParticipantView() {
                   >
                     View
                   </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setParticipant(participant);
-                      setVisible(true);
-                    }}
-                  >
-                    Update
-                  </DropdownMenuItem>
 
-                  <RoleAccess allow={(r) => r === "admin"}>
-                    <DropdownMenuItem
-                      className="text-destructive"
-                      onClick={() => {
-                        del.mutate(participant.id, {
-                          onSuccess: (res) => {
-                            toast.success((res as { message: string }).message);
-                          },
-                        });
-                      }}
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  </RoleAccess>
+                  {tab === "active" && (
+                    <>
+                      <RoleAccess
+                        allow={(r) => can(r, "update", "event")}
+                      >
+                        <DropdownMenuItem
+                          onClick={() => {
+                            setParticipant(participant);
+                            setVisible(true);
+                          }}
+                        >
+                          Update
+                        </DropdownMenuItem>
+                      </RoleAccess>
+                      <RoleAccess allow={(r) => can(r, "delete", "event")}>
+                        <DropdownMenuItem
+                          className="text-destructive"
+                          onClick={() => {
+                            del.mutate(participant.id, {
+                              onSuccess: (res) => {
+                                toast.success(
+                                  (res as { message: string }).message,
+                                );
+                              },
+                            });
+                          }}
+                        >
+                          Delete
+                        </DropdownMenuItem>
+                      </RoleAccess>
+                    </>
+                  )}
+
+                  {tab === "deleted" && (
+                    <RoleAccess allow={(r) => can(r, "update", "event")}>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          restore.mutate(participant.id, {
+                            onSuccess: (res) => {
+                              toast.success(
+                                (res as { message: string }).message,
+                              );
+                            },
+                          });
+                        }}
+                      >
+                        <RotateCcw className="mr-2 h-4 w-4" />
+                        Restore
+                      </DropdownMenuItem>
+                    </RoleAccess>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </CardAction>
@@ -160,12 +227,14 @@ function ParticipantView() {
           </CardContent>
         </Card>
       ))}
+      </section>
+      )}
       <UpdateParticipant
         participant={participant}
         open={visible}
         onOpenChange={setVisible}
       />
-    </section>
+    </div>
   );
 }
 

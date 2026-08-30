@@ -1,6 +1,5 @@
 "use client";
 import { SearchBox } from "@/components/search-box";
-import AddParticipant from "./add-participant";
 import { ArrowLeft, ArrowRight, RotateCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useQueryClient } from "@tanstack/react-query";
@@ -62,7 +61,6 @@ function ParticipantHeader() {
           <ArrowRight />
         </Button>
       </div>
-      <AddParticipant />
     </div>
   );
 }
