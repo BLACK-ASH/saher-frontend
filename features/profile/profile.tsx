@@ -5,13 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { useProfile } from "@/hooks/use-profile";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
-import { UserCheck, MailCheck, Ban, Trash2 } from "lucide-react";
+import { UserCheck, MailCheck, Ban, Trash2, Monitor, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import ProfileInfo from "./profile-info";
 import EmailVerification from "./email-verification";
 import { NotificationCard } from "../notification/register-push";
 import { Button } from "@/components/ui/button";
-import { formatIstDate } from "@/lib/date";
+import { formatIstDate, formatIstDateTime } from "@/lib/date";
 import { maskAccount } from "@/features/admin/bank-details";
 import {
   Accordion,
@@ -21,9 +21,21 @@ import {
 } from "@/components/ui/accordion";
 import Image from "next/image";
 import Link from "next/link";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function ProfilePage() {
-  const { data: account, isLoading } = useProfile();
+  const { profile, sessions, revokeSession } = useProfile();
+  const { data: account, isLoading } = profile;
 
   if (isLoading) return <DefaultLoader />;
   if (!account) return <NoData title="No Profile To Show" description="" />;
@@ -198,6 +210,102 @@ export default function ProfilePage() {
                     danger
                   />
                 )}
+              </CardContent>
+            </Card>
+
+            {/* ================= ACTIVE SESSIONS ================= */}
+            <Card className="border-muted/60">
+              <CardHeader className="pb-3">
+                <CardTitle>Active Sessions</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <Accordion type="single" collapsible defaultValue="sessions">
+                  <AccordionItem value="sessions">
+                    <AccordionTrigger>Active Sessions</AccordionTrigger>
+                    <AccordionContent>
+                      {sessions.isLoading ? (
+                        <div className="flex items-center justify-center py-4">
+                          <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+                          <span className="ml-2 text-sm text-muted-foreground">Loading...</span>
+                        </div>
+                      ) : sessions.error ? (
+                        <div className="text-sm text-destructive">Failed to load sessions</div>
+                      ) : sessions.data && sessions.data.length > 0 ? (
+                        <div className="space-y-3">
+                          {sessions.data.map((session) => (
+                            <div
+                              key={session.id}
+                              className="flex items-center justify-between p-3 rounded-lg border border-border"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="flex flex-col">
+                                  <span className="font-medium text-sm">{session.device}</span>
+                                  <span className="text-xs text-muted-foreground">
+                                    {session.ip}
+                                    {session.current && (
+                                      <>
+                                        <span className="mx-1">·</span>
+                                        <Badge variant="secondary" className="text-xs">
+                                          Current
+                                        </Badge>
+                                      </>
+                                    )}
+                                  </span>
+                                </div>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs text-muted-foreground">
+                                  {formatIstDateTime(session.lastActive)}
+                                </span>
+                                {!session.current && (
+                                  <AlertDialog>
+                                    <AlertDialogTrigger asChild>
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                                      >
+                                        <Monitor className="h-4 w-4" />
+                                        <span className="sr-only">Revoke session</span>
+                                      </Button>
+                                    </AlertDialogTrigger>
+                                    <AlertDialogContent>
+                                      <AlertDialogHeader>
+                                        <AlertDialogTitle>Revoke Session</AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                          Are you sure you want to revoke this session? You will be
+                                          logged out from this device.
+                                        </AlertDialogDescription>
+                                      </AlertDialogHeader>
+                                      <AlertDialogFooter>
+                                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                        <AlertDialogAction
+                                          onClick={() => revokeSession.mutate(session.id)}
+                                          disabled={revokeSession.isPending}
+                                        >
+                                          {revokeSession.isPending ? (
+                                            <>
+                                              <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                                              Revoking...
+                                            </>
+                                          ) : (
+                                            "Revoke"
+                                          )}
+                                        </AlertDialogAction>
+                                      </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                  </AlertDialog>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <p className="text-sm text-muted-foreground">No active sessions</p>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
               </CardContent>
             </Card>
           </div>

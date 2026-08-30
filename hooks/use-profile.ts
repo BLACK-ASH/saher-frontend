@@ -1,6 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { UserT } from "./use-me";
 import { apiFetch } from "@/lib/api-wrapper";
+import { toast } from "sonner";
+import { getSessions, revokeSession } from "@/services/auth.api";
 
 export type BankT = {
   readonly accountHolderName: string;
@@ -46,7 +48,9 @@ export type AccountT = {
 };
 
 export const useProfile = () => {
-  return useQuery({
+  const queryClient = useQueryClient();
+
+  const profile = useQuery({
     queryKey: ["user", "profile", "me"],
     queryFn: async () => {
       const res = await apiFetch<AccountT>(`/api/user`);
@@ -55,4 +59,28 @@ export const useProfile = () => {
     retry: 3,
     staleTime: 1000 * 60,
   });
+
+  const sessions = useQuery({
+    queryKey: ["user", "sessions"],
+    queryFn: getSessions,
+    retry: 3,
+    staleTime: 1000 * 60,
+  });
+
+  const revokeSessionMutation = useMutation({
+    mutationFn: revokeSession,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user", "sessions"] });
+      toast.success("Session revoked successfully");
+    },
+    onError: (error: Error) => {
+      toast.error(error.message);
+    },
+  });
+
+  return {
+    profile,
+    sessions,
+    revokeSession: revokeSessionMutation,
+  };
 };
