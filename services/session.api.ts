@@ -1,7 +1,6 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { normalizeList } from "@/lib/normalize-list";
 import { DefaultUserT } from "@/lib/common-zod-schema";
-import { toast } from "sonner";
 import { QueryProps } from "./program.api";
 import { ParticipantT } from "./participant.api";
 
@@ -68,7 +67,6 @@ export const getSessions = async ({
       method: "GET",
     },
   );
-  if (!res.success) toast.error(res.message);
   return normalizeList<SessionT>(res);
 };
 
@@ -76,7 +74,6 @@ export const getSingleSession = async (id: string) => {
   const res = await apiFetch<SessionT>(`/api/events/sessions/${id}`, {
     method: "GET",
   });
-  if (!res.success) toast.error(res.message);
   return res.data;
 };
 
@@ -91,7 +88,6 @@ export const addSession = async ({
     method: "POST",
     body: JSON.stringify(data),
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -106,7 +102,6 @@ export const updateSession = async ({
     method: "PUT",
     body: JSON.stringify(data),
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -114,7 +109,6 @@ export const deleteSession = async (id: string) => {
   const res = await apiFetch(`/api/events/sessions/${id}`, {
     method: "DELETE",
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -122,7 +116,6 @@ export const restoreSession = async (id: string) => {
   const res = await apiFetch(`/api/events/sessions/restore/${id}`, {
     method: "PATCH",
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -132,7 +125,6 @@ export const sendSessionReminder = async (id: string) => {
   const res = await apiFetch(`/api/events/programs/workshops/sessions/${id}`, {
     method: "GET",
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -152,7 +144,6 @@ export const requestSessionExport = async ({
       method: "GET",
     },
   );
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -170,7 +161,6 @@ export const markSessionAttendance = async ({
       body: JSON.stringify(data),
     },
   );
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -188,7 +178,6 @@ export const updateSessionAttendance = async ({
       body: JSON.stringify(data),
     },
   );
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -206,6 +195,5 @@ export const deleteSessionAttendance = async ({
       body: JSON.stringify(data),
     },
   );
-  if (!res.success) toast.error(res.message);
   return res;
 };

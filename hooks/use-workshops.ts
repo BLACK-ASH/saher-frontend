@@ -21,27 +21,40 @@ const useWorkshopBase = createResourceListHook({
   },
 });
 
+// Workshops belong to programs — mutations must invalidate both.
+const invalidateWorkshopAndProgram = (queryClient: ReturnType<typeof useQueryClient>) => {
+  queryClient.invalidateQueries({ queryKey: ["workshops"] });
+  queryClient.invalidateQueries({ queryKey: ["programs"] });
+};
+
 type Props = { id?: string } & QueryProps;
 
 export const useWorkshops = ({ id, keyword, page, limit }: Props) => {
   const queryClient = useQueryClient();
-  const { list, detail, add, update, del } = useWorkshopBase({
-    id,
-    keyword,
-    page,
-    limit,
+  const base = useWorkshopBase({ id, keyword, page, limit });
+
+  // Wrap base mutations to also invalidate programs
+  const add = useMutation({
+    mutationFn: (vars: unknown) => base.add.mutateAsync(vars),
+    onSuccess: () => invalidateWorkshopAndProgram(queryClient),
+  });
+  const update = useMutation({
+    mutationFn: (vars: unknown) => base.update.mutateAsync(vars),
+    onSuccess: () => invalidateWorkshopAndProgram(queryClient),
+  });
+  const del = useMutation({
+    mutationFn: (vars: unknown) => base.del.mutateAsync(vars),
+    onSuccess: () => invalidateWorkshopAndProgram(queryClient),
   });
 
   const restore = useMutation({
     mutationFn: restoreWorkshop,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["workshops"] });
-    },
+    onSuccess: () => invalidateWorkshopAndProgram(queryClient),
   });
 
   return {
-    workshops: list,
-    workshop: detail,
+    workshops: base.list,
+    workshop: base.detail,
     add,
     update,
     del,

@@ -1,6 +1,5 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { normalizeList } from "@/lib/normalize-list";
-import { toast } from "sonner";
 import { QueryProps } from "./program.api";
 
 export type WorkshopT = {
@@ -31,7 +30,6 @@ export const getWorkshops = async ({
       method: "GET",
     },
   );
-  if (!res.success) toast.error(res.message);
   return normalizeList<WorkshopT>(res);
 };
 
@@ -39,7 +37,6 @@ export const getSingleWorkshop = async (id: string) => {
   const res = await apiFetch<WorkshopT>(`/api/events/workshops/${id}`, {
     method: "GET",
   });
-  if (!res.success) toast.error(res.message);
   return res.data;
 };
 
@@ -54,7 +51,6 @@ export const addWorkshops = async ({
     method: "POST",
     body: JSON.stringify(data),
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -66,7 +62,6 @@ export const updateWorkshops = async ({ id, data }: UpdateProgramInput) => {
       body: JSON.stringify(data),
     },
   );
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -74,7 +69,6 @@ export const deleteWorkshops = async (id: string) => {
   const res = await apiFetch(`/api/events/workshops/${id}`, {
     method: "DELETE",
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -82,6 +76,5 @@ export const restoreWorkshop = async (id: string) => {
   const res = await apiFetch(`/api/events/workshops/restore/${id}`, {
     method: "PATCH",
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };

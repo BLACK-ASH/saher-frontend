@@ -1,6 +1,5 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { normalizeList } from "@/lib/normalize-list";
-import { toast } from "sonner";
 import { ParticipantT } from "./participant.api";
 
 export type ProgramsT = {
@@ -36,7 +35,6 @@ export const getPrograms = async ({
       method: "GET",
     },
   );
-  if (!res.success) toast.error(res.message);
   return normalizeList<ProgramsT>(res);
 };
 
@@ -44,7 +42,6 @@ export const getSingleProgram = async (id: string) => {
   const res = await apiFetch<SingleParticipantT>(`/api/events/programs/${id}`, {
     method: "GET",
   });
-  if (!res.success) toast.error(res.message);
   return res.data;
 };
 
@@ -53,7 +50,6 @@ export const addProgram = async (data: Omit<ProgramsT, "id">) => {
     method: "POST",
     body: JSON.stringify(data),
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -65,7 +61,6 @@ export const updateProgram = async ({ id, data }: UpdateProgramInput) => {
       body: JSON.stringify(data),
     },
   );
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -73,7 +68,6 @@ export const deleteProgram = async (id: string) => {
   const res = await apiFetch(`/api/events/programs/${id}`, {
     method: "DELETE",
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -88,7 +82,6 @@ export const addParticipantsInProgram = async ({
     method: "POST",
     body: JSON.stringify({ participantIds: participants }),
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -96,7 +89,6 @@ export const restoreProgram = async (id: string) => {
   const res = await apiFetch(`/api/events/programs/restore/${id}`, {
     method: "PATCH",
   });
-  if (!res.success) toast.error(res.message);
   return res;
 };
 
@@ -113,6 +105,5 @@ export const removeParticipantFromProgram = async ({
       method: "DELETE",
     },
   );
-  if (!res.success) toast.error(res.message);
   return res;
 };
