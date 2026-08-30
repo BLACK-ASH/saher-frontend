@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/field";
 import Image from "next/image";
 import { useState } from "react";
-import { Eye, EyeOffIcon } from "lucide-react";
+import { Eye, EyeOffIcon, Loader2 } from "lucide-react";
 import {
   InputGroup,
   InputGroupAddon,
@@ -23,6 +23,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useMutation } from "@tanstack/react-query";
 import { apiFetch } from "@/lib/api-wrapper";
 import Link from "next/link";
 
@@ -43,7 +44,7 @@ export function ChangePasswordForm({
     })
     .refine((data) => data.password === data.confirmPassword, {
       message: "Passwords do not match",
-      path: ["confirmPassword"], // 👈 show error under confirmPassword
+      path: ["confirmPassword"],
     });
 
   const form = useForm<z.infer<typeof changePasswordSchema>>({
@@ -55,22 +56,38 @@ export function ChangePasswordForm({
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof changePasswordSchema>) => {
-    const res = await apiFetch(`/api/auth/change-password/confirm/`, {
-      method: "POST",
-      body: JSON.stringify({ ...data, token }),
-    });
+  const changePasswordMutation = useMutation({
+    mutationFn: async (data: z.infer<typeof changePasswordSchema>) => {
+      const res = await apiFetch(`/api/auth/change-password/confirm/`, {
+        method: "POST",
+        body: JSON.stringify({ ...data, token }),
+      });
+      if (!res.success) {
+        throw new Error(res.message);
+      }
+      return res;
+    },
+    onSuccess: (res) => {
+      toast.success(res.message);
+      router.push("/login");
+    },
+    onError: (error: Error) => {
+      const message = error.message.toLowerCase();
+      if (message.includes("token expired") || message.includes("invalid token")) {
+        toast.error("This link has expired or is invalid. Please request a new password reset link.");
+      } else {
+        toast.error(error.message);
+      }
+    },
+  });
 
-    if (!res.success) {
-      toast.error(res.message);
-    }
-    toast.success(res.message);
-    router.push("/login");
-  };
+  const onSubmit = form.handleSubmit((data) => {
+    changePasswordMutation.mutate(data);
+  });
 
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form onSubmit={onSubmit}>
         <FieldGroup>
           <div className="flex flex-col items-center gap-2 text-center">
             <Link
@@ -107,6 +124,7 @@ export function ChangePasswordForm({
                         type={visible ? "text" : "password"}
                         placeholder="Enter password"
                         aria-invalid={fieldState.invalid}
+                        disabled={changePasswordMutation.isPending}
                       />
 
                       <InputGroupAddon align="inline-end">
@@ -114,6 +132,7 @@ export function ChangePasswordForm({
                           type="button"
                           size="icon-xs"
                           onClick={() => setVisible((prev) => !prev)}
+                          disabled={changePasswordMutation.isPending}
                         >
                           {visible ? <Eye /> : <EyeOffIcon />}
                         </InputGroupButton>
@@ -142,6 +161,7 @@ export function ChangePasswordForm({
                         type={visible ? "text" : "password"}
                         placeholder="confirm password"
                         aria-invalid={fieldState.invalid}
+                        disabled={changePasswordMutation.isPending}
                       />
 
                       <InputGroupAddon align="inline-end">
@@ -149,6 +169,7 @@ export function ChangePasswordForm({
                           type="button"
                           size="icon-xs"
                           onClick={() => setVisible((prev) => !prev)}
+                          disabled={changePasswordMutation.isPending}
                         >
                           {visible ? <Eye /> : <EyeOffIcon />}
                         </InputGroupButton>
@@ -162,7 +183,19 @@ export function ChangePasswordForm({
                 )}
               />
               <Field>
-                <Button type="submit">Change Password</Button>
+                <Button
+                  type="submit"
+                  disabled={changePasswordMutation.isPending}
+                >
+                  {changePasswordMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Changing...
+                    </>
+                  ) : (
+                    "Change Password"
+                  )}
+                </Button>
               </Field>
             </CardContent>
           </Card>
