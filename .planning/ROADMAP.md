@@ -238,7 +238,7 @@ Plans:
 
 **Wave 5** *(blocked on Wave 4 completion)*
 
-- [ ] 06-07-PLAN.md (W5, dep 06-04, 06-06) — Reminder + export: sendSessionReminder + requestSessionExport, session detail actions, notification download-action verification (EVNT-07, EVNT-08)
+- [x] 06-07-PLAN.md (W5, dep 06-04, 06-06) — Reminder + export: sendSessionReminder + requestSessionExport, session detail actions, notification download-action verification (EVNT-07, EVNT-08)
 
 ### Phase 7: Existing Modules Audit-and-Fix
 
@@ -274,7 +274,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 3. Noticeboard Pilot | 3/4 | Complete    | 2026-08-26 |
 | 4. Staff Self-Service — Mail & Leave | 0/4 | Planned | - |
 | 5. Money & Approval — Reimbursement & Payroll | 1/6 | In Progress|  |
-| 6. Admin Bank/Accounts & Events Depth | 6/7 | In Progress|  |
+| 6. Admin Bank/Accounts & Events Depth | 7/7 | Complete    | 2026-08-30 |
 | 7. Existing Modules Audit-and-Fix | 0/? | Not started | - |
 
 ---

@@ -20,12 +20,12 @@ progress:
 See: .planning/PROJECT.md (updated 2024-08-24)
 
 **Core value:** Every backend domain has a working, reliable screen — staff and admins run their daily work through this app without falling back to manual processes.
-**Current focus:** Phase 06 — admin-bank-accounts-events-depth
+**Current focus:** Phase 07 — existing modules audit-and-fix
 
 ## Current Position
 
-Phase: 06 (admin-bank-accounts-events-depth) — EXECUTING
-Plan: 6 of 7
+Phase: 06 (admin-bank-accounts-events-depth) — COMPLETE (next: phase 07)
+Plan: 7 of 7
 Plans: 7 of 7 planned (06-01…06-07), 5 waves
 
 Phase 6 Wave Structure
@@ -97,7 +97,7 @@ All 7 plans executed and committed:
 - 06-04: Workshop + session CRUD/trash + IST datetime contract (EVNT-03/04) — W1
 - 06-05: Participant rosters — restore + isDeleted default, populated roster (EVNT-05) — W3, dep 06-03
 - 06-06: Attendance diff engine (TDD, EVNT-06) — W4, dep 06-05, human-verify ✓
-- 06-07: Reminder + export to notifications (EVNT-07/08) — W5, dep 06-04 + 06-06, human-verify
+- 06-07: Reminder + export to notifications (EVNT-07/08) — W5, dep 06-04 + 06-06, human-verify ✓
 
 ## Accumulated Context
 
