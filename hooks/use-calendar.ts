@@ -2,6 +2,7 @@ import {
   createCalendarEvent,
   deleteCalendarEvent,
   getCalendar,
+  syncGoogleCalendar,
   updateCalendarEvent,
 } from "@/services/calendar.api";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -15,7 +16,7 @@ export const useCalendar = ({ year, month }: Props) => {
   const queryClient = useQueryClient();
 
   const calendar = useQuery({
-    queryKey: ["calendar", year, month],
+    queryKey: ["calendar", "events", year, month],
     queryFn: () => getCalendar(year?.toString() ?? "", month?.toString() ?? ""),
     retry: 3,
     enabled: year != null && month != null,
@@ -43,5 +44,12 @@ export const useCalendar = ({ year, month }: Props) => {
     },
   });
 
-  return { calendar, add, del, update };
+  const syncGoogle = useMutation({
+    mutationFn: syncGoogleCalendar,
+    onSuccess: (res) => {
+      queryClient.invalidateQueries({ queryKey: ["calendar"] });
+    },
+  });
+
+  return { calendar, add, del, update, syncGoogle };
 };

@@ -50,3 +50,10 @@ export const deleteCalendarEvent = async (id: string) => {
   });
   return res;
 };
+
+export const syncGoogleCalendar = async () => {
+  const res = await apiFetch(`/api/calendar/sync-holidays`, {
+    method: "POST",
+  });
+  return res;
+};
