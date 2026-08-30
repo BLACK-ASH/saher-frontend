@@ -11,14 +11,12 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { AccountT } from "@/hooks/use-profile";
-import { apiFetch } from "@/lib/api-wrapper";
+import { useAdminAccount } from "@/hooks/use-admin";
 import { formatIstDate } from "@/lib/date";
 import { can } from "@/lib/permissions";
 import RoleAccess from "@/components/role-access";
 import AccountEditDialog from "@/features/admin/account-edit";
 import { BankDetailForm, maskAccount } from "@/features/admin/bank-details";
-import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { MailCheck, Pencil, ShieldCheck, UserCheck, UserX } from "lucide-react";
 import Image from "next/image";
@@ -31,24 +29,15 @@ function ManagerUserPage() {
   const [editOpen, setEditOpen] = useState(false);
   const [bankEditOpen, setBankEditOpen] = useState(false);
 
-  const data = useQuery({
-    queryKey: ["user", "profile", id],
-    queryFn: async () => {
-      const res = await apiFetch<AccountT>(`/api/admin/user/${id}`);
-      return res.data;
-    },
-    retry: 3,
-    staleTime: 1000 * 60,
-  });
+  const { data: account, isLoading } = useAdminAccount(id);
 
-  if (data.isLoading) {
+  if (isLoading) {
     return <DefaultLoader />;
   }
 
-  if (!data.data) {
+  if (!account) {
     return <NoData title="User Not Found" description=""></NoData>;
   }
-  const account = data.data;
   const { user, bank } = account;
   const {
     accountHolderName,
