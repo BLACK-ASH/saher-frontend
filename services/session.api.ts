@@ -126,6 +126,36 @@ export const restoreSession = async (id: string) => {
   return res;
 };
 
+// GET despite the verb — backend reminder route is an odd GET job trigger (EVNT-07).
+// Sends an email reminder to the session's speakers; 201, data null. Any 2xx = done.
+export const sendSessionReminder = async (id: string) => {
+  const res = await apiFetch(`/api/events/programs/workshops/sessions/${id}`, {
+    method: "GET",
+  });
+  if (!res.success) toast.error(res.message);
+  return res;
+};
+
+// GET oddity — backend export route is an odd GET job trigger (EVNT-08).
+// Enqueues a BullMQ report job returning { jobId, format }; the result lands as a
+// "download" notification. "processing"/2xx treated as success for the caller.
+export const requestSessionExport = async ({
+  id,
+  format,
+}: {
+  id: string;
+  format: "pdf" | "xlsx";
+}) => {
+  const res = await apiFetch<{ jobId: string; format: string }>(
+    `/api/events/export/report?sessionId=${id}&format=${format}`,
+    {
+      method: "GET",
+    },
+  );
+  if (!res.success) toast.error(res.message);
+  return res;
+};
+
 export const markSessionAttendance = async ({
   id,
   data,
