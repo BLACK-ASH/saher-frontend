@@ -280,10 +280,30 @@ Plans:
 
 - [x] 07-08-PLAN.md — Final raw-date sweep + lint/typecheck gate (FNDT-02)
 
+### Phase 8: Bug Fixes & Calendar Overhaul
+
+**Goal**: Fix all reported bugs across the app — calendar drag-and-drop, calendar delete event, user creation employee ID type, profile page, leave validation, notice deletion, bill lifecycle — and overhaul the calendar module end-to-end (frontend + backend).
+**Mode:** mvp
+**Depends on**: Phases 1–7 (all patterns, utilities, and module structures exist)
+**Requirements**: BUGF-01, BUGF-02, BUGF-03, BUGF-04, BUGF-05, BUGF-06, BUGF-07, CAL-01, CAL-02
+**Contract check**: Verify calendar routes, leave validation logic, bill CRUD routes, notice delete routes, and user creation schemas against backend source before fixing.
+**Success Criteria** (what must be TRUE):
+
+  1. Calendar drag-and-drop moves events correctly; calendar delete removes events; both sync with backend
+  2. User creation form validates employee ID type correctly (no spurious "date of birth required" error)
+  3. Profile page loads and displays user data
+  4. Leave application form validates correctly and submits successfully
+  5. Notice delete works end-to-end (admin can soft-delete and permanently delete)
+  6. Bill lifecycle works: create, edit, withdraw, handle, settle — all mutating actions functional
+  7. Calendar module works across both frontend and backend without regressions
+
+**Plans**: TBD
+**UI hint**: yes
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -294,6 +314,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7
 | 5. Money & Approval — Reimbursement & Payroll | 1/6 | In Progress|  |
 | 6. Admin Bank/Accounts & Events Depth | 7/7 | Complete    | 2026-08-30 |
 | 7. Existing Modules Audit-and-Fix | 0/8 | Planned | - |
+| 8. Bug Fixes & Calendar Overhaul | 0/0 | Planned | - |
 
 ---
 *Roadmap created: 2026-08-24*
