@@ -23,17 +23,9 @@ export const notificationSchema = z.object({
 
 export type NotificationResponseT = z.infer<typeof notificationSchema>;
 
-export type NotificationListResponse = {
-  data: NotificationResponseT[];
-  unseenCount?: number;
-};
-
-export const getNotification = async () => {
+export const getNotification = async (): Promise<NotificationResponseT[]> => {
   const res = await apiFetch<NotificationResponseT[]>("/api/notification/", {
     method: "GET",
   });
-  return {
-    data: res.data ?? [],
-    unseenCount: res.meta?.unseenCount,
-  } satisfies NotificationListResponse;
+  return res.data ?? [];
 };

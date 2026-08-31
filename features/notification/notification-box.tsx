@@ -29,10 +29,12 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const NotificationBox = () => {
-  const { data, unseenCount, isLoading, refetch, isRefetching } = useNotification();
+  const { data, isLoading, refetch, isRefetching } = useNotification();
+  const notifications = data ?? [];
+  const unseenCount = notifications.filter((n) => !n.isSeen).length;
 
   if (isLoading) return <DefaultLoader />;
-  if (!data) return <NoData title="No Notification To Show" description="" />;
+  if (notifications.length === 0) return <NoData title="No Notification To Show" description="" />;
 
   return (
     <Card>
@@ -56,8 +58,8 @@ const NotificationBox = () => {
       </CardHeader>
       <CardContent>
         <ScrollArea className="h-60">
-          {data.length > 0 &&
-            data.map((notification) => {
+          {notifications.length > 0 &&
+            notifications.map((notification) => {
               return (
                 <Notification
                   key={notification.id}
