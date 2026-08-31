@@ -62,9 +62,9 @@ export function AttendanceTable({
 
   return (
     <Card className={className}>
-      <CardHeader>
+      <CardHeader className="flex flex-wrap items-center justify-between">
         <CardTitle>Recent Attendances</CardTitle>
-        <CardAction className="flex gap-2 items-center">
+        <CardAction className="flex flex-wrap gap-2 items-center">
           <Tooltip>
             <TooltipTrigger asChild>
               <AttendanceReportDropdown />

@@ -98,9 +98,9 @@ export function TodayAttendanceTable({
 
   return (
     <Card className={className}>
-      <CardHeader>
+      <CardHeader className="flex flex-wrap items-center justify-between">
         <CardTitle>Today Users Attendances</CardTitle>
-        <CardAction className="flex gap-2">
+        <CardAction className="flex flex-wrap gap-2">
           <Button
             variant={"outline"}
             disabled={isRefetching}
