@@ -297,8 +297,25 @@ Plans:
   6. Bill lifecycle works: create, edit, withdraw, handle, settle — all mutating actions functional
   7. Calendar module works across both frontend and backend without regressions
 
-**Plans**: TBD
+**Plans**: 6 plans in 3 waves
 **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 08-01-PLAN.md — Registration error messages + profile double-toast fix (BUGF-01, BUGF-02)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 08-02-PLAN.md — Notice trash tab: backend isDeleted query + frontend trash/restore/permanent-delete (BUGF-03, BUGF-06)
+- [ ] 08-03-PLAN.md — Bill management: nav entry + pagination fix + balance key alignment (BUGF-04)
+- [ ] 08-04-PLAN.md — Leave: backend field-name fix + frontend validation error surfacing (BUGF-05)
+- [ ] 08-05-PLAN.md — Calendar backend: month boundary TZ fix + RBAC + type enum alignment (BUGF-07, CAL-01)
+
+**Wave 3** *(blocked on Wave 2 completion)*
+
+- [ ] 08-06-PLAN.md — Calendar frontend: delete confirm + edit wiring + drag/resize errors + type dropdown (BUGF-07, CAL-02)
 
 ### Phase 9: Attendance Overhaul — Admin Oversight & UX Polish
 
