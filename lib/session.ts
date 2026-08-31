@@ -34,7 +34,7 @@ export function handleSessionDeath(queryClient: QueryClient): Promise<void> {
 export function performLogoutCleanup(queryClient: QueryClient): void {
   queryClient.cancelQueries();
   queryClient.clear();
-  window.location.href = "/login";
+  window.location.assign("/login");
 }
 
 export function resetSessionGuard(): void {

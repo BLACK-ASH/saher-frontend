@@ -3,6 +3,13 @@ import { cleanup } from "@testing-library/react";
 import { afterAll, afterEach, beforeAll } from "vitest";
 import { server } from "@/tests/test-server";
 
+// Radix Dialog/use-size requires ResizeObserver, which jsdom lacks.
+globalThis.ResizeObserver = class {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+};
+
 beforeAll(() => {
   server.listen({ onUnhandledRequest: "error" });
 });

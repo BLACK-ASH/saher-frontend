@@ -96,13 +96,13 @@ describe("performLogoutCleanup", () => {
     vi.unstubAllGlobals();
   });
 
-  it("calls cancelQueries, clear, and redirects to /", () => {
+  it("calls cancelQueries, clear, and redirects to /login", () => {
     const qc = fakeQueryClient();
     performLogoutCleanup(qc);
 
     expect(qc.cancelQueries).toHaveBeenCalled();
     expect(qc.clear).toHaveBeenCalled();
-    expect(location.assign).toHaveBeenCalledWith("/");
+    expect(location.assign).toHaveBeenCalledWith("/login");
   });
 
   it("does NOT fire a toast", async () => {
