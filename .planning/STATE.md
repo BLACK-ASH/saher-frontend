@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 8 planned — 6 plans in 3 waves (ready to execute)
-last_updated: "2026-08-31T17:10:00.000Z"
+stopped_at: Phase 8 UI-SPEC approved
+last_updated: "2026-08-31T11:58:29.754Z"
 progress:
   total_phases: 9
   completed_phases: 5
@@ -24,9 +24,9 @@ See: .planning/PROJECT.md (updated 2024-08-24)
 
 ## Current Position
 
-Phase: 08 (bug-fixes-calendar-overhaul) — PLANNED ✅
-Plan: 0 of 6
-Plans: 6 of 6 planned (08-01…08-06), 3 waves
+Phase: 08 (bug-fixes-calendar-overhaul) — EXECUTING
+Plan: 1 of 6 ✓
+Plans: 1/6 complete (08-01 ✓), 5 remaining (08-02…08-06)
 
 Phase 7 Status
 

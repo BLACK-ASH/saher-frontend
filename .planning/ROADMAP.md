@@ -304,7 +304,7 @@ Plans:
 
 **Wave 1**
 
-- [ ] 08-01-PLAN.md — Registration error messages + profile double-toast fix (BUGF-01, BUGF-02)
+- [x] 08-01-PLAN.md — Registration error messages + profile double-toast fix (BUGF-01, BUGF-02)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
@@ -349,7 +349,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 5. Money & Approval — Reimbursement & Payroll | 1/6 | In Progress|  |
 | 6. Admin Bank/Accounts & Events Depth | 7/7 | Complete    | 2026-08-30 |
 | 7. Existing Modules Audit-and-Fix | 0/8 | Planned | - |
-| 8. Bug Fixes & Calendar Overhaul | 0/0 | Planned | - |
+| 8. Bug Fixes & Calendar Overhaul | 1/6 | In Progress|  |
 | 9. Attendance Overhaul — Admin Oversight & UX Polish | 0/0 | Planned | - |
 
 ---

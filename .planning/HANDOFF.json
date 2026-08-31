@@ -1,29 +1,32 @@
 {
   "version": "1.0",
-  "timestamp": "2026-08-30T18:50:00Z",
-  "phase": "07",
-  "phase_name": "existing-modules-audit-and-fix",
-  "phase_dir": ".planning/phases/07-existing-modules-audit-and-fix",
-  "plan": 5,
+  "timestamp": "2026-08-31T12:32:35Z",
+  "phase": "08",
+  "phase_name": "bug-fixes-calendar-overhaul",
+  "phase_dir": ".planning/phases/08-bug-fixes-calendar-overhaul",
+  "plan": 4,
   "task": 1,
-  "total_tasks": 7,
+  "total_tasks": 2,
   "status": "paused",
   "completed_tasks": [
-    {"id": "07-01", "name": "Calendar Alignment", "status": "done"},
-    {"id": "07-02", "name": "Users & Program Final Alignment", "status": "done"},
-    {"id": "07-03", "name": "Profile Auth Flows", "status": "done"},
-    {"id": "07-04", "name": "Notifications Unseen Badge & Action Button", "status": "done"}
+    {"id": "08-01", "name": "Registration error messages & profile double-toast", "status": "done", "commit": "84bbb42"},
+    {"id": "08-02", "name": "Notice trash tab end-to-end", "status": "done", "commit": "eb9825e"},
+    {"id": "08-03", "name": "Bill management usability & EditBillDialog", "status": "done", "commit": "cc17b85"}
   ],
   "remaining_tasks": [
-    {"id": "07-05", "name": "Shared Trash Pattern Enforcement", "status": "in_progress"},
-    {"id": "07-06", "name": "Table component standardization", "status": "not_started"},
-    {"id": "07-07", "name": "Test suite for hooks/api", "status": "not_started"},
-    {"id": "07-08", "name": "Cross-module polish", "status": "not_started"}
+    {"id": "08-04", "name": "Leave backend field mismatch & validation error surfacing", "status": "not_started"},
+    {"id": "08-05", "name": "Calendar backend TZ, RBAC, and schema alignment", "status": "not_started"},
+    {"id": "08-06", "name": "Calendar frontend overhaul", "status": "not_started"}
   ],
   "blockers": [],
   "human_actions_pending": [],
-  "decisions": [],
-  "uncommitted_files": [],
-  "next_action": "Continue Plan 07-05, Task 1: Audit all soft-deletable resources.",
-  "context_notes": "Paused during Wave 2 execution. Plans 07-01 to 07-04 are complete. 07-05 is in progress."
+  "decisions": [
+    {"decision": "Used task subagents for execution sequentially", "rationale": "Avoid worktree merge conflicts across backend/frontend repos", "phase": "08"}
+  ],
+  "uncommitted_files": [
+    ".planning/STATE.md",
+    ".planning/ROADMAP.md"
+  ],
+  "next_action": "Resume Wave 2 execution with plan 08-04",
+  "context_notes": "Wave 1 (08-01) and Wave 2 plans 08-02 & 08-03 are completed and committed. Wave 2 plan 08-04 was next up when execution was paused."
 }
