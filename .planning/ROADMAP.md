@@ -300,10 +300,28 @@ Plans:
 **Plans**: TBD
 **UI hint**: yes
 
+### Phase 9: Attendance Overhaul — Admin Oversight & UX Polish
+
+**Goal**: Admin/manager can view all employees' attendance in a dedicated screen (not buried in dashboard), export all-employee reports, and the self-service attendance page becomes genuinely user-friendly — correct chart, working filters, clean layout.
+**Mode:** mvp
+**Depends on**: Phases 1–8 (shared patterns, bug fixes, calendar overhaul complete)
+**Requirements**: ATTD-01, ATTD-02, ATTD-03, ATTD-04, ATTD-05
+**Contract check**: Verify all attendance endpoints against `../saher-backend/src/attendance/attendance.route.ts` — especially `GET /retrieve` (all employees), `GET /user/:id` (single user history), and `GET /export/report` (format param).
+**Success Criteria** (what must be TRUE):
+
+  1. Admin/manager has a dedicated "All Attendance" page (separate from dashboard) with date-range filter, employee filter, and paginated table of all employees' attendance records
+  2. Admin can drill down into any employee's full attendance history via `/user/:id`
+  3. Export works for both self-service and admin (all employees); XLSX format option available
+  4. Self-service attendance page is user-friendly: chart shows actual month data (not 7 records), date-range filter on history table, clear check-in/out status
+  5. All existing attendance features (check-in/out, corrections, week-off) continue working without regressions
+
+**Plans**: TBD
+**UI hint**: yes
+
 ## Progress
 
 **Execution Order:**
-Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
+Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
@@ -315,6 +333,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8
 | 6. Admin Bank/Accounts & Events Depth | 7/7 | Complete    | 2026-08-30 |
 | 7. Existing Modules Audit-and-Fix | 0/8 | Planned | - |
 | 8. Bug Fixes & Calendar Overhaul | 0/0 | Planned | - |
+| 9. Attendance Overhaul — Admin Oversight & UX Polish | 0/0 | Planned | - |
 
 ---
 *Roadmap created: 2026-08-24*
