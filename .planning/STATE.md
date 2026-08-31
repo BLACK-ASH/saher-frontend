@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 6 planned (7 plans, 4 waves, frontmatter validated) — execution is next
-last_updated: "2026-08-30T04:42:33.673Z"
+stopped_at: Phase 7 planned (8 plans, 4 waves) — execution ready
+last_updated: "2026-08-30T07:18:53.820Z"
 progress:
   total_phases: 7
-  completed_phases: 3
-  total_plans: 31
-  completed_plans: 26
-  percent: 43
+  completed_phases: 4
+  total_plans: 39
+  completed_plans: 29
+  percent: 57
 ---
 
 # Project State
@@ -20,13 +20,20 @@ progress:
 See: .planning/PROJECT.md (updated 2024-08-24)
 
 **Core value:** Every backend domain has a working, reliable screen — staff and admins run their daily work through this app without falling back to manual processes.
-**Current focus:** Phase 07 — existing modules audit-and-fix
+**Current focus:** Phase 07 — existing-modules-audit-and-fix
 
 ## Current Position
 
-Phase: 06 (admin-bank-accounts-events-depth) — COMPLETE (next: phase 07)
-Plan: 7 of 7
-Plans: 7 of 7 planned (06-01…06-07), 5 waves
+Phase: 07 (existing-modules-audit-and-fix) — EXECUTING
+Plan: 1 of 8
+Plans: 8 of 8 planned (07-01…07-08), 4 waves
+
+Phase 7 Wave Structure
+
+- W1: 07-01 (calendar), 07-02 (users/program), 07-03 (profile auth), 07-04 (notifications) — parallel
+- W2: 07-05 (trash pattern enforcement, dep 07-02)
+- W3: 07-06 (responsive), 07-07 (test coverage) — parallel, dep 07-01..04, 07-03
+- W4: 07-08 (final date sweep + gate, dep all prior)
 
 Phase 6 Wave Structure
 
@@ -99,6 +106,17 @@ All 7 plans executed and committed:
 - 06-06: Attendance diff engine (TDD, EVNT-06) — W4, dep 06-05, human-verify ✓
 - 06-07: Reminder + export to notifications (EVNT-07/08) — W5, dep 06-04 + 06-06, human-verify ✓
 
+## Phase 7 Plan Summary
+
+- 07-01: Calendar alignment — IST dates + Google sync (AUDT-02) — W1
+- 07-02: Users & Program final alignment — pattern cleanup (AUDT-03) — W1
+- 07-03: Profile auth flows — token-confirm UX + active sessions (AUTH-02, AUTH-03) — W1
+- 07-04: Notifications — unseen badge + action reliability (AUDT-04) — W1
+- 07-05: Shared trash pattern enforcement — all soft-delete resources (AUDT-05) — W2
+- 07-06: Responsive layout pass — staff screens (AUDT-06) — W3
+- 07-07: Test coverage — money-path double-submit + auth refresh (AUDT-07, AUDT-08) — W3
+- 07-08: Final raw-date sweep + lint/typecheck gate (FNDT-02) — W4
+
 ## Accumulated Context
 
 ### Decisions
@@ -127,7 +145,8 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-None yet. (Phase 6 planned; execute via `/gsd-execute-phase 06`.)
+- Execute Phase 07 plans sequentially: 07-01 → 07-08
+- Human verify gates: 07-03 (auth flows UX), 07-06 (responsive visual), 07-08 (final gate)
 
 ### Blockers/Concerns
 
@@ -145,6 +164,6 @@ None yet. (Phase 6 planned; execute via `/gsd-execute-phase 06`.)
 
 ## Session Continuity
 
-Last session: 2026-08-30T04:41:58.019Z
-Stopped at: Phase 6 planned (7 plans, 4 waves, frontmatter validated) — execution is next
+Last session: 2026-08-30T12:30:00.000Z
+Stopped at: Phase 7 planned (8 plans, 4 waves) — execution ready
 Resume file: None
