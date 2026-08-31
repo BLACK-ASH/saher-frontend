@@ -45,7 +45,7 @@ export default function ProfilePage() {
   return (
     <div className="max-w-7xl mx-auto px-6 py-10 space-y-10">
       <NotificationCard dbEnabled={account.user.pushNotificationsEnabled} />
-      {!account.user.emailVerified && <EmailVerification />}
+      <EmailVerification emailVerified={account.user.emailVerified} />
       {/* ================= HEADER ================= */}
       <ProfileInfo account={account} />
       <Separator />

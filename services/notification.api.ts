@@ -1,28 +1,39 @@
 import { apiFetch } from "@/lib/api-wrapper";
+import z from "zod";
 
-export type NotificationResponseT = {
-  readonly type: "success" | "info" | "warn" | "error";
-  readonly title: string;
-  readonly description: string;
-  readonly id: string;
-  readonly isSeen: boolean;
-  readonly createdAt: string;
-  readonly expiresAt: string;
-  readonly user?: string[] | undefined;
-  readonly action?:
-    | {
-        type: "download" | "navigate" | "external" | "none";
-        label: string;
-        url: string;
-        method: "GET" | "POST" | "PATCH" | "DELETE";
-      }
-    | undefined;
-  readonly seenAt: string | null | undefined;
+export const notificationSchema = z.object({
+  type: z.enum(["success", "info", "warn", "error"]),
+  title: z.string(),
+  description: z.string(),
+  id: z.string(),
+  isSeen: z.boolean(),
+  createdAt: z.string(),
+  expiresAt: z.string(),
+  user: z.array(z.string()).optional(),
+  action: z
+    .object({
+      type: z.enum(["download", "navigate", "external", "none"]),
+      label: z.string(),
+      url: z.string(),
+      method: z.enum(["GET", "POST", "PATCH", "DELETE"]),
+    })
+    .optional(),
+  seenAt: z.string().nullable().optional(),
+});
+
+export type NotificationResponseT = z.infer<typeof notificationSchema>;
+
+export type NotificationListResponse = {
+  data: NotificationResponseT[];
+  unseenCount?: number;
 };
 
 export const getNotification = async () => {
   const res = await apiFetch<NotificationResponseT[]>("/api/notification/", {
     method: "GET",
   });
-  return res.data;
+  return {
+    data: res.data ?? [],
+    unseenCount: res.meta?.unseenCount,
+  } satisfies NotificationListResponse;
 };

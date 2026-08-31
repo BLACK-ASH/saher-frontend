@@ -6,6 +6,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import {
   BellIcon,
   CircleAlert,
@@ -28,7 +29,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const NotificationBox = () => {
-  const { data, isLoading, refetch, isRefetching } = useNotification();
+  const { data, unseenCount, isLoading, refetch, isRefetching } = useNotification();
 
   if (isLoading) return <DefaultLoader />;
   if (!data) return <NoData title="No Notification To Show" description="" />;
@@ -39,6 +40,9 @@ const NotificationBox = () => {
         <CardTitle className="flex items-center gap-3">
           <BellIcon className="size-4" />
           notifications
+          <Badge variant={unseenCount > 0 ? "default" : "secondary"}>
+            {unseenCount}
+          </Badge>
         </CardTitle>
         <CardAction>
           <Button

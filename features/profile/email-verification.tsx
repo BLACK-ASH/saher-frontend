@@ -1,10 +1,17 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { apiFetch } from "@/lib/api-wrapper";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
+import { CheckCircle, Mail } from "lucide-react";
 
-function EmailVerification() {
+interface EmailVerificationProps {
+  emailVerified: boolean;
+}
+
+function EmailVerification({ emailVerified }: EmailVerificationProps) {
   const [cooldown, setCooldown] = useState(0);
 
   useEffect(() => {
@@ -32,10 +39,32 @@ function EmailVerification() {
     setCooldown(60);
   };
 
+  if (emailVerified) {
+    return (
+      <Alert className="border-green-500/50 bg-green-500/10">
+        <AlertTitle className="flex items-center justify-between text-sm font-medium text-green-700 dark:text-green-300">
+          <span className="flex items-center gap-2">
+            <CheckCircle className="h-4 w-4" />
+            Email Verified
+          </span>
+          <span className="rounded-md bg-green-100 px-2 py-1 text-xs text-green-700 dark:bg-green-900 dark:text-green-300">
+            verified
+          </span>
+        </AlertTitle>
+        <AlertDescription className="mt-3 text-sm text-green-700 dark:text-green-300">
+          Your email address has been verified. You now have access to all features.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
     <Alert className="border-border bg-muted/40">
       <AlertTitle className="flex items-center justify-between text-sm font-medium">
-        <span>Email verification required</span>
+        <span className="flex items-center gap-2">
+          <Mail className="h-4 w-4" />
+          Email verification required
+        </span>
 
         <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground">
           unverified
