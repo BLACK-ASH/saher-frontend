@@ -40,6 +40,7 @@ function ProfileInfo({ account }: Props) {
     });
     if (!res.success) {
       toast.error(res.message);
+      return;
     }
     toast.success(res.message);
     queryClient.invalidateQueries({ queryKey: ["user"] });
@@ -51,6 +52,7 @@ function ProfileInfo({ account }: Props) {
     });
     if (!res.success) {
       toast.error(res.message);
+      return;
     }
     toast.success(res.message);
     queryClient.invalidateQueries({ queryKey: ["user"] });
@@ -68,6 +70,7 @@ function ProfileInfo({ account }: Props) {
 
     if (!res.success) {
       toast.error(res.message);
+      return;
     }
     toast.success(res.message);
     queryClient.invalidateQueries({ queryKey: ["user"] });
