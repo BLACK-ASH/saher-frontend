@@ -309,7 +309,7 @@ Plans:
 **Wave 2** *(blocked on Wave 1 completion)*
 
 - [ ] 08-02-PLAN.md — Notice trash tab: backend isDeleted query + frontend trash/restore/permanent-delete (BUGF-03, BUGF-06)
-- [ ] 08-03-PLAN.md — Bill management: nav entry + pagination fix + balance key alignment (BUGF-04)
+- [ ] 08-03-PLAN.md — Bill management: nav entry + pagination fix + balance key alignment + EditBillDialog (D-08) + advance-bill verification (D-09) (BUGF-04)
 - [ ] 08-04-PLAN.md — Leave: backend field-name fix + frontend validation error surfacing (BUGF-05)
 - [ ] 08-05-PLAN.md — Calendar backend: month boundary TZ fix + RBAC + type enum alignment (BUGF-07, CAL-01)
 

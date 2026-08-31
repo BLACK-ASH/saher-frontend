@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
 status: executing
-stopped_at: Phase 7 COMPLETE — all modules audit-and-fix delivered, 39/39 plans
-last_updated: "2026-08-31T12:00:00.000Z"
+stopped_at: Phase 8 planned — 6 plans in 3 waves (ready to execute)
+last_updated: "2026-08-31T17:10:00.000Z"
 progress:
-  total_phases: 7
+  total_phases: 9
   completed_phases: 5
-  total_plans: 39
-  completed_plans: 39
-  percent: 100
+  total_plans: 45
+  completed_plans: 37
+  percent: 56
 ---
 
 # Project State
@@ -20,15 +20,16 @@ progress:
 See: .planning/PROJECT.md (updated 2024-08-24)
 
 **Core value:** Every backend domain has a working, reliable screen — staff and admins run their daily work through this app without falling back to manual processes.
-**Current focus:** Phase 07 — existing-modules-audit-and-fix
+**Current focus:** Phase 08 — bug-fixes-calendar-overhaul
 
 ## Current Position
 
-Phase: 07 (existing-modules-audit-and-fix) — COMPLETE ✅
-Plan: 8 of 8 (all complete)
-Plans: 8 of 8 planned (07-01…07-08), 4 waves
+Phase: 08 (bug-fixes-calendar-overhaul) — PLANNED ✅
+Plan: 0 of 6
+Plans: 6 of 6 planned (08-01…08-06), 3 waves
 
 Phase 7 Status
+
 - W1: 07-01 calendar ✓, 07-02 users/program ✓, 07-03 profile auth ✓, 07-04 notifications ✓
 - W2: 07-05 trash pattern enforcement ✓ (realized to audit — see SUMMARY)
 - W3: 07-06 responsive ✓, 07-07 test coverage ✓ (428 tests green)
@@ -118,6 +119,15 @@ All 7 plans executed and committed:
 - 07-07: Test coverage — money-path double-submit + auth refresh (AUDT-07, AUDT-08) — W3
 - 07-08: Final raw-date sweep + lint/typecheck gate (FNDT-02) — W4
 
+## Phase 8 Plan Summary
+
+- 08-01: Registration error messages + profile double-toast (BUGF-01, BUGF-02) — W1
+- 08-02: Notice trash tab — backend isDeleted query + frontend trash/restore/permanent-delete (BUGF-03, BUGF-06) — W2
+- 08-03: Bill management — nav entry + pagination + balance key + EditBillDialog (D-08) + advance-bill verify (D-09) (BUGF-04) — W2
+- 08-04: Leave — backend field-name fix + frontend validation error surfacing (BUGF-05) — W2
+- 08-05: Calendar backend — month-boundary TZ fix + RBAC + type enum (BUGF-07, CAL-01) — W2
+- 08-06: Calendar frontend — delete confirm + edit wiring + drag/resize errors + type dropdown (BUGF-07, CAL-02) — W3, dep 08-05
+
 ## Accumulated Context
 
 ### Decisions
@@ -165,6 +175,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-08-30T12:30:00.000Z
-Stopped at: Phase 7 planned (8 plans, 4 waves) — execution ready
-Resume file: None
+Last session: 2026-08-31T11:18:53.427Z
+Stopped at: Phase 8 UI-SPEC approved
+Resume file: .planning/phases/08-bug-fixes-calendar-overhaul/08-UI-SPEC.md
