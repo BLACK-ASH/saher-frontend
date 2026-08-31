@@ -19,7 +19,12 @@ export const useNotices = () => {
 
   const notices = useQuery({
     queryKey: ["notices", "active"],
-    queryFn: getNotices,
+    queryFn: () => getNotices(false),
+  });
+
+  const trashedNotices = useQuery({
+    queryKey: ["notices", "trash"],
+    queryFn: () => getNotices(true),
   });
 
   const addNotice = useMutation({
@@ -50,6 +55,7 @@ export const useNotices = () => {
 
   return {
     notices,
+    trashedNotices,
     addNotice,
     editNotice,
     removeNotice,

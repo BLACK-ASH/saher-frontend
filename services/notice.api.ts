@@ -22,12 +22,16 @@ export const createNoticeSchema = z.object({
 
 export type CreateNoticeInput = z.infer<typeof createNoticeSchema>;
 
-// GET /notice — returns the raw array; backend sends no pagination meta,
-// so envelope list-normalization helpers must NOT be used here.
-export const getNotices = async (): Promise<NoticeResponse[]> => {
-  const res = await apiFetch<NoticeResponse[]>("/api/notice", {
-    method: "GET",
-  });
+// GET /notice?isDeleted= — returns the raw array; backend sends no pagination
+// meta, so envelope list-normalization helpers must NOT be used here.
+// Pass isDeleted=true to list trashed notices.
+export const getNotices = async (
+  isDeleted = false,
+): Promise<NoticeResponse[]> => {
+  const res = await apiFetch<NoticeResponse[]>(
+    `/api/notice?isDeleted=${isDeleted}`,
+    { method: "GET" },
+  );
   return res.data;
 };
 
