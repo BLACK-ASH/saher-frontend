@@ -35,7 +35,7 @@ const employeeShift = [
     value: "shift-1",
   },
   {
-    label: "2:00 AM - 6:00 PM",
+    label: "2:00 PM - 6:00 PM",
     value: "shift-2",
   },
 ];
