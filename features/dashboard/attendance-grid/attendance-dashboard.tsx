@@ -37,7 +37,7 @@ function getDatesBetween(start: string, end: string) {
 }
 
 export default function AttendanceDashboard() {
-  const today = new Date();
+  const today = istDateOnlyToDate(dateToIstDateOnly(new Date()));
 
   const [page, setPage] = useState(1);
   const [limit] = useState(20);
@@ -142,7 +142,7 @@ export default function AttendanceDashboard() {
   };
 
   const goToday = () => {
-    const now = new Date();
+    const now = istDateOnlyToDate(dateToIstDateOnly(new Date()));
 
     setStartDate(formatDate(addDays(now, -6)));
     setEndDate(formatDate(now));

@@ -26,7 +26,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Calendar } from "@/components/ui/calendar";
-import { dateToIstDateOnly, formatIstDate } from "@/lib/date";
+import { dateToIstDateOnly, istDateOnlyToDate, formatIstDate } from "@/lib/date";
 
 const employeeType = ["free", "intern", "full-time", "part-time", "volunteer"];
 const employeeShift = [
@@ -225,8 +225,8 @@ const EmployeeDetail = ({
                   >
                     <Calendar
                       mode="single"
-                      selected={new Date()}
-                      defaultMonth={new Date()}
+                      selected={istDateOnlyToDate(dateToIstDateOnly(new Date()))}
+                      defaultMonth={istDateOnlyToDate(dateToIstDateOnly(new Date()))}
                       captionLayout="dropdown"
                       timeZone="Asia/Kolkata"
                       onSelect={(date) => {

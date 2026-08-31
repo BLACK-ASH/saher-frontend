@@ -23,7 +23,7 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [ ] **Phase 4: Staff Self-Service — Mail & Leave** - Staff run daily personal workflows in-app: read/write internal mail, apply for leave with balances, managers review applications
 - [x] **Phase 5: Money & Approval — Reimbursement & Payroll** - The org's full money pipeline (bills → handle → settle, advances, payroll installments, generation trigger) runs in-app with double-submit-proof actions
 - [ ] **Phase 6: Admin Bank/Accounts & Events Depth** - Atomic employee onboarding + bank detail CRUD; full events hierarchy (program→workshop→session→participant), attendance grid, reminders, exports
-- [ ] **Phase 7: Existing Modules Audit-and-Fix** - Attendance, calendar, users, program, profile, notifications aligned to contract and shared patterns; responsive pass; money/auth test coverage complete
+- [x] **Phase 7: Existing Modules Audit-and-Fix** - Attendance, calendar, users, program, profile, notifications aligned to contract and shared patterns; responsive pass; money/auth test coverage complete
 
 ## Phase Details
 
@@ -262,23 +262,23 @@ Plans:
 
 **Wave 1**
 
-- [ ] 07-01-PLAN.md — Calendar alignment: IST dates + Google sync verification (AUDT-02)
-- [ ] 07-02-PLAN.md — Users & Program final alignment: pattern cleanup (AUDT-03)
-- [ ] 07-03-PLAN.md — Profile auth flows: token-confirm UX + active sessions (AUTH-02, AUTH-03)
-- [ ] 07-04-PLAN.md — Notifications: unseen badge + action button reliability (AUDT-04)
+- [x] 07-01-PLAN.md — Calendar alignment: IST dates + Google sync verification (AUDT-02)
+- [x] 07-02-PLAN.md — Users & Program final alignment: pattern cleanup (AUDT-03)
+- [x] 07-03-PLAN.md — Profile auth flows: token-confirm UX + active sessions (AUTH-02, AUTH-03)
+- [x] 07-04-PLAN.md — Notifications: unseen badge + action button reliability (AUDT-04)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 07-05-PLAN.md — Shared trash pattern enforcement: all soft-delete resources (AUDT-05)
+- [x] 07-05-PLAN.md — Shared trash pattern enforcement: all soft-delete resources (AUDT-05)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 07-06-PLAN.md — Responsive layout pass: staff-used screens (AUDT-06)
-- [ ] 07-07-PLAN.md — Test coverage: money-path double-submit + auth refresh path (AUDT-07, AUDT-08)
+- [x] 07-06-PLAN.md — Responsive layout pass: staff-used screens (AUDT-06)
+- [x] 07-07-PLAN.md — Test coverage: money-path double-submit + auth refresh path (AUDT-07, AUDT-08)
 
 **Wave 4** *(blocked on Wave 3 completion)*
 
-- [ ] 07-08-PLAN.md — Final raw-date sweep + lint/typecheck gate (FNDT-02)
+- [x] 07-08-PLAN.md — Final raw-date sweep + lint/typecheck gate (FNDT-02)
 
 ## Progress
 

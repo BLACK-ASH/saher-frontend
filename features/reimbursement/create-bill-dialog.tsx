@@ -11,6 +11,7 @@ import ImageUpload from "@/components/image-upload";
 import { userBillCreateSchema, type UserBillCreateInput } from "@/services/reimbursement.api";
 import { useReimbursement } from "@/hooks/use-reimbursement";
 import { toast } from "sonner";
+import { dateToIstDateOnly } from "@/lib/date";
 
 interface CreateBillDialogProps {
   open: boolean;
@@ -25,7 +26,7 @@ export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) 
     defaultValues: {
       amount: 0,
       description: "",
-      date: new Date().toISOString().split("T")[0],
+      date: dateToIstDateOnly(new Date()),
       images: [],
     },
   });
