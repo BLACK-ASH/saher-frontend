@@ -259,6 +259,7 @@ export default function ReimbursementManagementPage() {
               onEditAdvance={handleEditAdvance}
               onDeleteAdvance={handleDeleteAdvance}
               bulkProgress={bulkProgress}
+              onPageChange={setPage}
             />
 
             {selectedIds.size > 0 && (

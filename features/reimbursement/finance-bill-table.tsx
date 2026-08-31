@@ -25,6 +25,7 @@ interface FinanceBillTableProps {
   onEditAdvance?: (bill: BillResponse) => void;
   onDeleteAdvance?: (bill: BillResponse) => void;
   bulkProgress?: { done: number; total: number } | null;
+  onPageChange?: (page: number) => void;
 }
 
 function SelectAllCheckbox({ checked, onChange, disabled }: { checked: boolean; onChange: (checked: boolean) => void; disabled?: boolean }) {
@@ -49,6 +50,7 @@ export function FinanceBillTable({
   onEditAdvance,
   onDeleteAdvance,
   bulkProgress,
+  onPageChange,
 }: FinanceBillTableProps) {
   const items = data?.items ?? [];
   const totalPages = data?.totalPages ?? 1;
@@ -204,7 +206,7 @@ export function FinanceBillTable({
 
       {totalPages > 1 && (
         <div className="flex justify-end px-4 py-4">
-          <PaginationFooter page={data?.page ?? 1} totalPages={totalPages} onPageChange={() => {}} />
+          <PaginationFooter page={data?.page ?? 1} totalPages={totalPages} onPageChange={onPageChange ?? (() => {})} />
         </div>
       )}
     </div>

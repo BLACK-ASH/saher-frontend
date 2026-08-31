@@ -57,7 +57,7 @@ export const useReimbursement = (options?: { isDeleted?: boolean }) => {
   // here; the server refetch after invalidation is the only way cache changes.
   const invalidate = () => {
     queryClient.invalidateQueries({ queryKey: ["bills"] });
-    queryClient.invalidateQueries({ queryKey: ["balance"] });
+    queryClient.invalidateQueries({ queryKey: ["reimbursement", "balance"] });
   };
 
   const myBills = useQuery({

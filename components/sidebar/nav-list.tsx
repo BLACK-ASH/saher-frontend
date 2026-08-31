@@ -75,6 +75,11 @@ const userRoutes = [
     url: "/reimbursement/my-bills",
     icon: ReceiptText,
   },
+  {
+    label: "Bill Management",
+    url: "/reimbursement/management",
+    icon: ReceiptText,
+  },
 ];
 
 const managerRoutes = [
@@ -173,7 +178,9 @@ export function NavItem() {
         <SidebarGroupLabel>User</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
-            {userRoutes.map((item) => (
+            {userRoutes
+              .filter((item) => item.url !== "/reimbursement/management" || can(user.role, "read", "preReimbursement"))
+              .map((item) => (
               <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton
                   isActive={isActive(item.url)}
