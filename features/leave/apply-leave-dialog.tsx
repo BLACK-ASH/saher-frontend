@@ -92,9 +92,15 @@ export default function ApplyLeaveDialog({
   }, [leave, form]);
 
   const handleError = (err: Error) => {
-    // Overlap errors surface inline below the dates; every other failure is
-    // already toasted by apiFetch before it throws.
-    if (err.message.toLowerCase().includes("overlap")) {
+    const msg = err.message.toLowerCase();
+    // Surface any known business-rule rejection inline (not just overlap).
+    // Backend validators: notice period, proof requirement, overlap.
+    if (
+      msg.includes("overlap") ||
+      msg.includes("notice") ||
+      msg.includes("proof") ||
+      msg.includes("before")
+    ) {
       setOverlapError(err.message);
     }
   };
@@ -109,17 +115,8 @@ export default function ApplyLeaveDialog({
     const endDate = dateInputToIso(values.endDate);
 
     if (leave) {
-      // Backend update resolves the leave type by _id via payload.leaveCode;
-      // only the create endpoint matches by code.
-      const leaveCode = leaveTypes.data?.find((lt) => lt.code === type)?.id;
-
-      if (!leaveCode) {
-        toast.error("Selected leave type is no longer available");
-        return;
-      }
-
       updateApplication.mutate(
-        { id: leave.id, data: { startDate, endDate, reason, proof, leaveCode } },
+        { id: leave.id, data: { startDate, endDate, reason, proof, type } },
         {
           onSuccess: () => {
             toast.success("Leave updated successfully");

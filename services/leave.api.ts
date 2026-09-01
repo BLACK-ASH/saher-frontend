@@ -183,10 +183,10 @@ export type CreateLeavePayload = {
   proof?: string;
 };
 
-// Backend update controller reads `leaveCode` (the leave-type _id) and
-// ignores `type`; only the create endpoint matches by code.
+// Backend update controller reads `payload.type` (the leave-type code) and
+// resolves via code-or-_id lookup (consistent with the create endpoint).
 export type UpdateLeavePayload = Partial<Omit<CreateLeavePayload, "type">> & {
-  leaveCode?: string;
+  type?: string;
 };
 
 export type ReviewLeavePayload = {
