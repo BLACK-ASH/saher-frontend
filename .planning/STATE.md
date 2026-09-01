@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: executing
-stopped_at: Phase 8 UI-SPEC approved
-last_updated: "2026-08-31T11:58:29.754Z"
+status: waiting
+stopped_at: Phase 8 complete
+last_updated: "2026-09-01T13:17:54.409Z"
 progress:
   total_phases: 9
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 45
-  completed_plans: 37
-  percent: 56
+  completed_plans: 43
+  percent: 96
 ---
 
 # Project State
@@ -20,13 +20,14 @@ progress:
 See: .planning/PROJECT.md (updated 2024-08-24)
 
 **Core value:** Every backend domain has a working, reliable screen — staff and admins run their daily work through this app without falling back to manual processes.
-**Current focus:** Phase 08 — bug-fixes-calendar-overhaul
+**Current focus:** None — phase 8 complete
 
 ## Current Position
 
-Phase: 08 (bug-fixes-calendar-overhaul) — EXECUTING
-Plan: 1 of 6 ✓
-Plans: 1/6 complete (08-01 ✓), 5 remaining (08-02…08-06)
+Phase: 08 (bug-fixes-calendar-overhaul) — COMPLETE ✓
+Plan: 6 of 6 ✓
+Plans: 6/6 complete (08-01 ✓, 08-02 ✓, 08-03 ✓, 08-04 ✓, 08-05 ✓, 08-06 ✓)
+Remaining phases: 04, 06
 
 Phase 7 Status
 
@@ -35,7 +36,7 @@ Phase 7 Status
 - W3: 07-06 responsive ✓, 07-07 test coverage ✓ (428 tests green)
 - W4: 07-08 final date sweep + gate ✓ (lib/date sweep, lint/build/test green)
 
-All 39 plans, 5 phases complete (1,2,3,5,7). Remaining: Phase 4, Phase 6.
+All 43 plans, 6 phases complete (1,2,3,5,7,8). Remaining: Phase 4, Phase 6.
 
 Phase 6 Wave Structure
 
@@ -121,12 +122,12 @@ All 7 plans executed and committed:
 
 ## Phase 8 Plan Summary
 
-- 08-01: Registration error messages + profile double-toast (BUGF-01, BUGF-02) — W1
-- 08-02: Notice trash tab — backend isDeleted query + frontend trash/restore/permanent-delete (BUGF-03, BUGF-06) — W2
-- 08-03: Bill management — nav entry + pagination + balance key + EditBillDialog (D-08) + advance-bill verify (D-09) (BUGF-04) — W2
-- 08-04: Leave — backend field-name fix + frontend validation error surfacing (BUGF-05) — W2
-- 08-05: Calendar backend — month-boundary TZ fix + RBAC + type enum (BUGF-07, CAL-01) — W2
-- 08-06: Calendar frontend — delete confirm + edit wiring + drag/resize errors + type dropdown (BUGF-07, CAL-02) — W3, dep 08-05
+- 08-01: Registration error messages + profile double-toast (BUGF-01, BUGF-02) — W1 ✓
+- 08-02: Notice trash tab — backend isDeleted query + frontend trash/restore/permanent-delete (BUGF-03, BUGF-06) — W2 ✓
+- 08-03: Bill management — nav entry + pagination + balance key + EditBillDialog (D-08) + advance-bill verify (D-09) (BUGF-04) — W2 ✓
+- 08-04: Leave — backend field-name fix + frontend validation error surfacing (BUGF-05) — W2 ✓
+- 08-05: Calendar backend — month-boundary TZ fix + RBAC + type enum (BUGF-07, CAL-01) — W2 ✓
+- 08-06: Calendar frontend — delete confirm + edit wiring + drag/resize errors + type dropdown (BUGF-07, CAL-02) — W3 ✓
 
 ## Accumulated Context
 
@@ -156,8 +157,8 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Execute Phase 07 plans sequentially: 07-01 → 07-08
-- Human verify gates: 07-03 (auth flows UX), 07-06 (responsive visual), 07-08 (final gate)
+- Execute Phase 04 and Phase 06 plans
+- Remove orphaned `underDevelopment` middleware from backend (now dead code after phase 8)
 
 ### Blockers/Concerns
 
