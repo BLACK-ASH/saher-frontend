@@ -332,8 +332,19 @@ Plans:
   4. Self-service attendance page is user-friendly: chart shows actual month data (not 7 records), date-range filter on history table, clear check-in/out status
   5. All existing attendance features (check-in/out, corrections, week-off) continue working without regressions
 
-**Plans**: TBD
+**Plans**: 3 plans in 2 waves
 **UI hint**: yes
+
+Plans:
+
+**Wave 1**
+
+- [ ] 09-01-PLAN.md — Backend security guards + export dead-link fix + $sort bug + nav entry (ATTD-01, ATTD-03, ATTD-05)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
+- [ ] 09-02-PLAN.md — Admin attendance page: Range/Today/Monthly views + drill-down Sheet + export (ATTD-01, ATTD-02)
+- [ ] 09-03-PLAN.md — Self-service UX: chart month data fix + history date-range filter + export format + status card (ATTD-03, ATTD-04, ATTD-05)
 
 ## Progress
 
@@ -350,7 +361,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 →
 | 6. Admin Bank/Accounts & Events Depth | 7/7 | Complete    | 2026-08-30 |
 | 7. Existing Modules Audit-and-Fix | 0/8 | Planned | - |
 | 8. Bug Fixes & Calendar Overhaul | 1/6 | In Progress|  |
-| 9. Attendance Overhaul — Admin Oversight & UX Polish | 0/0 | Planned | - |
+| 9. Attendance Overhaul — Admin Oversight & UX Polish | 0/3 | Planned | - |
 
 ---
 *Roadmap created: 2026-08-24*
