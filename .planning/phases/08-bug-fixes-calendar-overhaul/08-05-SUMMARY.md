@@ -110,5 +110,14 @@ None - no external service configuration required.
 
 ---
 
+## Self-Check: PASSED
+
+- FOUND: `.planning/phases/08-bug-fixes-calendar-overhaul/08-05-SUMMARY.md`
+- FOUND: frontend commit `3a3c633` (docs)
+- FOUND: backend commit `f551dcd` (fix)
+- FOUND: backend `src/libs/utils/calendar.ts` (IST boundaries verified via grep)
+
+---
+
 *Phase: 08-bug-fixes-calendar-overhaul*
 *Completed: 2026-09-01*
