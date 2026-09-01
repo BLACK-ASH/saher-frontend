@@ -4,6 +4,32 @@
 **Domain:** Admin attendance oversight UI, async report export, self-service UX repair (Next.js 16 + TanStack Query + recharts + shadcn)
 **Confidence:** HIGH (backend contracts, export path, guards, and chart root cause all verified against live source)
 
+> **SCOPE EXPANSION (operator-authorized 2026-09-01):** The owner has expanded Phase 9 beyond
+> the original CONTEXT. These additions NOW SUPERSEDE the "backend changes out of scope" claim
+> in this document and REQUIREMENTS.md WITH RESPECT TO THIS PHASE. All are approved in-scope:
+>
+> 1. **All-employee admin export (backend + frontend)** — resolves D-15. Add a backend endpoint
+>    or `userId=all` param so the export worker can produce an ALL-employees PDF/XLSX, plus the
+>    frontend admin export button.
+> 2. **Backend check-in/out mapping fixes** — align the frontend check-in/check-out/overtime
+>    calls (`services/attendance.api.ts`) exactly to backend (`check-in`, `check-out`,
+>    `overtime/check-in`, `weekoff`), incl. the D-14 `$sort`→`sort` bug.
+> 3. **Overtime cron wiring** — verify/wire the existing backend cron jobs
+>    (`create-attendance.cron.ts`, `auto-checkout-attendance.cron.ts`) and surface overtime
+>    state (`attendance.overtime`, `overtime/check-in`) correctly in the UI.
+> 4. **Admin page has THREE views: Range / Today / Monthly** — not just the single range view
+>    in CONTEXT D-02. Admin can switch between a custom date-range table, a today view (all
+>    employees today via `GET /today`), and a monthly view.
+> 5. **Self-service export format selector** — PDF/XLSX (D-06, was already in scope).
+> 6. **D-13 guard fix (backend)** — add `authorize('read','attendance')` to `GET /retrieve` and
+>    `authorize('read','attendance-correction')` to `GET /admin/correction` (confirmed gap);
+>    mirror-verify `lib/permissions.ts` + `tests/permissions.test.ts`.
+>
+> **Frontend AND backend work are both in-scope for Phase 9** per these owner directives.
+> REQUIREMENTS.md's blanket "Backend changes of any kind" out-of-scope line does not apply to
+> the items above for this phase. All other considerations (envelope, dates, pagination, RBAC
+> mirrors) still apply. Backend tasks landing in `../saher-backend` get their own plan/tasks.
+
 ## Summary
 
 This phase builds a dedicated admin "All Attendance" page and repairs the self-service attendance page. Every backend contract in the phase scope was verified against `saher-backend` live source, and four of the CONTEXT decisions (D-08 dead-link, D-10 chart, D-13 guard gap, D-14 `$sort` bug) are **confirmed** as real bugs. One decision, **D-15/D-07 admin all-employee export, is a genuine scope conflict**: the existing `GET /api/attendance/export/report` → BullMQ worker → `retrieveCustomAttendace(job.data.user)` path is hard-wired to a **single user** and has no `userId=all` handling anywhere. Delivering all-employee export requires either a new backend endpoint or a reworked worker — both are backend modifications, which the project's REQUIREMENTS.md explicitly puts **out of scope** ("Backend changes of any kind"). The planner must surface this to the user for an explicit call.
