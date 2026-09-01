@@ -22,11 +22,26 @@ import { CalendarSelection } from "./calendar";
 import { addDays, parseISO } from "date-fns";
 import { useCalendar } from "@/hooks/use-calendar";
 import { toast } from "sonner";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type Props = {
   data: CalendarSelection | null;
   visible: boolean;
   setVisible: Dispatch<SetStateAction<boolean>>;
+  eventId?: string;
+  initialData?: {
+    title: string;
+    type: string;
+    start: Date;
+    end: Date;
+    description?: string | null;
+  };
 };
 
 const createEventSchema = z.object({
@@ -39,8 +54,8 @@ const createEventSchema = z.object({
 
 export type EventPayload = z.infer<typeof createEventSchema>;
 
-function AddEventDialog({ data, visible, setVisible }: Props) {
-  const { add } = useCalendar({});
+function AddEventDialog({ data, visible, setVisible, eventId, initialData }: Props) {
+  const { add, update } = useCalendar({});
   const form = useForm<EventPayload>({
     resolver: zodResolver(createEventSchema),
   });
@@ -57,22 +72,59 @@ function AddEventDialog({ data, visible, setVisible }: Props) {
     });
   }, [data, form]);
 
+  useEffect(() => {
+    if (initialData) {
+      form.reset({
+        title: initialData.title,
+        type: initialData.type,
+        description: initialData.description ?? "",
+        start: initialData.start,
+        end: initialData.end,
+      });
+    }
+  }, [initialData, form]);
+
+  useEffect(() => {
+    if (!visible) {
+      form.reset();
+    }
+  }, [visible, form]);
+
   if (!data) return null;
 
   const start = form.watch("start");
   const end = form.watch("end");
 
   const onEventSubmit = (data: EventPayload) => {
-    add.mutate(
-      { ...data, end: addDays(data.end, 1) },
-      {
-        onSuccess: (res) => {
-          toast.success(res.message);
+    if (eventId) {
+      update.mutate(
+        { id: eventId, data: { ...data, end: addDays(data.end, 1) } },
+        {
+          onSuccess: (res) => {
+            toast.success(res.message);
+            form.reset();
+            setVisible(false);
+          },
+          onError: (err: Error) => {
+            toast.error(err.message);
+          },
         },
-      },
-    );
-    form.reset();
-    setVisible(false);
+      );
+    } else {
+      add.mutate(
+        { ...data, end: addDays(data.end, 1) },
+        {
+          onSuccess: (res) => {
+            toast.success(res.message);
+            form.reset();
+            setVisible(false);
+          },
+          onError: (err: Error) => {
+            toast.error(err.message);
+          },
+        },
+      );
+    }
   };
 
   return (
@@ -108,13 +160,24 @@ function AddEventDialog({ data, visible, setVisible }: Props) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="type">Type</FieldLabel>
-                  <Input
-                    {...field}
-                    id="type"
-                    placeholder="Meeting, Holiday, Task..."
-                    aria-invalid={fieldState.invalid}
-                  />
+                  <FieldLabel htmlFor="event-type">Event Type</FieldLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger
+                      id="event-type"
+                      aria-invalid={fieldState.invalid}
+                    >
+                      <SelectValue placeholder="Select event type" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="holiday">Holiday</SelectItem>
+                      <SelectItem value="session">Session</SelectItem>
+                      <SelectItem value="task">Task</SelectItem>
+                      <SelectItem value="meeting">Meeting</SelectItem>
+                      <SelectItem value="calendar-event">
+                        Calendar Event
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -186,7 +249,7 @@ function AddEventDialog({ data, visible, setVisible }: Props) {
           />
 
           <Button type="submit" className="w-full">
-            Create Event
+            {eventId ? "Update Event" : "Create Event"}
           </Button>
         </form>
       </DialogContent>
