@@ -11,6 +11,16 @@ import { useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
@@ -40,6 +50,8 @@ export default function EventsCalendar() {
   const [selectedEvent, setSelectedEvent] = useState<CalendarEvent | null>(
     null,
   );
+  const [deleteTarget, setDeleteTarget] = useState<CalendarEvent | null>(null);
+  const [editEvent, setEditEvent] = useState<CalendarEvent | null>(null);
   const goPrev = () => {
     calendarRef.current?.getApi().prev();
   };
@@ -169,6 +181,9 @@ export default function EventsCalendar() {
                 onSuccess: (res) => {
                   toast.success(res.message);
                 },
+                onError: (err: Error) => {
+                  toast.error(err.message);
+                },
               },
             );
           }}
@@ -185,6 +200,9 @@ export default function EventsCalendar() {
               {
                 onSuccess: (res) => {
                   toast.success(res.message);
+                },
+                onError: (err: Error) => {
+                  toast.error(err.message);
                 },
               },
             );
@@ -204,8 +222,23 @@ export default function EventsCalendar() {
         />
         <AddEventDialog
           data={selectedItem}
-          visible={selectedVisible}
-          setVisible={setSelectedVisible}
+          visible={selectedVisible || !!editEvent}
+          setVisible={(v) => {
+            if (!v) setEditEvent(null);
+            setSelectedVisible(v);
+          }}
+          eventId={editEvent?.id ?? undefined}
+          initialData={
+            editEvent
+              ? {
+                  title: editEvent.title,
+                  type: editEvent.type,
+                  start: editEvent.start,
+                  end: editEvent.end,
+                  description: editEvent.description,
+                }
+              : undefined
+          }
         />
         <EventDetailsSheet
           event={selectedEvent}
@@ -215,24 +248,53 @@ export default function EventsCalendar() {
               setSelectedEvent(null);
             }
           }}
-          //          onEdit={(event) => {
-          //            console.log("Edit", event);
-
-          // Later:
-          // setEditEvent(event)
-          // setSelectedEvent(null)
-          //          }}
-          onDelete={(event) => {
-            del.mutate(event.id, {
-              onSuccess: () => {
-                toast.success("Calendar Event Deleted");
-              },
-            });
+          onEdit={(event) => {
             setSelectedEvent(null);
-            // Later:
-            // open delete confirmation dialog
+            setEditEvent(event);
+          }}
+          onDelete={(event) => {
+            setSelectedEvent(null);
+            setDeleteTarget(event);
           }}
         />
+        <AlertDialog
+          open={!!deleteTarget}
+          onOpenChange={(open) => {
+            if (!open) setDeleteTarget(null);
+          }}
+        >
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete event?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. The event will be permanently
+                removed.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction
+                disabled={del.isPending}
+                onClick={() => {
+                  if (deleteTarget) {
+                    del.mutate(deleteTarget.id, {
+                      onSuccess: () => {
+                        toast.success("Calendar Event Deleted");
+                        setDeleteTarget(null);
+                      },
+                      onError: (err: Error) => {
+                        toast.error(err.message);
+                        setDeleteTarget(null);
+                      },
+                    });
+                  }
+                }}
+              >
+                {del.isPending ? "Deleting..." : "Delete"}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </CardContent>
     </Card>
   );

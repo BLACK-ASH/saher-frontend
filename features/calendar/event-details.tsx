@@ -36,7 +36,7 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 
-  // onEdit?: (event: CalendarEvent) => void;
+  onEdit?: (event: CalendarEvent) => void;
   onDelete?: (event: CalendarEvent) => void;
 }
 
@@ -44,7 +44,7 @@ export default function EventDetailsSheet({
   event,
   open,
   onOpenChange,
-  // onEdit,
+  onEdit,
   onDelete,
 }: Props) {
   if (!event) return null;
@@ -132,22 +132,25 @@ export default function EventDetailsSheet({
 
         {/* Footer */}
         <div className="border-t p-6">
-          {/* <div className="grid grid-cols-2 gap-3"> */}
-          {/*   <Button variant="outline" onClick={() => onEdit?.(event)}> */}
-          {/*     <Pencil className="mr-2 h-4 w-4" /> */}
-          {/*     Edit */}
-          {/*   </Button> */}
+          <div className="grid grid-cols-2 gap-3">
+            <Button
+              variant="outline"
+              onClick={() => onEdit?.(event)}
+            >
+              <Pencil className="mr-2 h-4 w-4" />
+              Edit
+            </Button>
 
-          <Button
-            variant="destructive"
-            onClick={() => {
-              onDelete?.(event);
-            }}
-          >
-            <Trash2 className="mr-2 h-4 w-4" />
-            Delete
-          </Button>
-          {/* </div> */}
+            <Button
+              variant="destructive"
+              onClick={() => {
+                onDelete?.(event);
+              }}
+            >
+              <Trash2 className="mr-2 h-4 w-4" />
+              Delete
+            </Button>
+          </div>
         </div>
       </SheetContent>
     </Sheet>
