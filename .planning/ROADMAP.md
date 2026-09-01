@@ -339,12 +339,12 @@ Plans:
 
 **Wave 1**
 
-- [ ] 09-01-PLAN.md — Backend security guards + export dead-link fix + $sort bug + nav entry (ATTD-01, ATTD-03, ATTD-05)
+- [ ] 09-01-PLAN.md — Backend foundation: D-13 guards + export dead-link fix + ALL-employees export (userId=all) + month-bounded /user/me + $sort fix + check-in/out mapping + overtime cron verify + nav entry (ATTD-01, ATTD-03, ATTD-04, ATTD-05)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 09-02-PLAN.md — Admin attendance page: Range/Today/Monthly views + drill-down Sheet + export (ATTD-01, ATTD-02)
-- [ ] 09-03-PLAN.md — Self-service UX: chart month data fix + history date-range filter + export format + status card (ATTD-03, ATTD-04, ATTD-05)
+- [ ] 09-02-PLAN.md — Admin attendance page: Range/Today/Monthly views + EMPLOYEE filter + drill-down Sheet + ALL-employees export wired to backend (ATTD-01, ATTD-02, ATTD-03)
+- [ ] 09-03-PLAN.md — Self-service UX: calendar-month chart + range-scoped history filter + export format + status card + overtime surfacing (ATTD-03, ATTD-04, ATTD-05)
 
 ## Progress
 
