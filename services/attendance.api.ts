@@ -1,5 +1,6 @@
 import { apiFetch } from "@/lib/api-wrapper";
 import { userField } from "@/lib/common-zod-schema";
+import { dateToIstDateOnly } from "@/lib/date";
 import { normalizeList } from "@/lib/normalize-list";
 import { toast } from "sonner";
 import z from "zod";
@@ -77,7 +78,30 @@ export const getRangeAttendance = async ({
   endDate,
 }: DefaultProps & { startDate: string; endDate: string }) => {
   const res = await apiFetch<AttendanceResponse[]>(
-    `/api/attendance/retrieve?startDate=${startDate}&endDate=${endDate}&$sort=${sort}&page=${page}&limit=${limit}`,
+    `/api/attendance/retrieve?startDate=${startDate}&endDate=${endDate}&sort=${sort}&page=${page}&limit=${limit}`,
+    {
+      method: "GET",
+    },
+  );
+  return normalizeList<AttendanceResponse>(res);
+};
+
+export const getMonthAttendance = async () => {
+  const now = new Date();
+  const startDate = dateToIstDateOnly(new Date(now.getFullYear(), now.getMonth(), 1));
+  const endDate = dateToIstDateOnly(new Date(now.getFullYear(), now.getMonth() + 1, 0));
+  const res = await apiFetch<AttendanceResponse[]>(
+    `/api/attendance/user/me?startDate=${startDate}&endDate=${endDate}&page=1&limit=31`,
+    {
+      method: "GET",
+    },
+  );
+  return normalizeList<AttendanceResponse>(res);
+};
+
+export const getAttendanceByUserId = async (id: string, page = 1, limit = 10) => {
+  const res = await apiFetch<AttendanceResponse[]>(
+    `/api/attendance/user/${id}?sort=desc&page=${page}&limit=${limit}`,
     {
       method: "GET",
     },

@@ -20,9 +20,9 @@ Decimal phases appear between their surrounding integers in numeric order.
 - [x] **Phase 1: Quality Gates & Test Infrastructure** - Lint/typecheck/test gates exist before any mass changes; vitest + testing-library + msw wired at the apiFetch boundary (completed 2026-08-24)
 - [x] **Phase 2: Shared Infrastructure & Session Reliability** - IST date utils, envelope normalization factory, session-death handler, safe pagination footer, RBAC helper — each tested; auth refresh/logout flows verified against contract (completed 2026-08-25)
 - [x] **Phase 3: Noticeboard Pilot** - First complete module proves the Slice Contract end-to-end; promotes trash-tabs and pagination footer to shared components (completed 2026-08-26)
-- [ ] **Phase 4: Staff Self-Service — Mail & Leave** - Staff run daily personal workflows in-app: read/write internal mail, apply for leave with balances, managers review applications
+- [x] **Phase 4: Staff Self-Service — Mail & Leave** - Staff run daily personal workflows in-app: read/write internal mail, apply for leave with balances, managers review applications
 - [x] **Phase 5: Money & Approval — Reimbursement & Payroll** - The org's full money pipeline (bills → handle → settle, advances, payroll installments, generation trigger) runs in-app with double-submit-proof actions
-- [ ] **Phase 6: Admin Bank/Accounts & Events Depth** - Atomic employee onboarding + bank detail CRUD; full events hierarchy (program→workshop→session→participant), attendance grid, reminders, exports
+- [x] **Phase 6: Admin Bank/Accounts & Events Depth** - Atomic employee onboarding + bank detail CRUD; full events hierarchy (program→workshop→session→participant), attendance grid, reminders, exports
 - [x] **Phase 7: Existing Modules Audit-and-Fix** - Attendance, calendar, users, program, profile, notifications aligned to contract and shared patterns; responsive pass; money/auth test coverage complete
 
 ## Phase Details
@@ -145,16 +145,16 @@ Plans:
 Plans:
 **Wave 1**
 
-- [ ] 04-01-PLAN.md — Code quality foundation: zod schemas for mail/leave services, filename fixes, shared UserSearchPicker component (MAIL-01..04, LEAV-01..06)
+- [x] 04-01-PLAN.md — Code quality foundation: zod schemas for mail/leave services, filename fixes, shared UserSearchPicker component (MAIL-01..04, LEAV-01..06)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 04-02-PLAN.md — Complete mail experience: compose with validation, reply, sanitized body, pagination, outbox multi-recipient display (MAIL-01, MAIL-02, MAIL-03, MAIL-04)
-- [ ] 04-03-PLAN.md — Staff leave: apply with balance cards, proof upload, edit pending, overlap errors, pagination (LEAV-01, LEAV-02, LEAV-03, LEAV-04)
+- [x] 04-02-PLAN.md — Complete mail experience: compose with validation, reply, sanitized body, pagination, outbox multi-recipient display (MAIL-01, MAIL-02, MAIL-03, MAIL-04)
+- [x] 04-03-PLAN.md — Staff leave: apply with balance cards, proof upload, edit pending, overlap errors, pagination (LEAV-01, LEAV-02, LEAV-03, LEAV-04)
 
 **Wave 3** *(blocked on Wave 2 completion)*
 
-- [ ] 04-04-PLAN.md — Admin leave: status filter buttons, PaginationFooter, leave type CRUD verification (LEAV-05, LEAV-06)
+- [x] 04-04-PLAN.md — Admin leave: status filter buttons, PaginationFooter, leave type CRUD verification (LEAV-05, LEAV-06)
 
 ### Phase 5: Money & Approval — Reimbursement & Payroll
 
@@ -339,12 +339,12 @@ Plans:
 
 **Wave 1**
 
-- [ ] 09-01-PLAN.md — Backend foundation: D-13 guards + export dead-link fix + ALL-employees export (userId=all) + month-bounded /user/me + $sort fix + check-in/out mapping + overtime cron verify + nav entry (ATTD-01, ATTD-03, ATTD-04, ATTD-05)
+- [x] 09-01-PLAN.md — Backend foundation: D-13 guards + export dead-link fix + ALL-employees export (userId=all) + month-bounded /user/me + $sort fix + check-in/out mapping + overtime cron verify + nav entry (ATTD-01, ATTD-03, ATTD-04, ATTD-05)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 09-02-PLAN.md — Admin attendance page: Range/Today/Monthly views + EMPLOYEE filter + drill-down Sheet + ALL-employees export wired to backend (ATTD-01, ATTD-02, ATTD-03)
-- [ ] 09-03-PLAN.md — Self-service UX: calendar-month chart + range-scoped history filter + export format + status card + overtime surfacing (ATTD-03, ATTD-04, ATTD-05)
+- [x] 09-02-PLAN.md — Admin attendance page: Range/Today/Monthly views + EMPLOYEE filter + drill-down Sheet + ALL-employees export wired to backend (ATTD-01, ATTD-02, ATTD-03)
+- [x] 09-03-PLAN.md — Self-service UX: calendar-month chart + range-scoped history filter + export format + status card + overtime surfacing (ATTD-03, ATTD-04, ATTD-05)
 
 ## Progress
 

@@ -71,6 +71,7 @@ describe("nav-list sidebar visibility", () => {
     });
     render(<NavItem />, { wrapper });
     expect(screen.getByText("Manager")).toBeTruthy();
+    expect(screen.getByText("All Attendance")).toBeTruthy();
     expect(screen.queryByText("Admin")).toBeNull();
   });
 
@@ -82,6 +83,7 @@ describe("nav-list sidebar visibility", () => {
     render(<NavItem />, { wrapper });
     expect(screen.queryByText("Manager")).toBeNull();
     expect(screen.queryByText("Admin")).toBeNull();
+    expect(screen.queryByText("All Attendance")).toBeNull();
   });
 
   it("admin sees both Manager and Admin group", () => {
@@ -92,6 +94,7 @@ describe("nav-list sidebar visibility", () => {
     render(<NavItem />, { wrapper });
     expect(screen.getByText("Manager")).toBeTruthy();
     expect(screen.getByText("Admin")).toBeTruthy();
+    expect(screen.getByText("All Attendance")).toBeTruthy();
   });
 
   it("intern sees neither Manager nor Admin group", () => {

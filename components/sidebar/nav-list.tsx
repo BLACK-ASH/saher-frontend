@@ -15,6 +15,7 @@ import {
   Bell,
   Calendar,
   CalendarCheck,
+  ClipboardCheck,
   ClockAlert,
   ClockCheck,
   Home,
@@ -103,6 +104,11 @@ const managerRoutes = [
     url: "/leave-management",
     icon: NotebookPen,
   },
+  {
+    label: "All Attendance",
+    url: "/attendance/all",
+    icon: ClipboardCheck,
+  },
 ];
 
 const adminRoutes = [
@@ -125,6 +131,7 @@ const canSeeManagerGroup = (role: UserRole): boolean => {
     if (r.url === "/attendance-correction")
       return can(role, "read", "attendance-correction");
     if (r.url === "/leave-management") return can(role, "read", "leave");
+    if (r.url === "/attendance/all") return role === "admin" || role === "manager";
     return false;
   });
 };

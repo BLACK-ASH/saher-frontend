@@ -15,7 +15,7 @@ import {
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart";
-import { useAttendance } from "@/hooks/use-attendance";
+import { useMonthAttendance } from "@/hooks/use-attendance";
 import { getMonthYear, formatIstDate } from "@/lib/date";
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
@@ -33,8 +33,8 @@ export function AttendanceChart({
   className,
   ...props
 }: React.ComponentProps<"div">) {
-  const { attendancesList } = useAttendance();
-  const { data, isLoading } = attendancesList;
+  const monthQuery = useMonthAttendance();
+  const { data, isLoading } = monthQuery;
 
   const chartData = data?.items.map((a) => ({
     date: a.date,

@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
-import { Download } from "lucide-react";
+import { Check, Download, Loader2 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -28,6 +29,8 @@ export function AttendanceReportDropdown() {
 
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
+  const [format, setFormat] = useState<"pdf" | "xlsx">("pdf");
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const generateReport = async (
     query: Record<string, string | number | boolean>,
@@ -48,24 +51,49 @@ export function AttendanceReportDropdown() {
     toast.success(res.message);
   };
 
+  const handleGenerate = async (query: Record<string, string | number | boolean>) => {
+    setIsGenerating(true);
+    try {
+      await generateReport({ ...query, format });
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">
-            <Download className="size-4" />
-            <p className="hidden md:block">Export Report</p>
+          <Button variant="outline" disabled={isGenerating}>
+            {isGenerating ? (
+              <Loader2 className="size-4 animate-spin" />
+            ) : (
+              <Download className="size-4" />
+            )}
+            <p className="hidden md:block">
+              Export Report ({format.toUpperCase()})
+            </p>
           </Button>
         </DropdownMenuTrigger>
 
         <DropdownMenuContent align="end">
-          <DropdownMenuItem onClick={() => generateReport({ type: "today" })}>
+          <DropdownMenuItem onClick={() => setFormat("pdf")}>
+            {format === "pdf" && <Check className="mr-2 h-4 w-4" />}
+            PDF
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => setFormat("xlsx")}>
+            {format === "xlsx" && <Check className="mr-2 h-4 w-4" />}
+            Excel (XLSX)
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+
+          <DropdownMenuItem onClick={() => handleGenerate({ type: "today" })}>
             Today
           </DropdownMenuItem>
 
           <DropdownMenuItem
             onClick={() =>
-              generateReport({
+              handleGenerate({
                 type: "week",
                 includeToday: true,
               })
@@ -76,7 +104,7 @@ export function AttendanceReportDropdown() {
 
           <DropdownMenuItem
             onClick={() =>
-              generateReport({
+              handleGenerate({
                 type: "month",
                 includeToday: true,
               })
@@ -87,7 +115,7 @@ export function AttendanceReportDropdown() {
 
           <DropdownMenuItem
             onClick={() =>
-              generateReport({
+              handleGenerate({
                 type: "year",
                 includeToday: true,
               })
@@ -121,7 +149,7 @@ export function AttendanceReportDropdown() {
 
           <Button
             onClick={async () => {
-              await generateReport({
+              await handleGenerate({
                 type: "lastDays",
                 days,
                 includeToday: true,
@@ -155,7 +183,7 @@ export function AttendanceReportDropdown() {
 
           <Button
             onClick={async () => {
-              await generateReport({
+              await handleGenerate({
                 type: "custom",
                 startDate,
                 endDate,

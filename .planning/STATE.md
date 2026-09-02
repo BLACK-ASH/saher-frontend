@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.0
 milestone_name: milestone
-status: waiting
-stopped_at: Phase 9 UI-SPEC approved
-last_updated: "2026-09-01T15:22:43.446Z"
+status: complete
+stopped_at: Phase 9 complete — all 9 phases, 48/48 plans
+last_updated: "2026-09-02T17:30:00.000Z"
 progress:
   total_phases: 9
-  completed_phases: 6
+  completed_phases: 9
   total_plans: 48
-  completed_plans: 43
-  percent: 67
+  completed_plans: 48
+  percent: 100
 ---
 
 # Project State
@@ -24,10 +24,19 @@ See: .planning/PROJECT.md (updated 2024-08-24)
 
 ## Current Position
 
-Phase: 08 (bug-fixes-calendar-overhaul) — COMPLETE ✓
-Plan: 6 of 6 ✓
-Plans: 6/6 complete (08-01 ✓, 08-02 ✓, 08-03 ✓, 08-04 ✓, 08-05 ✓, 08-06 ✓)
-Remaining phases: 04, 06
+Phase: 09 (attendance-overhaul-admin-oversight-ux-polish) — COMPLETE ✓
+Plan: 3 of 3 ✓
+Plans: 3/3 complete (09-01 ✓, 09-02 ✓, 09-03 ✓)
+
+**ALL 9 PHASES COMPLETE — 48/48 plans, 100%. Milestone v1.0 delivered.**
+
+Phase 9 Execution (2026-09-02):
+
+- 09-01: Backend hardening + export dead-link fix + all-employees export (?userId=all) + month-bounded /user/me + $sort fix + nav entry + cron verification
+- 09-02: Admin "All Attendance" page (/attendance/all) — Range/Today/Monthly views, employee filter, drill-down Sheet, PDF/XLSX export
+- 09-03: Self-service UX — calendar-month chart, range-scoped history filter, export format selector, status Badge + overtime surfacing
+
+Session report export enhancement (backend, post-phase): PDF + XLSX session reports now include details (desc/time), roster attendance (present/absent derived from program participants vs session.participants), images, and bills — implemented in `src/events/export/session-pdf.ts` + `src/events/export/session-excel.service.ts`, driven by the expanded `fetchSession` in `src/worker/session-report.ts`. Verified live: PDF renders Attendance(3)+Program/Workshop, XLSX emits Session/Attendance/Bills sheets; images/bills sections hide when empty. Backend tsc passes, lint 0 errors.
 
 Phase 7 Status
 
@@ -36,7 +45,7 @@ Phase 7 Status
 - W3: 07-06 responsive ✓, 07-07 test coverage ✓ (428 tests green)
 - W4: 07-08 final date sweep + gate ✓ (lib/date sweep, lint/build/test green)
 
-All 43 plans, 6 phases complete (1,2,3,5,7,8). Remaining: Phase 4, Phase 6.
+All 48 plans, 9 phases complete (1,2,3,4,5,6,7,8,9). No remaining phases.
 
 Phase 6 Wave Structure
 
@@ -157,7 +166,6 @@ Recent decisions affecting current work:
 
 ### Pending Todos
 
-- Execute Phase 04 and Phase 06 plans
 - Remove orphaned `underDevelopment` middleware from backend (now dead code after phase 8)
 
 ### Blockers/Concerns
@@ -176,6 +184,6 @@ Recent decisions affecting current work:
 
 ## Session Continuity
 
-Last session: 2026-09-01T14:30:01.819Z
-Stopped at: Phase 9 UI-SPEC approved
-Resume file: .planning/phases/09-attendance-overhaul-admin-oversight-ux-polish/09-UI-SPEC.md
+Last session: 2026-09-02T18:15:00.000Z
+Stopped at: All 9 phases complete — 48/48 plans, milestone v1.0 delivered; session report export enhanced (PDF+XLSX with details/attendance/images/bills), verified live
+Resume file: .planning/phases/09-attendance-overhaul-admin-oversight-ux-polish/09-03-SUMMARY.md

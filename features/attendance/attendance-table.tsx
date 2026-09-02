@@ -21,6 +21,7 @@ import { useAttendance } from "@/hooks/use-attendance";
 import { formatIstDate, formatIstDateTime, formatHours } from "@/lib/date";
 import { AttendanceCorrectionSide } from "./attendance-correction";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { RotateCw } from "lucide-react";
 import { useState } from "react";
 import {
@@ -47,8 +48,19 @@ export function AttendanceTable({
   ...props
 }: React.ComponentProps<"div">) {
   const [page, setPage] = useState<number>(1);
-  const { attendancesList: data } = useAttendance({ sort: "desc", page });
+  const [filterStartDate, setFilterStartDate] = useState("");
+  const [filterEndDate, setFilterEndDate] = useState("");
+  const [appliedStart, setAppliedStart] = useState("");
+  const [appliedEnd, setAppliedEnd] = useState("");
+  const { attendancesList: data } = useAttendance({ sort: "desc", page, limit: 100 });
   const { data: attendances, isLoading, refetch, isRefetching } = data;
+
+  const filteredItems =
+    attendances?.items.filter((a) => {
+      if (appliedStart && a.date < appliedStart) return false;
+      if (appliedEnd && a.date > appliedEnd) return false;
+      return true;
+    }) ?? [];
 
   if (isLoading) return <DefaultLoader className={className} />;
   if (!attendances)
@@ -60,11 +72,55 @@ export function AttendanceTable({
       />
     );
 
+  const filterActive = !!(appliedStart || appliedEnd);
+
   return (
     <Card className={className}>
       <CardHeader className="flex flex-wrap items-center justify-between">
         <CardTitle>Recent Attendances</CardTitle>
         <CardAction className="flex flex-wrap gap-2 items-center">
+          <div className="flex items-center gap-2">
+            <Input
+              type="date"
+              className="w-[140px]"
+              value={filterStartDate}
+              max={filterEndDate || undefined}
+              onChange={(e) => setFilterStartDate(e.target.value)}
+              placeholder="Start"
+            />
+            <Input
+              type="date"
+              className="w-[140px]"
+              value={filterEndDate}
+              min={filterStartDate || undefined}
+              onChange={(e) => setFilterEndDate(e.target.value)}
+              placeholder="End"
+            />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => {
+                setAppliedStart(filterStartDate);
+                setAppliedEnd(filterEndDate);
+                setPage(1);
+              }}
+            >
+              Apply
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => {
+                setFilterStartDate("");
+                setFilterEndDate("");
+                setAppliedStart("");
+                setAppliedEnd("");
+                setPage(1);
+              }}
+            >
+              Reset
+            </Button>
+          </div>
           <Tooltip>
             <TooltipTrigger asChild>
               <AttendanceReportDropdown />
@@ -88,6 +144,11 @@ export function AttendanceTable({
         </CardAction>
       </CardHeader>
       <CardContent>
+        {filterActive && (
+          <p className="mb-2 text-sm text-muted-foreground">
+            Filtered: {appliedStart || "—"} to {appliedEnd || "—"}
+          </p>
+        )}
         <Table>
           <TableHeader>
             <TableRow>
@@ -101,39 +162,47 @@ export function AttendanceTable({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {attendances?.items.map((attendance) => (
-              <TableRow className="cursor-pointer" key={attendance.id}>
-                <TableCell className="font-medium">
-                  {formatIstDate(attendance.date)}
-                </TableCell>
-                <TableCell className="text-center">
-                  {formatIstDateTime(attendance.inTime)}
-                </TableCell>
-                <TableCell className="text-center">
-                  {formatIstDateTime(attendance.outTime)}
-                </TableCell>
-                <TableCell className="text-center">
-                  {formatHours(attendance.workHours)}
-                </TableCell>
-                <TableCell className="font-medium">
-                  <Badge variant={attendanceStatusVariant[attendance.status]}>
-                    {attendance.status}
-                  </Badge>
-                </TableCell>
-                <TableCell className="font-medium text-center">
-                  <Badge
-                    variant={
-                      attendance.isLate ? "outline-warn" : "outline-success"
-                    }
-                  >
-                    {attendance.isLate ? "late" : "on time"}
-                  </Badge>
-                </TableCell>
-                <TableCell className="text-center">
-                  <AttendanceCorrectionSide attendance={attendance} />
+            {filteredItems.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                  No attendance records match the selected date range.
                 </TableCell>
               </TableRow>
-            ))}
+            ) : (
+              filteredItems.map((attendance) => (
+                <TableRow className="cursor-pointer" key={attendance.id}>
+                  <TableCell className="font-medium">
+                    {formatIstDate(attendance.date)}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {formatIstDateTime(attendance.inTime)}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {formatIstDateTime(attendance.outTime)}
+                  </TableCell>
+                  <TableCell className="text-center">
+                    {formatHours(attendance.workHours)}
+                  </TableCell>
+                  <TableCell className="font-medium">
+                    <Badge variant={attendanceStatusVariant[attendance.status]}>
+                      {attendance.status}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="font-medium text-center">
+                    <Badge
+                      variant={
+                        attendance.isLate ? "outline-warn" : "outline-success"
+                      }
+                    >
+                      {attendance.isLate ? "late" : "on time"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <AttendanceCorrectionSide attendance={attendance} />
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
           </TableBody>
         </Table>
       </CardContent>

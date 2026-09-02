@@ -2,6 +2,7 @@
 
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,7 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { useAttendance } from "@/hooks/use-attendance";
+import { useAttendance, AttendanceStatus as AttendanceStatusEnum } from "@/hooks/use-attendance";
 import { formatIstDate, formatHours, istTime } from "@/lib/date";
 import {
   ArrowDownLeft,
@@ -52,10 +53,29 @@ const AttendanceStatus = () => {
       <CardHeader>
         <CardTitle>{formatIstDate(data.date)}</CardTitle>
 
-        <CardAction>
-          <span className="rounded-md bg-muted px-3 py-1 text-sm font-medium">
-            {status.replaceAll("_", " ")}
-          </span>
+        <CardAction className="flex flex-wrap items-center gap-2">
+          <Badge
+            variant={
+              status === AttendanceStatusEnum.CHECKED_IN
+                ? "outline-success"
+                : status === AttendanceStatusEnum.LATE
+                  ? "outline-warn"
+                  : status === AttendanceStatusEnum.CHECKED_OUT
+                    ? "default"
+                    : "outline"
+            }
+          >
+            {status === AttendanceStatusEnum.NOT_CHECKED_IN
+              ? "Not Checked In"
+              : status === AttendanceStatusEnum.CHECKED_IN
+                ? "Checked In"
+                : status === AttendanceStatusEnum.LATE
+                  ? "Late"
+                  : "Checked Out"}
+          </Badge>
+          {data.overtime === true && (
+            <Badge variant="verify">Overtime</Badge>
+          )}
         </CardAction>
       </CardHeader>
 

@@ -4,6 +4,7 @@ import {
   checkInApi,
   checkOutApi,
   getAttendance,
+  getMonthAttendance,
   overtimeCheckInApi,
   weekoff,
 } from "@/services/attendance.api";
@@ -98,3 +99,10 @@ export const useAttendance = ({
     weekOff,
   };
 };
+
+export const useMonthAttendance = () =>
+  useQuery({
+    queryKey: ["attendance", "month"],
+    queryFn: getMonthAttendance,
+    staleTime: 60_000,
+  });
