@@ -8,7 +8,7 @@
 | # | Phase | Priority | Status | Root Cause (verified) | Files | Evidence |
 |---|-------|----------|--------|----------------------|-------|----------|
 | 0 | Authentication & Authorization | CRITICAL | ✅ **DONE** | deadlock (no verify link + auth-gated request); no status check on guard/refresh; no session flush on admin delete | backend: account/controller, onboard-mail, user/controller, token, protected-route, auth.test | `pnpm typecheck` PASS, `pnpm lint` 0 err, `pnpm test` 257/257 |
-| 1 | Soft Delete & Resource Lifecycle | CRITICAL | ⏳ Pending | React Query hooks drop `isDeleted` → identical cache key for Active/Deleted | hooks/use-programs,sessions,workshops; backend program.controller | |
+| 1 | Soft Delete & Resource Lifecycle | CRITICAL | ✅ DONE | React Query hooks drop `isDeleted` → identical cache key for Active/Deleted | hooks/use-programs,sessions,workshops; backend program.controller | |
 | 2 | Image/File Preview | HIGH | ⏳ Pending | upload controllers return `url` not `src`; duplicated mapping; leave `proof` mis-store | backend upload controllers + openapi; frontend image-upload, leave, register, profile, program | |
 | 3 | Global Form Validation | HIGH | ⏳ Pending | attendance-correction enum/message mismatch; backend bill/leave validation gaps | features/attendance-correction{,view}; VALIDATION-AUDIT | |
 | 4 | Bill Management | HIGH | ⏳ Pending | `onView`/`onWithdraw` no-ops on My Bills; backend lacks `.positive()` | my-bills/page; backend bill/schema, bill.model | |
