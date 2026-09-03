@@ -30,6 +30,7 @@ export const usePrograms = ({
   keyword = "",
   limit = 10,
   page = 1,
+  isDeleted,
 }: Props) => {
   const queryClient = useQueryClient();
   const { list, detail, add, update, del } = useProgramBase({
@@ -37,6 +38,7 @@ export const usePrograms = ({
     keyword,
     page,
     limit,
+    isDeleted,
   });
 
   const addParticipants = useMutation({

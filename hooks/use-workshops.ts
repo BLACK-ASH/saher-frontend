@@ -29,9 +29,9 @@ const invalidateWorkshopAndProgram = (queryClient: ReturnType<typeof useQueryCli
 
 type Props = { id?: string } & QueryProps;
 
-export const useWorkshops = ({ id, keyword, page, limit }: Props) => {
+export const useWorkshops = ({ id, keyword, page, limit, isDeleted }: Props) => {
   const queryClient = useQueryClient();
-  const base = useWorkshopBase({ id, keyword, page, limit });
+  const base = useWorkshopBase({ id, keyword, page, limit, isDeleted });
 
   // Wrap base mutations to also invalidate programs
   const add = useMutation({

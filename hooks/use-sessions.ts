@@ -36,9 +36,9 @@ const invalidateSessionHierarchy = (queryClient: ReturnType<typeof useQueryClien
 
 type Props = { id?: string } & QueryProps;
 
-export const useSessions = ({ id, keyword, limit, page }: Props) => {
+export const useSessions = ({ id, keyword, limit, page, isDeleted }: Props) => {
   const queryClient = useQueryClient();
-  const base = useSessionBase({ id, keyword, page, limit });
+  const base = useSessionBase({ id, keyword, page, limit, isDeleted });
 
   // Wrap base mutations to also invalidate workshops and programs
   const add = useMutation({
