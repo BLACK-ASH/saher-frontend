@@ -42,7 +42,6 @@ import {
 
 export const attendanceCorrectionStatusList = [
   "reject",
-  "pending",
   "on-hold",
   "approve",
 ] as const;
@@ -119,7 +118,7 @@ const AttendanceCorrectionView = ({
     if (correction) {
       form.reset({
         isAdmin,
-        status: correction.status,
+        status: correction.status === "pending" ? "on-hold" : correction.status,
         reason: correction.reason ?? "",
         changes: {
           inTime: istTime(correction?.changes?.inTime) ?? "",

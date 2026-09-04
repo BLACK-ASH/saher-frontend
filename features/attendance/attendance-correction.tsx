@@ -39,7 +39,7 @@ export const attendanceCorrectionCreateSchema = z.object({
   message: z
     .string()
     .min(10, "Message is Required. Atleast 10 Characters")
-    .max(100, "Max Limit Is 100 Characters."),
+    .max(300, "Max Limit Is 300 Characters."),
   proof: z.string().optional(),
   upload: z.string().optional(),
   inTime: z.string().min(2, "Check In Time Is Required"),
@@ -209,7 +209,7 @@ export function AttendanceCorrectionSide({
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">
-                        {field.value.length}/100 characters
+                        {field.value.length}/300 characters
                       </InputGroupText>
                     </InputGroupAddon>
                   </InputGroup>

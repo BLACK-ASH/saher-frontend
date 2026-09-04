@@ -2,7 +2,7 @@
 fix_state_version: 1.0
 milestone: fix
 total_phases: 10
-completed_phases: 3
+completed_phases: 4
 last_updated: "2026-09-04T00:00:00.000Z"
 ---
 
@@ -10,7 +10,7 @@ last_updated: "2026-09-04T00:00:00.000Z"
 
 ## Position
 
-**Active phase:** Phase 3 — awaiting execution
+**Active phase:** Phase 4 — awaiting execution
 
 ## Phase 0 — Authentication & Authorization ✅ COMPLETE
 
@@ -72,8 +72,22 @@ last_updated: "2026-09-04T00:00:00.000Z"
 
 **Unrelated backend edits** (get-bill schema + search-bill controller) committed separately as `5af6bd2` to keep them out of the Phase 2 commit.
 
-## Deployment status (testing phase)
+## Phase 3 — Form Validation (fix-03) ✅ COMPLETE
 
-- Frontend: committed on `dev` (`8f4237a`) — push `dev` to trigger frontend CI test deploy.
-- Backend: committed on `fix/module-fixes` (`55334aa`, `5af6bd2`) — push `fix/module-fixes`, then merge to `dev` and push `dev` to trigger backend integration deploy. Backend CI deploys from `main` only for production.
-- ⚠️ Pushes pending: this sandbox has no outbound GitHub access; must be pushed from a networked host.
+**Goal:** Audit every major form against its backend schema and close gaps.
+
+**Frontend changes (commit pending, on `dev`):**
+- `features/attendance/attendance-correction.tsx` — message max `.max(100)` → `.max(300)` (+ counter).
+- `features/attendance-correction/attendance-correction-view.tsx` — handle/submit status enum drops `"pending"` (now `['reject','on-hold','approve']`, matching backend); reset normalizes pending → on-hold.
+
+**Docs:**
+- `VALIDATION-AUDIT.md` — 13-form audit, 14 GAP rows, 5 HIGH + 2 MEDIUM.
+- `VALIDATION-BACKEND-GAPS.md` — bill amount/advance `.positive()` (fix-04), leave type `.min(1)` (fix-06) tracked.
+
+**Verification:** lint 0 errors, build PASS, test 428/428 PASS.
+
+## Deployment status (Phase 3)
+
+- Frontend: pushed to `dev` (phase commits follow once committed).
+- Backend: pushed to `dev` (`b89b357..5af6bd2`, merged `fix/module-fixes`).
+- CI test deploys triggered on `dev` push for both repos.
