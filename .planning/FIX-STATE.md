@@ -2,7 +2,7 @@
 fix_state_version: 1.0
 milestone: fix
 total_phases: 10
-completed_phases: 4
+completed_phases: 5
 last_updated: "2026-09-04T00:00:00.000Z"
 ---
 
@@ -10,7 +10,7 @@ last_updated: "2026-09-04T00:00:00.000Z"
 
 ## Position
 
-**Active phase:** Phase 4 — awaiting execution
+**Active phase:** Phase 5 — awaiting execution
 
 ## Phase 0 — Authentication & Authorization ✅ COMPLETE
 
@@ -91,3 +91,34 @@ last_updated: "2026-09-04T00:00:00.000Z"
 - Frontend: pushed to `dev` (phase commits follow once committed).
 - Backend: pushed to `dev` (`b89b357..5af6bd2`, merged `fix/module-fixes`).
 - CI test deploys triggered on `dev` push for both repos.
+
+## Phase 4 — Bill Management (fix-04) ✅ COMPLETE
+
+**Root causes of the live bill bugs:**
+1. BILL-01 (bug 2): `my-bills/page.tsx` passed `onView={() => {}}` and never
+   passed `onWithdraw` → the View/Withdraw buttons were no-ops.
+2. Bugs 1 & 3 (receipts): the backend stored `images: [Media-id]` but the
+   response schema only had a dead singular `image` field and stripped
+   `images` → `bill.image` was always `undefined`, so receipts never rendered
+   in the detail dialog nor prefilled in the edit dialog.
+3. BILL-02: backend `bill/schema.ts` had no positive constraint on `amount`.
+
+**Changes:**
+- Backend — `get-bill.schema.ts` replaces `image` with `images: [{id,src,alt}]`;
+  `my-bills`/`search-bill`/`recycle-bill` controllers `.populate('images')`;
+  `bill/schema.ts` `amount` → `.positive()`; `bill.model.ts` `amount` `min:1`
+  (advance stays `min:0` — user bills legitimately carry `advance: 0`).
+- Frontend — `reimbursement.api.ts` `billSchema.images` array;
+  `bill-detail-dialog` renders receipts; `edit-bill-dialog` prefills from
+  `bill.images` ids; `my-bills/page.tsx` wires `onView` + `onWithdraw`
+  (AlertDialog confirm) + `BillDetailDialog`; test fixture updated.
+
+**Not a bug:** "admin panel won't open" — management page correctly requires
+`preReimbursement:read` (admin/manager only); a `user`/`intern` account is
+redirected to `/forbidden`. Role/config matter, not code.
+
+**Verification:**
+- Backend: typecheck PASS, test 257/257 PASS, lint 0 errors.
+- Frontend: lint 0 errors, test 428/428 PASS, build PASS.
+
+**Docs:** `.planning/phases/fix-04-bill-management/04-01-SUMMARY.md`.
