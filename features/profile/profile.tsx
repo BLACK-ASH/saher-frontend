@@ -58,21 +58,21 @@ export default function ProfilePage() {
             <Grid>
               <Field label="Full Name" value={user.name} />
               <Field label="Display Name" value={user.displayName || "-"} />
-              <Field label="Gender" value={account.gender} />
-              <Field label="Phone" value={account.phoneNumber} />
+              <Field label="Gender" value={account.gender || "-"} />
+              <Field label="Phone" value={account.phoneNumber || "-"} />
               <Field
                 label="Date of Birth"
                 value={formatDate(account.dateOfBirth)}
               />
-              <Field label="Address" value={account.address} full />
+              <Field label="Address" value={account.address || "-"} full />
             </Grid>
           </Section>
 
           <Section title="Employment">
             <Grid>
-              <Field label="Department" value={account.department} />
-              <Field label="Designation" value={account.designation} />
-              <Field label="Employee Type" value={account.employeeType} />
+              <Field label="Department" value={account.department || "-"} />
+              <Field label="Designation" value={account.designation || "-"} />
+              <Field label="Employee Type" value={account.employeeType || "-"} />
               <Field
                 label="Shift"
                 value={account.employeeShift || "Not Assigned"}
@@ -83,73 +83,93 @@ export default function ProfilePage() {
               />
               <Field
                 label="Salary Structure"
-                value={account.salaryStructure}
+                value={account.salaryStructure || "-"}
                 full
               />
             </Grid>
           </Section>
 
-          <Section title="Bank Details">
-            <Grid>
-              <Field label="Account Holder" value={bank.accountHolderName} />
-              <Field label="Bank Name" value={bank.bankName} />
-              <Field label="Account Number" value={maskAccount(bank.accountNumber)} />
-              <Field label="IFSC" value={bank.ifcs} />
-              <Field label="Branch" value={bank.branch} />
-              <Field label="Mobile" value={bank.mobileNumber} />
-            </Grid>
-          </Section>
+          {bank && (
+            <Section title="Bank Details">
+              <Grid>
+                <Field label="Account Holder" value={bank.accountHolderName} />
+                <Field label="Bank Name" value={bank.bankName} />
+                <Field label="Account Number" value={maskAccount(bank.accountNumber)} />
+                <Field label="IFSC" value={bank.ifcs} />
+                <Field label="Branch" value={bank.branch} />
+                <Field label="Mobile" value={bank.mobileNumber} />
+              </Grid>
+            </Section>
+          )}
 
           <Section title="Documents">
             <Accordion type="single" collapsible defaultValue="aadhar">
-              <AccordionItem value="aadhar">
-                <AccordionTrigger>Aadhar Card</AccordionTrigger>
-                <AccordionContent>
-                  <Image
-                    src={account.aadhar.src}
-                    alt={account.aadhar.alt}
-                    height={400}
-                    width={400}
-                  />
-                  <Link href={account.aadhar.src} download={account.aadhar.alt}>
-                    <Button className="my-4" variant={"outline"}>
-                      Download
-                    </Button>
-                  </Link>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="pan">
-                <AccordionTrigger>Pan Card</AccordionTrigger>
-                <AccordionContent>
-                  <Image
-                    src={account.pan.src}
-                    alt={account.pan.alt}
-                    height={400}
-                    width={400}
-                  />
-                  <Link href={account.pan.src} download={account.pan.alt}>
-                    <Button className="my-4" variant={"outline"}>
-                      Download
-                    </Button>
-                  </Link>
-                </AccordionContent>
-              </AccordionItem>
-              <AccordionItem value="resume">
-                <AccordionTrigger>Resume</AccordionTrigger>
-                <AccordionContent>
-                  <Image
-                    src={account.resume.src}
-                    alt={account.resume.alt}
-                    height={400}
-                    width={400}
-                  />
-                  <Link href={account.resume.src} download={account.resume.alt}>
-                    <Button className="my-4" variant={"outline"}>
-                      Download
-                    </Button>
-                  </Link>
-                </AccordionContent>
-              </AccordionItem>
+              {account.aadhar ? (
+                <AccordionItem value="aadhar">
+                  <AccordionTrigger>Aadhar Card</AccordionTrigger>
+                  <AccordionContent>
+                    <Image
+                      src={account.aadhar.src}
+                      alt={account.aadhar.alt}
+                      height={400}
+                      width={400}
+                    />
+                    <Link href={account.aadhar.src} download={account.aadhar.alt}>
+                      <Button className="my-4" variant={"outline"}>
+                        Download
+                      </Button>
+                    </Link>
+                  </AccordionContent>
+                </AccordionItem>
+              ) : (
+                <AccordionItem value="aadhar" disabled>
+                  <AccordionTrigger>Aadhar Card — Not uploaded</AccordionTrigger>
+                </AccordionItem>
+              )}
+              {account.pan ? (
+                <AccordionItem value="pan">
+                  <AccordionTrigger>Pan Card</AccordionTrigger>
+                  <AccordionContent>
+                    <Image
+                      src={account.pan.src}
+                      alt={account.pan.alt}
+                      height={400}
+                      width={400}
+                    />
+                    <Link href={account.pan.src} download={account.pan.alt}>
+                      <Button className="my-4" variant={"outline"}>
+                        Download
+                      </Button>
+                    </Link>
+                  </AccordionContent>
+                </AccordionItem>
+              ) : (
+                <AccordionItem value="pan" disabled>
+                  <AccordionTrigger>Pan Card — Not uploaded</AccordionTrigger>
+                </AccordionItem>
+              )}
+              {account.resume ? (
+                <AccordionItem value="resume">
+                  <AccordionTrigger>Resume</AccordionTrigger>
+                  <AccordionContent>
+                    <Image
+                      src={account.resume.src}
+                      alt={account.resume.alt}
+                      height={400}
+                      width={400}
+                    />
+                    <Link href={account.resume.src} download={account.resume.alt}>
+                      <Button className="my-4" variant={"outline"}>
+                        Download
+                      </Button>
+                    </Link>
+                  </AccordionContent>
+                </AccordionItem>
+              ) : (
+                <AccordionItem value="resume" disabled>
+                  <AccordionTrigger>Resume — Not uploaded</AccordionTrigger>
+                </AccordionItem>
+              )}
             </Accordion>
           </Section>
         </div>

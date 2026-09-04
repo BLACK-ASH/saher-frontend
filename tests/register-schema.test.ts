@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { registerFormSchema } from "@/features/register/register-schema";
+import {
+  registerFormSchema,
+  bankDetailSchema,
+} from "@/features/register/register-schema";
 
 const objectId = "614c1f8b9f1b2c3d4e5f6a7b";
 
@@ -34,6 +37,25 @@ const basePayload = {
     resume: objectId,
   },
 };
+
+describe("USER-01 bank field string contract", () => {
+  it("parses bankName as a string (not a number)", () => {
+    const result = bankDetailSchema.safeParse(basePayload.bank);
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.bankName).toBe("HDFC");
+      expect(typeof result.data.bankName).toBe("string");
+    }
+  });
+
+  it("rejects a numeric bankName (no string coercion)", () => {
+    const result = bankDetailSchema.safeParse({
+      ...basePayload.bank,
+      bankName: 12345 as unknown as string,
+    });
+    expect(result.success).toBe(false);
+  });
+});
 
 describe("registerFormSchema employeeType enum (five-value backend list)", () => {
   it("accepts employeeType 'free'", () => {

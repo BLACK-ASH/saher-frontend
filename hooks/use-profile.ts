@@ -14,6 +14,12 @@ export type BankT = {
   readonly id: string;
 };
 
+export type KYCDoc = {
+  id: string;
+  alt: string;
+  src: string;
+};
+
 export type AccountT = {
   readonly gender: "male" | "female" | "other";
   readonly dateOfBirth: Date;
@@ -28,23 +34,11 @@ export type AccountT = {
   readonly address: string;
   readonly id: string;
   readonly user: UserT;
-  readonly bank: BankT;
+  readonly bank: BankT | null;
   readonly employeeShift?: "shift-1" | "shift-2" | undefined;
-  readonly aadhar: {
-    id: string;
-    alt: string;
-    src: string;
-  };
-  readonly pan: {
-    id: string;
-    alt: string;
-    src: string;
-  };
-  readonly resume: {
-    id: string;
-    alt: string;
-    src: string;
-  };
+  readonly aadhar: KYCDoc | null | undefined;
+  readonly pan: KYCDoc | null | undefined;
+  readonly resume: KYCDoc | null | undefined;
 };
 
 export const useProfile = () => {

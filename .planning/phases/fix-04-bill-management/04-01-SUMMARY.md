@@ -54,6 +54,20 @@ redirected to `/forbidden` by design (server still enforces all endpoints).
 If the QA account can't open the panel, its role is not admin — that is a
 role/config matter, not code.
 
+## Follow-up — admin-panel runtime crash (NOT yet root-caused)
+Later QA reported the reimbursement management page throws "Something went
+wrong" (app/error.tsx boundary) even when logged in as `admin`. This is a
+client **runtime render/data crash**, distinct from the permission redirect.
+It is NOT caused by the fix-04 receipt changes: the search/recycle responses
+are NOT zod-parsed at runtime (`searchBills` returns `res.data` raw through
+`normalizeList`; `billSchema` is used only as a TS type and for
+`balanceEnquiry.parse`), so the `images` schema change never executes on that
+data path. Root cause requires live runtime logs (deep-link the page, read
+the `logError` output / dev error boundary). Likely candidates to investigate
+first: `useUserMap` iterating a non-iterable cached `["users"]` value, or a
+data-shape mismatch from the backend search/mybills endpoint. Revisit before
+declaring the management panel stable.
+
 ## Verification
 - Backend: `pnpm typecheck` PASS, `pnpm test` 257/257 PASS, `pnpm lint` 0 errors.
 - Frontend: `pnpm lint` 0 errors (58 warnings), `pnpm test` 428/428 PASS, `pnpm build` PASS.

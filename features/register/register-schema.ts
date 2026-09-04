@@ -10,7 +10,10 @@ const objectId = z
 export const bankDetailSchema = z.object({
   accountHolderName: z.string().min(2, "Account Holder Name Is Required"),
   bankName: z.string().min(2, "Bank Name Is Required."),
-  accountNumber: z.string("Bank Account Number Is Required."),
+  accountNumber: z
+    .string("Bank Account Number Is Required.")
+    .trim()
+    .regex(/^\d{9,18}$/, "Invalid bank account number (9-18 digits)"),
   ifcs: z
     .string("Bank IFCS Code Is Required.")
     .trim()

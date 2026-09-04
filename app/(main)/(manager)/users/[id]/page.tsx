@@ -39,14 +39,6 @@ function ManagerUserPage() {
     return <NoData title="User Not Found" description=""></NoData>;
   }
   const { user, bank } = account;
-  const {
-    accountHolderName,
-    bankName,
-    accountNumber,
-    ifcs,
-    branch,
-    mobileNumber,
-  } = bank;
   return (
     <section className="w-full md:w-2/3 lg:1/2 mx-auto mt-8 py-8 space-y-2">
       {" "}
@@ -180,66 +172,88 @@ function ManagerUserPage() {
               </Button>
             </div>
           </RoleAccess>
-          <Grid>
-            <Field label="Account Holder" value={accountHolderName} />
-            <Field label="Bank Name" value={bankName} />
-            <Field label="Account Number" value={maskAccount(accountNumber)} />
-            <Field label="IFSC" value={ifcs} />
-            <Field label="Branch" value={branch} />
-            <Field label="Mobile" value={mobileNumber} />
-          </Grid>
+          {bank ? (
+            <Grid>
+              <Field label="Account Holder" value={bank.accountHolderName} />
+              <Field label="Bank Name" value={bank.bankName} />
+              <Field label="Account Number" value={maskAccount(bank.accountNumber)} />
+              <Field label="IFSC" value={bank.ifcs} />
+              <Field label="Branch" value={bank.branch} />
+              <Field label="Mobile" value={bank.mobileNumber} />
+            </Grid>
+          ) : (
+            <p className="text-sm text-muted-foreground">Not provided</p>
+          )}
         </Section>
 
         <Section title="Documents">
           <Accordion type="single" collapsible defaultValue="aadhar">
-            <AccordionItem value="aadhar">
-              <AccordionTrigger>Aadhar Card</AccordionTrigger>
-              <AccordionContent>
-                <Image
-                  src={account.aadhar.src}
-                  alt={account.aadhar.alt}
-                  height={400}
-                  width={400}
-                />
-                <Link href={account.aadhar.src} download={account.aadhar.alt}>
-                  <Button className="my-4" variant={"outline"}>
-                    Download
-                  </Button>
-                </Link>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="pan">
-              <AccordionTrigger>Pan Card</AccordionTrigger>
-              <AccordionContent>
-                <Image
-                  src={account.pan.src}
-                  alt={account.pan.alt}
-                  height={400}
-                  width={400}
-                />
-                <Link href={account.pan.src} download={account.pan.alt}>
-                  <Button className="my-4" variant={"outline"}>
-                    Download
-                  </Button>
-                </Link>
-              </AccordionContent>
-            </AccordionItem>
-            <AccordionItem value="resume">
-              <AccordionTrigger>Resume</AccordionTrigger>
-              <AccordionContent>
-                <Image
-                  src={account.resume.src}
-                  alt={account.resume.alt}
-                  height={400}
-                  width={400}
-                />
-                <Link href={account.resume.src} download={account.resume.alt}>
-                  <Button className="my-4" variant={"outline"}>
-                    Download
-                  </Button>
-                </Link>
-              </AccordionContent>
-            </AccordionItem>
+            {account.aadhar ? (
+              <AccordionItem value="aadhar">
+                <AccordionTrigger>Aadhar Card</AccordionTrigger>
+                <AccordionContent>
+                  <Image
+                    src={account.aadhar.src}
+                    alt={account.aadhar.alt}
+                    height={400}
+                    width={400}
+                  />
+                  <Link href={account.aadhar.src} download={account.aadhar.alt}>
+                    <Button className="my-4" variant={"outline"}>
+                      Download
+                    </Button>
+                  </Link>
+                </AccordionContent>
+              </AccordionItem>
+            ) : (
+              <AccordionItem value="aadhar" disabled>
+                <AccordionTrigger>Aadhar Card — Not uploaded</AccordionTrigger>
+              </AccordionItem>
+            )}
+            {account.pan ? (
+              <AccordionItem value="pan">
+                <AccordionTrigger>Pan Card</AccordionTrigger>
+                <AccordionContent>
+                  <Image
+                    src={account.pan.src}
+                    alt={account.pan.alt}
+                    height={400}
+                    width={400}
+                  />
+                  <Link href={account.pan.src} download={account.pan.alt}>
+                    <Button className="my-4" variant={"outline"}>
+                      Download
+                    </Button>
+                  </Link>
+                </AccordionContent>
+              </AccordionItem>
+            ) : (
+              <AccordionItem value="pan" disabled>
+                <AccordionTrigger>Pan Card — Not uploaded</AccordionTrigger>
+              </AccordionItem>
+            )}
+            {account.resume ? (
+              <AccordionItem value="resume">
+                <AccordionTrigger>Resume</AccordionTrigger>
+                <AccordionContent>
+                  <Image
+                    src={account.resume.src}
+                    alt={account.resume.alt}
+                    height={400}
+                    width={400}
+                  />
+                  <Link href={account.resume.src} download={account.resume.alt}>
+                    <Button className="my-4" variant={"outline"}>
+                      Download
+                    </Button>
+                  </Link>
+                </AccordionContent>
+              </AccordionItem>
+            ) : (
+              <AccordionItem value="resume" disabled>
+                <AccordionTrigger>Resume — Not uploaded</AccordionTrigger>
+              </AccordionItem>
+            )}
           </Accordion>
         </Section>
       </div>

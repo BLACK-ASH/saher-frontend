@@ -51,6 +51,7 @@ export default function RegisterUserForm() {
       bank: {
         accountHolderName: "",
         bankName: "",
+        accountNumber: "",
         branch: "",
         mobileNumber: "",
         ifcs: "",
