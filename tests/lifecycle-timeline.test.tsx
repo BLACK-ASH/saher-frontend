@@ -7,7 +7,7 @@ import { BillResponse, SettlementResponse } from "@/services/reimbursement.api";
 const bill = (overrides: Partial<BillResponse> = {}): BillResponse => ({
   id: "b1",
   user: "u1",
-  image: undefined,
+  images: [],
   amount: 1000,
   advance: 0,
   date: "2026-08-01T10:00:00",

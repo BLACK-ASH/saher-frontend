@@ -37,7 +37,7 @@ export function EditBillDialog({ bill, open, onOpenChange }: EditBillDialogProps
       form.reset({
         amount: bill.amount,
         description: bill.description,
-        images: bill.image ? [bill.image] : [],
+        images: bill.images.map((img) => img.id),
       });
     }
   }, [bill, open, form]);

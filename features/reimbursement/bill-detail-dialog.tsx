@@ -65,13 +65,15 @@ export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = fa
               </div>
             </div>
 
-            {(bill.image) && (
+            {bill.images.length > 0 && (
               <div className="space-y-2">
                 <h4 className="font-medium text-sm">Receipts</h4>
-                <div className="flex gap-2">
-                  <a href={bill.image} target="_blank" rel="noopener noreferrer" className="group">
-                    <img src={bill.image} alt="Receipt" className="h-32 w-32 object-cover rounded-md border group-hover:opacity-80" />
-                  </a>
+                <div className="flex gap-2 flex-wrap">
+                  {bill.images.map((img) => (
+                    <a key={img.id} href={img.src} target="_blank" rel="noopener noreferrer" className="group">
+                      <img src={img.src} alt={img.alt || "Receipt"} className="h-32 w-32 object-cover rounded-md border group-hover:opacity-80" />
+                    </a>
+                  ))}
                 </div>
               </div>
             )}
