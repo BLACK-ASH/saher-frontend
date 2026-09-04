@@ -253,7 +253,7 @@ const AddParticipant = () => {
                     (image, index) => (
                       <div key={image.id} className="relative">
                         <img
-                          src={image.url}
+                          src={image.src}
                           alt={`Document ${index + 1}`}
                           className="aspect-square w-full rounded-md border object-cover"
                         />

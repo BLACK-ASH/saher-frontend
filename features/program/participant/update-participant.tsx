@@ -272,7 +272,7 @@ const UpdateParticipant = ({ participant, open, onOpenChange }: Props) => {
 
                     form.setValue("uploaded.document", [
                       ...(form.getValues("uploaded.document") ?? []),
-                      { id: data.id, alt: data.fileName, src: data.url },
+                      { id: data.id, alt: data.fileName, src: data.src },
                     ]);
                   }}
                 />

@@ -152,7 +152,7 @@ export default function SessionReportPage() {
           onUploadSuccess={(image) => {
             setImages((prev) => [
               ...prev,
-              { id: image.id, src: image.url, alt: image.fileName },
+              { id: image.id, src: image.src, alt: image.fileName },
             ]);
             toast.success("Image uploaded.");
           }}

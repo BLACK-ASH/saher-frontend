@@ -24,7 +24,7 @@ const UploadDocument = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
                   altName={"aadhar" + form.getValues("user.name")}
                   onUploadSuccess={(data) => {
                     form.setValue("account.aadhar", data.id)
-                    form.setValue("uploaded.aadhar", data.url)
+                    form.setValue("uploaded.aadhar", data.src)
                   }}
                 />
                 {fieldState.invalid && (
@@ -44,7 +44,7 @@ const UploadDocument = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
                   altName={"pan" + form.getValues("user.name")}
                   onUploadSuccess={(data) => {
                     form.setValue("account.pan", data.id)
-                    form.setValue("uploaded.pan", data.url)
+                    form.setValue("uploaded.pan", data.src)
                   }}
                 />
                 {fieldState.invalid && (
@@ -64,7 +64,7 @@ const UploadDocument = ({ form }: { form: UseFormReturn<RegisterFormData> }) => 
                   altName={"resume" + form.getValues("user.name")}
                   onUploadSuccess={(data) => {
                     form.setValue("account.resume", data.id)
-                    form.setValue("uploaded.resume", data.url)
+                    form.setValue("uploaded.resume", data.src)
                   }}
                 />
                 {fieldState.invalid && (

@@ -152,7 +152,7 @@ const BasicDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
                   url={form.getValues("uploaded.image")}
                   onUploadSuccess={(data) => {
                     form.setValue("user.image", data.id);
-                    form.setValue("uploaded.image", data.url);
+                    form.setValue("uploaded.image", data.src);
                   }}
                 />
                 {fieldState.invalid && (

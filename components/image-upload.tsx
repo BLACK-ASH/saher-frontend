@@ -21,7 +21,8 @@ import { toast } from "sonner";
 type UploadedImage = {
   id: string;
   fileName: string;
-  url: string;
+  alt: string;
+  src: string;
   size: number;
   width?: number;
   height?: number;
