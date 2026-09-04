@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "timestamp": "2026-09-04T02:14:32.422Z",
+  "phase": "5",
+  "phase_name": "fix-05-user-profile",
+  "phase_dir": ".planning/phases/fix-05-user-profile",
+  "plan": 1,
+  "task": 3,
+  "total_tasks": 3,
+  "status": "paused",
+  "completed_tasks": [
+    {"id": 1, "name": "USER-01 — Correct registration bank defaults + frontend regression test", "status": "done", "commit": null, "note": "uncommitted: user-register.tsx accountNumber default; register-schema.test.ts USER-01 describe block"},
+    {"id": 2, "name": "USER-01 — Backend regression test locking bank string persistence", "status": "done", "commit": null, "note": "uncommitted: admin.test.ts USER-01 test (verified 22/22 with bank schema reverted to HEAD)"},
+    {"id": 3, "name": "USER-02 — Resilient self-serve profile read (backend + frontend) + response-contract docs", "status": "in_progress", "progress": "root cause located; no code written yet"}
+  ],
+  "remaining_tasks": [
+    {"id": 3, "name": "USER-02 — profile resilience: backend imageType.nullish() + getUser fallback + frontend null guards + openapi nullable + docs:lint + graphify update", "status": "not_started"},
+    {"id": 99, "name": "EXTRA (user-reported, deviates from plan): backend validation — string fields reject pure numbers (user chose ALL registration text fields)", "status": "not_started"},
+    {"id": 100, "name": "Verify + commit + push to dev; write 05-01-SUMMARY.md; update FIX-STATE.md", "status": "not_started"}
+  ],
+  "blockers": [
+    {"description": "Frontend register-schema.ts accountNumber regex (^\\d{9,18}$) still in working tree — SAME approach that broke backend reads (getBank re-parses via bankSchemaFinal.parse, legacy fixtures like accountNumber:'42' fail -> 500). NOT yet validated end-to-end; may need to be relaxed or the read path made tolerant.", "type": "technical", "workaround": "If a read-path schema re-parses stored docs (check each *_Final service), do NOT tighten regex/min on fields without also relaxing the *_Final read schema or legacy data will 500."},
+    {"description": "Profile-view crash root cause LOCATED but UNFIXED: AccountT types aadhar/pan/resume as required non-null (use-profile.ts:33-47); backend accountSchemaFinal declares them imageType (non-nullish); missing/deleted KYC Media ref -> 500 (backend parse throws) or frontend renders undefined.src -> React crash.", "type": "technical", "workaround": "Follow Task 3 as written: imageType.nullish() backend, null guards frontend, getUser(id) fallback in userGetController."}
+  ],
+  "human_actions_pending": [
+    {"action": "Confirm the exact 'string rejects pure numbers' validation rule before implementing, to avoid repeating the broken overly-strict approach from this session", "context": "User selected 'All registration text fields reject pure numbers' but exact rule (reject all-digit-only values vs min-length) not finalized; previous attempt (accountNumber ^\\d{9,18}$) broke existing data on the read path", "blocking": true}
+  ],
+  "decisions": [
+    {"decision": "Reverted backend src/admin/bank/schema.ts strict validation (.min(2) + accountNumber ^\\d{9,18}$) to HEAD", "rationale": "It broke the pre-existing 'restores a soft-deleted bank' test: getBank/_services/bank.ts:21 re-parses stored docs via bankSchemaFinal.parse, so legacy fixtures (accountNumber:'42') failed the new regex -> 500 on read.", "phase": "5"},
+    {"decision": "Task 2 backend login test marks the registered user emailVerified:true in DB before logging in, and uses the derived password PRIY1995", "rationale": "Admin onboarding intentionally creates an UNverified user (Phase-0 email flow), so login would otherwise fail; self-read GET /api/user is what's being asserted, not the verification flow.", "phase": "5"},
+    {"decision": "Deferred the admin-panel (management page) runtime crash from Phase 4\n", "rationale": "User explicitly said handle it later; distinct from the profile-view crash. Recorded as follow-up in 04-01-SUMMARY.md, not root-caused.", "phase": "4"}
+  ],
+  "uncommitted_files": [
+    "fe (dev): features/register/user-register.tsx",
+    "fe (dev): features/register/register-schema.ts",
+    "fe (dev): tests/register-schema.test.ts",
+    "fe (dev): .planning/phases/fix-04-bill-management/04-01-SUMMARY.md",
+    "be (dev): tests/admin/admin.test.ts"
+  ],
+  "next_action": "Reconcile two remaining bugs with the user, then implement Task 3 profile resilience (backend imageType.nullish() + getUser fallback + frontend null guards + openapi nullable + docs:lint + graphify update), then decide/replace the 'string rejects numbers' validation approach safely.",
+  "context_notes": "User clarified there are TWO separate bugs: (1) frontend profile view crashes for ANY user (active or deleted) — this is USER-02/Task 3; (2) backend validation where string fields accept numbers. The profile crash root cause is confirmed in code: aadhar/pan/resume typed non-null but often missing -> renders undefined.src or 500. Kept running into a tool-invocation stalling loop; be decisive with tool calls. Do NOT invent/login issues — user explicitly said 'don't invent thing' when I chased a non-issue. Backend test currently passes 22/22. Nothing pushed; both repos on dev branch."
+}
