@@ -2,15 +2,15 @@
 fix_state_version: 1.0
 milestone: fix
 total_phases: 10
-completed_phases: 2
-last_updated: "2026-09-03T17:50:00.000Z"
+completed_phases: 3
+last_updated: "2026-09-04T00:00:00.000Z"
 ---
 
 # FIX Stabilization — Current State
 
 ## Position
 
-**Active phase:** Phase 2 — Soft Delete & Resource Lifecycle
+**Active phase:** Phase 3 — awaiting execution
 
 ## Phase 0 — Authentication & Authorization ✅ COMPLETE
 
@@ -47,12 +47,33 @@ last_updated: "2026-09-03T17:50:00.000Z"
 - Backend `pnpm lint` 0 errors, `pnpm test` 257/257 PASS, `pnpm typecheck` PASS
 - No endpoint signatures changed → OpenAPI/docs and graphify update unaffected.
 
-## Phase 2 — Soft Delete & Resource Lifecycle ⏳ IN PROGRESS
+## Phase 2 — Image/Upload `src` contract & Media ObjectId ✅ COMPLETE
 
-**Root cause:** React Query list hooks for Programs, Sessions, and Workshops accept `isDeleted` from tab components but never forward it to the backend list query, so Active and Deleted tabs collapse onto one identical React Query cache key and the backend filter is never sent. The backend is correct (soft delete via `isDeleted` flag), but the frontend never sends the filter.
+**Goal:** Align every upload consumer with the backend `{ id, alt, src }` contract. The backend stores/needs the Media ObjectId (`id`); the frontend previews use the `src` URL, never `id`.
 
-**Changes planned:** 
-- Hooks: Forward `isDeleted` into `createResourceListHook` params (already committed in `a68efc8`)
-- Backend: Consistency hardening already applied
+**Backend changes (commit `55334aa` on `fix/module-fixes`):**
+- `src/upload/image/image.controller.ts` — single + bulk now return `{ id, fileName, alt, src, size, mimetype, width?, height? }`; `url` removed.
+- `src/upload/document/document.controller.ts` — single + bulk now return `{ id, fileName, alt, src, size, mimetype }`; `url` removed.
+- `openapi/paths/upload/*.yaml` — all 4 updated: `url` → `src`, added `alt`.
+- `tests/upload/image.test.ts`, `tests/upload/document.test.ts` — updated to assert `src`/`alt`.
 
-**Next steps:** Execute Phase 2 plan per `fix-01-soft-delete/01-01-PLAN.md`
+**Frontend changes (commit `8f4237a` on `dev`):**
+- `components/image-upload.tsx` — `UploadedImage` type no longer references `url`; now `{ id, alt, src }`.
+- `features/leave/apply-leave-dialog.tsx` — proof stores Media ObjectId (`file.id`).
+- `features/attendance/attendance-correction.tsx` — proof stores `id`, preview `upload` uses `src`.
+- `features/register/basic-details.tsx`, `features/register/document-upload.tsx` — `user.image`/`account.*` store `id`, `uploaded.*` preview uses `src`.
+- `features/program/participant/add-participant.tsx`, `update-participant.tsx` — doc preview uses `src`.
+- `app/(main)/program/sessions/review/[id]/page.tsx` — gallery preview uses `src`.
+- `features/profile/profile-info.tsx` — already used `id`+`src`, no change.
+
+**Verification:**
+- Backend: `pnpm tests` 257/257 PASS, `docs:lint` valid, typecheck clean.
+- Frontend: `pnpm lint` 0 errors/58 warnings, `pnpm build` PASS.
+
+**Unrelated backend edits** (get-bill schema + search-bill controller) committed separately as `5af6bd2` to keep them out of the Phase 2 commit.
+
+## Deployment status (testing phase)
+
+- Frontend: committed on `dev` (`8f4237a`) — push `dev` to trigger frontend CI test deploy.
+- Backend: committed on `fix/module-fixes` (`55334aa`, `5af6bd2`) — push `fix/module-fixes`, then merge to `dev` and push `dev` to trigger backend integration deploy. Backend CI deploys from `main` only for production.
+- ⚠️ Pushes pending: this sandbox has no outbound GitHub access; must be pushed from a networked host.
