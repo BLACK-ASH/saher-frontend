@@ -1,6 +1,6 @@
 "use client";
 
-import ImageUpload from "@/components/image-upload";
+import BulkImageUpload from "@/components/bulk-image-upload";
 import TiptapEditor from "@/components/tiptap/editor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -147,14 +147,16 @@ export default function SessionReportPage() {
           </p>
         </div>
 
-        <ImageUpload
-          altName={`${data.title}-session`}
-          onUploadSuccess={(image) => {
+        <BulkImageUpload
+          onUploadSuccess={(uploaded) => {
             setImages((prev) => [
               ...prev,
-              { id: image.id, src: image.src, alt: image.fileName },
+              ...uploaded.map((image) => ({
+                id: image.id,
+                src: image.src,
+                alt: image.fileName,
+              })),
             ]);
-            toast.success("Image uploaded.");
           }}
         />
 

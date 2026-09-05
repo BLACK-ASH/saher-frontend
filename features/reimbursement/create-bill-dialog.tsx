@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
-import ImageUpload from "@/components/image-upload";
+import BulkImageUpload from "@/components/bulk-image-upload";
 import { userBillCreateSchema, type UserBillCreateInput } from "@/services/reimbursement.api";
 import { useReimbursement } from "@/hooks/use-reimbursement";
 import { toast } from "sonner";
@@ -100,9 +100,13 @@ export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) 
               control={form.control}
               render={({ field }) => (
                 <>
-                  <ImageUpload
-                    altName="bill-receipt"
-                    onUploadSuccess={(img) => field.onChange([...field.value, img.id])}
+                  <BulkImageUpload
+                    onUploadSuccess={(imgList) =>
+                      field.onChange([
+                        ...field.value,
+                        ...imgList.map((img) => img.id),
+                      ])
+                    }
                   />
                   <p className="text-xs text-muted-foreground">
                     {attachedImages.length > 0
