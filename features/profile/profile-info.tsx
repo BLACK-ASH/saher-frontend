@@ -31,18 +31,27 @@ type Props = { account: AccountT };
 function ProfileInfo({ account }: Props) {
   const queryClient = useQueryClient();
   const [display, setDisplay] = useState(false);
+  const [emailDialog, setEmailDialog] = useState(false);
+  const emailRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
   const [image, setImage] = useState("");
 
   const handleChangeEmail = async () => {
+    const email = emailRef.current?.value.trim();
+    if (!email) {
+      toast.error("New email is required");
+      return;
+    }
     const res = await apiFetch(`/api/auth/change-email/request`, {
       method: "POST",
+      body: JSON.stringify({ email }),
     });
     if (!res.success) {
       toast.error(res.message);
       return;
     }
     toast.success(res.message);
+    setEmailDialog(false);
     queryClient.invalidateQueries({ queryKey: ["user"] });
   };
 
@@ -194,11 +203,30 @@ function ProfileInfo({ account }: Props) {
         <Button
           variant={"outline"}
           className="flex gap-2 items-center w-44 justify-start"
-          onClick={() => handleChangeEmail()}
+          onClick={() => setEmailDialog(true)}
         >
           <Edit />
           Change Email
         </Button>
+        <Dialog open={emailDialog} onOpenChange={setEmailDialog}>
+          <DialogContent className="p-2 min-w-1/3">
+            <DialogTitle>Change Email</DialogTitle>
+            <DialogDescription></DialogDescription>
+
+            <FieldLabel htmlFor="change-email-input">
+              New Email Address
+            </FieldLabel>
+            <Input
+              id="change-email-input"
+              type="email"
+              placeholder="Enter New Email..."
+              ref={emailRef}
+            />
+            <Button className="m-2 items-center" onClick={() => handleChangeEmail()}>
+              Send Verification Mail
+            </Button>
+          </DialogContent>
+        </Dialog>
       </div>
     </div>
   );

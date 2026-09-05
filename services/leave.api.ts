@@ -112,7 +112,7 @@ export const leaveApplicationSchema = z.object({
 export type LeaveApplicationResponse = z.infer<typeof leaveApplicationSchema>;
 
 export const leaveBalanceSchema = z.object({
-  id: z.string(),
+  id: z.string().nullable(),
   user: z.string(),
   year: z.string(),
   balance: z.record(
@@ -164,7 +164,7 @@ export type LeaveBalanceItem = {
 };
 
 export type LeaveBalanceT = {
-  id: string;
+  id: string | null;
   user: DefaultUserT;
   year: string;
   balance: {

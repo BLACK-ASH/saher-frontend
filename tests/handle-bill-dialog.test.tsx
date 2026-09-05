@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "@/tests/render-with-providers";
 import { server } from "@/tests/test-server";
 import HandleBillDialog from "@/features/reimbursement/handle-bill-dialog";
+import type { BillResponse } from "@/services/reimbursement.api";
 
 vi.mock("sonner", () => ({
   toast: { error: vi.fn(), success: vi.fn(), warning: vi.fn() },
@@ -15,9 +16,10 @@ vi.mock("sonner", () => ({
 const ok = (data: unknown) =>
   HttpResponse.json({ success: true, message: "ok", data });
 
-const bill = {
+const bill: BillResponse = {
   id: "b1",
   user: "u1",
+  images: [],
   amount: 1200,
   advance: 0,
   date: "2026-08-26T00:00:00.000Z",

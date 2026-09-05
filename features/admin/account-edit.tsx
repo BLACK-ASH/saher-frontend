@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import ImageUpload from "@/components/image-upload";
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
 import {
   Select,
@@ -72,6 +73,9 @@ export default function AccountEditDialog({
       employeeShift: account.employeeShift,
       salaryStructure: account.salaryStructure,
       address: account.address,
+      aadhar: account.aadhar?.id,
+      pan: account.pan?.id,
+      resume: account.resume?.id,
     },
   });
 
@@ -91,6 +95,9 @@ export default function AccountEditDialog({
         employeeShift: account.employeeShift,
         salaryStructure: account.salaryStructure,
         address: account.address,
+        aadhar: account.aadhar?.id,
+        pan: account.pan?.id,
+        resume: account.resume?.id,
       });
     }
   }, [open, account, form]);
@@ -361,6 +368,33 @@ export default function AccountEditDialog({
               </Field>
             )}
           />
+
+          <Field>
+            <FieldLabel htmlFor="account-aadhar">Aadhar Card</FieldLabel>
+            <ImageUpload
+              altName={`aadhar-${account.employeeId}`}
+              url={account.aadhar?.src}
+              onUploadSuccess={(data) => form.setValue("aadhar", data.id)}
+            />
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="account-pan">Pan Card</FieldLabel>
+            <ImageUpload
+              altName={`pan-${account.employeeId}`}
+              url={account.pan?.src}
+              onUploadSuccess={(data) => form.setValue("pan", data.id)}
+            />
+          </Field>
+
+          <Field>
+            <FieldLabel htmlFor="account-resume">Resume</FieldLabel>
+            <ImageUpload
+              altName={`resume-${account.employeeId}`}
+              url={account.resume?.src}
+              onUploadSuccess={(data) => form.setValue("resume", data.id)}
+            />
+          </Field>
 
           <Button
             type="submit"

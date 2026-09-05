@@ -13,6 +13,7 @@ import { Download, HandCoins } from "lucide-react";
 
 import { useReimbursement, useSearchBills, type HandleStatus } from "@/hooks/use-reimbursement";
 import { useUserMap } from "@/hooks/use-user-map";
+import { useAdminUsers } from "@/hooks/use-admin";
 import { BillResponse } from "@/services/reimbursement.api";
 
 import { FinanceBillTable } from "@/features/reimbursement/finance-bill-table";
@@ -35,6 +36,10 @@ export default function ReimbursementManagementPage() {
   } = useReimbursement();
 
   const { userMap } = useUserMap();
+
+  // Hydrate the id→name map from the full directory (read:user, cached 7 days
+  // server-side) so bill rows and the user filter show full names, not ids.
+  useAdminUsers();
 
   const [activeTab, setActiveTab] = useState<"queue" | "recycle">("queue");
   const [page, setPage] = useState(1);

@@ -4,6 +4,7 @@ import { describe, expect, it, vi } from "vitest";
 import { renderWithProviders } from "@/tests/render-with-providers";
 import { server } from "@/tests/test-server";
 import RecordPaymentDialog from "@/features/payroll/record-payment-dialog";
+import type { PayrollResponse } from "@/services/payroll.api";
 
 vi.mock("sonner", () => ({
   toast: { error: vi.fn(), success: vi.fn(), warning: vi.fn() },
@@ -15,11 +16,10 @@ vi.mock("sonner", () => ({
 const ok = (data: unknown) =>
   HttpResponse.json({ success: true, message: "ok", data });
 
-const payroll = {
+const payroll: PayrollResponse = {
   id: "p1",
   user: "u1",
-  dateOfCreation: "2026-08-01T00:00:00.000Z",
-  dateOfPayment: undefined,
+  dateOfCreation: new Date("2026-08-01T00:00:00.000Z"),
   mode: "upi",
   baseSalary: 20000,
   expectedSalary: 21000,

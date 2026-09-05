@@ -17,19 +17,42 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { UserT } from "@/hooks/use-me";
 import { apiFetch } from "@/lib/api-wrapper";
+import { updateUserRole } from "@/services/admin.api";
+import type { UserRole } from "@/lib/permissions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
-import { ArchiveRestore, MoreHorizontal, Trash } from "lucide-react";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { ArchiveRestore, MoreHorizontal, Shield, Trash } from "lucide-react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+
+const roleOptions: UserRole[] = ["intern", "user", "manager", "admin"];
 
 export default function UserActions({ user }: { user: UserT }) {
   const queryClient = useQueryClient();
   const router = useRouter();
   const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [roleDialog, setRoleDialog] = useState(false);
+  const [role, setRole] = useState<UserRole>(user.role);
 
   const deleteUser = useMutation({
     mutationFn: async () => {
@@ -71,6 +94,18 @@ export default function UserActions({ user }: { user: UserT }) {
     });
   };
 
+  const changeRole = useMutation({
+    mutationFn: (newRole: UserRole) => updateUserRole(user.id, newRole),
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setRoleDialog(false);
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
+
   return (
     <>
       <DropdownMenu>
@@ -91,6 +126,15 @@ export default function UserActions({ user }: { user: UserT }) {
 
           <DropdownMenuItem onClick={() => router.push("/users/" + user.id)}>
             Profile
+          </DropdownMenuItem>
+          <DropdownMenuItem
+            onClick={() => {
+              setRole(user.role);
+              setRoleDialog(true);
+            }}
+          >
+            <Shield className="h-4 w-4" />
+            Change Role
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           {user.isActive ? (
@@ -151,6 +195,45 @@ export default function UserActions({ user }: { user: UserT }) {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={roleDialog} onOpenChange={setRoleDialog}>
+        <DialogContent className="max-w-sm">
+          <DialogHeader>
+            <DialogTitle>Change Role</DialogTitle>
+            <DialogDescription>
+              {user.name} is currently <span className="font-medium">{user.role}</span>.
+            </DialogDescription>
+          </DialogHeader>
+          <Field>
+            <FieldLabel htmlFor="change-role-select">Role</FieldLabel>
+            <Select
+              value={role}
+              onValueChange={(value) => setRole(value as UserRole)}
+            >
+              <SelectTrigger id="change-role-select" className="w-full">
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {roleOptions.map((r) => (
+                    <SelectItem key={r} value={r}>
+                      {r.toUpperCase()}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </Field>
+          <DialogFooter>
+            <Button
+              disabled={changeRole.isPending || role === user.role}
+              onClick={() => changeRole.mutate(role)}
+            >
+              {changeRole.isPending ? "Saving..." : "Save"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

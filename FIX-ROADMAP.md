@@ -16,7 +16,8 @@
 | 6 | Notice & Leave | HIGH | ✅ **DONE** | notice `_id` vs `id` drift; proof stores URL not ObjectId; leave balance double-count; leave GET controllers missing `.populate('proof')` | backend notice/leave; frontend noticeboard, apply-leave-dialog, leave-details-dialog, leave.api.ts | proof populated on all leave controllers (get/update/review) |
 | 7 | Attendance Correction | HIGH | ✅ **DONE** | `combineDateAndTimeToIso` produces unparseable datetime; message mismatch; create endpoint returns unpopulated proof | lib/date, attendance-correction; backend create-correction.ts | message min(3), counter /300, date utility fixed, proof populated on create |
 | 8 | Notification UI | MEDIUM | ✅ **DONE** | frontend missing mark-seen/count + bell (backend API exists); `getUnseenCount` read count from `data` instead of `meta` | services/notification.api, hooks/use-notification, sidebar-header, features/notification/{notification-box,notification-bell} | verified: `res.meta.count`, PATCH /:id mark-seen, unread/read distinction + error state; FE lint 0 err / build pass / 430 tests, BE 258 tests |
-| 9 | Full Regression Testing | CRITICAL | ⏳ Pending | needs E2E-style regression; build≠feature | REGRESSION-REPORT.md | |
+| 9 | Full Regression Testing | CRITICAL | ✅ **DONE** | e2e-style regression across all 10 REG areas + cross-cutting checklist; build≠feature | REGRESSION-REPORT.md, 09-01-SUMMARY.md | BE `pnpm test` 261/261, lint/typecheck/build PASS; FE `pnpm test` 428/428, lint/build PASS, typecheck clean except 3 pre-existing fixture errors |
+| 10 | fix-10 — New Bugs | HIGH | ✅ **DONE** | negative workHours; leave-balance 404; change-email no-op; bill restore missing; attendance crons HTTP-only; role change missing; advance-bill amount 0 + raw user id | see `.planning/phases/fix-10-new-bugs/10-01-SUMMARY.md` | BE `pnpm test` 261/261, `pnpm typecheck` PASS, lint 0 err; FE `pnpm test` 428/428, lint 0 err |
 
 ## Execution Order / Dependencies
 

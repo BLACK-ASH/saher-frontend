@@ -2,7 +2,7 @@
 fix_state_version: 1.0
 milestone: fix
 total_phases: 10
-completed_phases: 8
+completed_phases: 10
 last_updated: "2026-09-05T00:00:00.000Z"
 ---
 
@@ -10,7 +10,7 @@ last_updated: "2026-09-05T00:00:00.000Z"
 
 ## Position
 
-**Active phase:** Phase 9 — Full Regression Testing (awaiting execution)
+**All 10 phases complete — stabilization declared stable.**
 
 ## Phase 0 — Authentication & Authorization ✅ COMPLETE
 
@@ -160,3 +160,21 @@ redirected to `/forbidden`. Role/config matter, not code.
 **Changes:** `notification.api.ts` `getUnseenCount` reads `res.meta.count` + `markNotificationSeen` (PATCH `/:id`); `use-notification.ts` exposes `list`/`unseen`/`markSeen`; new `notification-bell.tsx` with unread badge in `sidebar-header`; `notification-box.tsx` read/unread styling + error/loading/empty states + click-to-mark-seen.
 
 **Verification:** backend 258/258, frontend 430/430, lint 0 errors, build clean.
+
+## Phase 10 — fix-10 New Bugs (fix-10) ✅ COMPLETE
+
+**Root causes:** negative `workHours` (shift/out<in); leave balance 404'd without a doc; profile change-email button was a no-op; no bill-restore route after soft delete; attendance crons relied on an external HTTP scheduler; admin couldn't edit a user's role; advance bills showed `₹0` amount; bill UI showed raw user object ids.
+
+**Changes:** backend — workHours `Math.max(0,..)` clamp + `outTime > inTime` refine; leave balance zero-synthesis (`id: null`); `PATCH /:billId/restore` + mybill cache clear; `createAttendanceSync`/`autoCheckoutSync` reuse from new in-worker BullMQ schedulers (idempotent); CRON.md rewritten. Frontend — change-email dialog posts to `/api/auth/change-email/request`; admin account-edit adds aadhar/pan/resume uploads; `updateUserRole` + Change Role dialog; my-bills/handle dialog show `amount || advance`, finance table renders "—" for zeros; `useUserMap` seeded from the directory query and bill dialogs/tables resolve full user names.
+
+**Verification:** backend `pnpm typecheck` PASS, lint 0 errors, `pnpm test` 261/261 PASS; frontend lint 0 errors, `pnpm test` 428/428 PASS (one api-wrapper single-flight test flaked once under load, passed clean on re-run); full summary in `.planning/phases/fix-10-new-bugs/10-01-SUMMARY.md`.
+
+## Phase 9 — Full Regression Testing (fix-09) ✅ COMPLETE
+
+**Goal:** prove every prior phase (0–8 + fix-10) holds end-to-end, not just compiles. Ran all four gates on both repos and audited the complete service → hook → component → page chain for all ten REG areas plus the cross-cutting checklist.
+
+**Result:** all gates green — backend lint/typecheck/build PASS, `pnpm test` 261/261; frontend lint/build PASS, `pnpm test` 428/428, typecheck clean except 3 pre-existing errors in git-unmodified test fixtures. Zero regressions found. One intra-phase TS error (`result?.updated` nullability in auto-checkout cron) was caught by the build gate and fixed.
+
+**Artifacts:** `.planning/phases/fix-09-full-regression/REGRESSION-REPORT.md` + `09-01-SUMMARY.md`.
+
+**Remaining debt:** frontend typecheck exits non-zero on 3 fixture files; backend 48 / frontend 58 lint warnings (pre-existing); optional headed manual smoke pass; legacy attendance cron routes can be retired once the worker is confirmed in production.

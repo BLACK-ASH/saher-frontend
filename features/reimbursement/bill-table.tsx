@@ -27,7 +27,7 @@ export function BillTable({ bills, onView, onEdit, onWithdraw, onRestore, showAc
         {bills.map((bill) => (
           <TableRow key={bill.id}>
             <TableCell>{bill.description}</TableCell>
-            <TableCell>{bill.amount}</TableCell>
+            <TableCell>₹{(bill.amount || bill.advance).toLocaleString("en-IN")}</TableCell>
             <TableCell>
               <BillStatusBadge status={bill.status} />
             </TableCell>

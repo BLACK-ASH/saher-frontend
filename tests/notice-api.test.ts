@@ -11,7 +11,7 @@ import {
 import { server } from "@/tests/test-server";
 
 const notice = {
-  _id: "1",
+  id: "1",
   title: "Test",
   description: "Desc",
   expiresAt: "2026-09-15T00:00:00Z",
@@ -51,7 +51,7 @@ describe("createNotice", () => {
         return HttpResponse.json({
           success: true,
           message: "created",
-          data: { ...notice, _id: "2", title: "New", description: "Body" },
+          data: { ...notice, id: "2", title: "New", description: "Body" },
         });
       }),
     );
@@ -60,7 +60,7 @@ describe("createNotice", () => {
 
     expect(hitPath).toBe("/api/notice");
     expect(body).toEqual({ title: "New", description: "Body" });
-    expect(created._id).toBe("2");
+    expect(created.id).toBe("2");
   });
 });
 

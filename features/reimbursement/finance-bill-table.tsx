@@ -134,8 +134,12 @@ export function FinanceBillTable({
               </TableCell>
               <TableCell>{resolveName(bill.user)}</TableCell>
               <TableCell className="max-w-[200px] truncate">{bill.description}</TableCell>
-              <TableCell>₹{bill.amount.toLocaleString()}</TableCell>
-              <TableCell>₹{bill.advance.toLocaleString()}</TableCell>
+              <TableCell>
+                {bill.amount > 0 ? `₹${bill.amount.toLocaleString("en-IN")}` : "—"}
+              </TableCell>
+              <TableCell>
+                {bill.advance > 0 ? `₹${bill.advance.toLocaleString("en-IN")}` : "—"}
+              </TableCell>
               <TableCell>{formatIstDate(bill.date)}</TableCell>
               <TableCell><BillStatusBadge status={bill.status} /></TableCell>
               <TableCell className="text-right">

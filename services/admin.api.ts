@@ -4,6 +4,7 @@ import { z } from "zod";
 import type { RegisterFormData } from "@/features/register/register-schema";
 import { bankDetailSchema } from "@/features/register/register-schema";
 import type { AccountT } from "@/hooks/use-profile";
+import type { UserRole } from "@/lib/permissions";
 
 // ========================
 // ACCOUNT UPDATE SCHEMA
@@ -187,3 +188,11 @@ export const updateBank = async ({
 export const restoreBank = async (id: string) => {
   await apiFetch(`/api/admin/bank/restore/${id}`, { method: "PATCH" });
 };
+
+// PUT /api/admin/user/:id — update a user's role. Backend userUpdateSchema is
+// userSchema.partial() so `role` alone is accepted (update:user permission).
+export const updateUserRole = async (id: string, role: UserRole) =>
+  apiFetch(`/api/admin/user/${id}`, {
+    method: "PUT",
+    body: JSON.stringify({ role }),
+  });

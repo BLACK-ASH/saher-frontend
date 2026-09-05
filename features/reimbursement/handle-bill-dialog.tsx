@@ -22,6 +22,7 @@ import { Label } from "@/components/ui/label";
 
 import { BillResponse, handleBillInputSchema, HandleBillInput } from "@/services/reimbursement.api";
 import { useReimbursement, HandleStatus } from "@/hooks/use-reimbursement";
+import { useUserMap } from "@/hooks/use-user-map";
 
 import { toast } from "sonner";
 
@@ -39,6 +40,7 @@ export default function HandleBillDialog({
   onOpenChange,
 }: Props) {
   const { handleOne } = useReimbursement();
+  const { resolveName } = useUserMap();
 
   const form = useForm<HandleBillInput>({
     resolver: zodResolver(handleBillInputSchema),
@@ -93,7 +95,8 @@ export default function HandleBillDialog({
             <div className="rounded-lg border p-4 space-y-2">
               <p className="font-semibold">{bill.description}</p>
               <p className="text-sm text-muted-foreground">
-                User: {bill.user.slice(-6)} | Amount: ₹{bill.amount.toLocaleString()}
+                User: {resolveName(bill.user)} | Amount: ₹
+                {(bill.amount || bill.advance).toLocaleString("en-IN")}
               </p>
             </div>
           )}

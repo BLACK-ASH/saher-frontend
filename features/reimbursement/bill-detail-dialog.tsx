@@ -10,6 +10,7 @@ import { SettleDialog } from "./settle-dialog";
 import { formatIstDate, formatIstDateTime } from "@/lib/date";
 import { PaginationFooter } from "@/components/pagination-footer";
 import { DefaultLoader } from "@/components/loading";
+import { useUserMap } from "@/hooks/use-user-map";
 
 interface BillDetailDialogProps {
   bill: BillResponse | null;
@@ -23,6 +24,7 @@ const AUDIT_PAGE_SIZE = 5;
 export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = false }: BillDetailDialogProps) {
   const [settleOpen, setSettleOpen] = useState(false);
   const [auditPage, setAuditPage] = useState(1);
+  const { resolveName } = useUserMap();
 
   const { data: settlement, isLoading: loadingSettlement } = useQuery({
     queryKey: ["bills", "detail", bill?.id],
@@ -48,6 +50,9 @@ export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = fa
 
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span className="font-medium">User:</span> {resolveName(bill.user)}
+              </div>
               <div>
                 <span className="font-medium">Description:</span> {bill.description}
               </div>
