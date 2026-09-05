@@ -2,15 +2,15 @@
 fix_state_version: 1.0
 milestone: fix
 total_phases: 10
-completed_phases: 5
-last_updated: "2026-09-04T00:00:00.000Z"
+completed_phases: 8
+last_updated: "2026-09-05T00:00:00.000Z"
 ---
 
 # FIX Stabilization — Current State
 
 ## Position
 
-**Active phase:** Phase 5 — awaiting execution
+**Active phase:** Phase 9 — Full Regression Testing (awaiting execution)
 
 ## Phase 0 — Authentication & Authorization ✅ COMPLETE
 
@@ -122,3 +122,41 @@ redirected to `/forbidden`. Role/config matter, not code.
 - Frontend: lint 0 errors, test 428/428 PASS, build PASS.
 
 **Docs:** `.planning/phases/fix-04-bill-management/04-01-SUMMARY.md`.
+
+## Phase 5 — User Registration & Profile (fix-05) ✅ COMPLETE
+
+**Root causes:**
+1. USER-01: `RegisterUserForm` was missing the `accountNumber` default in `defaultValues`; bank name could carry a numeric value.
+2. USER-02: `AccountT` (frontend) typed aadhar/pan/resume as REQUIRED objects while backend `accountSchemaFinal` declared them non-nullish — when a user's KYC Media ref is missing/deleted, the backend `.parse()` threw (500) or the frontend rendered `undefined.src` → profile-view crash for any user.
+
+**Changes:**
+- Backend — `accountSchemaFinal` aadhar/pan/resume → `imageType.nullish()`; `userGetController` falls back to `getUser(id)` (no 404) when no Account doc; `getAllSessionController` marks `current` via cookie.
+- Frontend — `use-profile.ts` AccountT aadhar/pan/resume nullable + `bank` nullable; `features/profile/profile.tsx` null-guards Documents/Bank; manager `users/[id]/page.tsx` same guards; `user-register.tsx` `accountNumber: ""` default; `services/auth.api.ts` session shape (`sessionId`/`updatedAt`, `revoke` GET); `lib/date.ts` `dateToIstDateOnly` accepts strings.
+
+**Verification:** backend 258/258, frontend 430/430, lint 0 errors, typecheck + build clean.
+
+## Phase 6 — Notice & Leave (fix-06) ✅ COMPLETE
+
+**Root causes:** notice `_id` vs `id` drift; leave proof stored the URL instead of the Media ObjectId; leave GET controllers lacked `.populate('proof')`.
+
+**Changes:**
+- Frontend — noticeboard components + `services/notice.api.ts` use `id`; leave proof: input sends `file.id`, response type is the populated `{id,src,alt}`; `apply-leave-dialog`/`leave-details-dialog` null-safe on `proof`.
+- Backend — all leave GET/update/review controllers `.populate('proof')`; `getLeaveApplicationSchema.proof` → `.nullish()` (populate yields `null` for missing ref — legacy rows must not 500).
+
+**Verification:** backend leave suite + full 258/258, frontend 430/430.
+
+## Phase 7 — Attendance Correction (fix-07) ✅ COMPLETE
+
+**Root causes:** `combineDateAndTimeToIso` produced unparseable datetimes (non-normalized date); message min/max mismatch; create endpoint returned unpopulated proof.
+
+**Changes:** `lib/date.ts` `toDateOnly` normalizes the date + `+05:30` offset, `dateToIstDateOnly` accepts `Date | string`; message min 3 / max 300 with counter; backend `create-correction.ts` `.populate('proof')`.
+
+**Verification:** backend 258/258, frontend 430/430, lint 0 errors.
+
+## Phase 8 — Notification UI (fix-08) ✅ COMPLETE
+
+**Root causes:** frontend had only a static card (no persistent bell, no read/unread distinction, no mark-seen); `getUnseenCount` read `data.count` but the backend puts count in `meta.count`.
+
+**Changes:** `notification.api.ts` `getUnseenCount` reads `res.meta.count` + `markNotificationSeen` (PATCH `/:id`); `use-notification.ts` exposes `list`/`unseen`/`markSeen`; new `notification-bell.tsx` with unread badge in `sidebar-header`; `notification-box.tsx` read/unread styling + error/loading/empty states + click-to-mark-seen.
+
+**Verification:** backend 258/258, frontend 430/430, lint 0 errors, build clean.
