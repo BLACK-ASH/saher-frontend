@@ -27,19 +27,11 @@ import { can } from "@/lib/permissions";
 import RoleAccess from "@/components/role-access";
 import { toast } from "sonner";
 
-// Masking util (ADMN-04, T-06-02-01): full accountNumber arrives unmasked on
-// every account/bank read. Apply maskAccount to EVERY non-editing render; the
-// raw value appears only inside the bank edit input.
-export const maskAccount = (num: string): string =>
-  num.length > 4 ? `•••• ${num.slice(-4)}` : "••••";
-
 type BankFormValues = z.infer<typeof bankDetailSchema>;
 
 // Bank create/edit form (ADMN-04). Manager-only: gated on
 // can(role, "write" | "update", "bank") — admins hold bank:read only and see
-// no write affordances (Pitfall 2). Edit mode prefills the FULL accountNumber
-// (the edit input is the one place the raw number appears); every other render
-// must go through maskAccount.
+// no write affordances (Pitfall 2). Edit mode prefills the full accountNumber.
 //
 // Create mode: sends createBank(data). In practice the employee page always
 // passes an existing bank (accounts are created atomically with a bank, and no

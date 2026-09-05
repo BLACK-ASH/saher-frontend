@@ -16,7 +16,7 @@ import { formatIstDate } from "@/lib/date";
 import { can } from "@/lib/permissions";
 import RoleAccess from "@/components/role-access";
 import AccountEditDialog from "@/features/admin/account-edit";
-import { BankDetailForm, maskAccount } from "@/features/admin/bank-details";
+import { BankDetailForm } from "@/features/admin/bank-details";
 import { useState } from "react";
 import { MailCheck, Pencil, ShieldCheck, UserCheck, UserX } from "lucide-react";
 import Image from "next/image";
@@ -176,7 +176,7 @@ function ManagerUserPage() {
             <Grid>
               <Field label="Account Holder" value={bank.accountHolderName} />
               <Field label="Bank Name" value={bank.bankName} />
-              <Field label="Account Number" value={maskAccount(bank.accountNumber)} />
+              <Field label="Account Number" value={bank.accountNumber} />
               <Field label="IFSC" value={bank.ifcs} />
               <Field label="Branch" value={bank.branch} />
               <Field label="Mobile" value={bank.mobileNumber} />

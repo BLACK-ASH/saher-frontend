@@ -7,7 +7,6 @@ import {
   restoreBank,
   accountUpdateSchema,
 } from "@/services/admin.api";
-import { maskAccount } from "@/features/admin/bank-details";
 import { server } from "@/tests/test-server";
 
 describe("updateAccount (strict-partial PUT, T-06-02-03)", () => {
@@ -123,15 +122,5 @@ describe("accountUpdateSchema (strict-partial)", () => {
       employeeShift: "shift-1",
     });
     expect(good.success).toBe(true);
-  });
-});
-
-describe("maskAccount (T-06-02-01)", () => {
-  it("masks all but last 4 for long numbers", () => {
-    expect(maskAccount("1234567890")).toBe("•••• 7890");
-  });
-
-  it("returns 4 bullets for short numbers", () => {
-    expect(maskAccount("12")).toBe("••••");
   });
 });
