@@ -5,13 +5,17 @@ import z from "zod";
 import { QueryProps } from "./program.api";
 
 const baseSchema = z.object({
-  name: z.string().min(2),
+  name: z.string().min(2).regex(/^[A-Za-z\s]+$/, "Name must contain only letters"),
   age: z.number().min(1).optional(),
   gender: z
     .string()
     .transform((e) => e.toLocaleUpperCase())
     .optional(),
-  phoneNumber: z.string().optional(),
+  phoneNumber: z
+    .string()
+    .regex(/^[6-9]\d{9}$/, "Invalid Indian phone number")
+    .optional()
+    .or(z.literal("")),
   image: z.string().trim().optional(),
   address: z.string().optional(),
   affiliation: z.string().optional(),

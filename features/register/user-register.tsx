@@ -127,7 +127,7 @@ export default function RegisterUserForm() {
       toast.success(res.message);
       setStep(1);
       form.reset();
-      queryClient.invalidateQueries({ queryKey: ["user", "list"] });
+      queryClient.invalidateQueries({ queryKey: ["admin"] });
       router.refresh();
     } catch (err) {
       console.error(err);

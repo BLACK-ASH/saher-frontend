@@ -339,7 +339,7 @@ const AttendanceCorrectionView = ({
                       />
                       <InputGroupAddon align="block-end">
                         <InputGroupText className="tabular-nums">
-                          {field.value?.length ?? 0}/100 characters
+                          {field.value?.length ?? 0}/300 characters
                         </InputGroupText>
                       </InputGroupAddon>
                     </InputGroup>

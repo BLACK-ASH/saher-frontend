@@ -43,7 +43,7 @@ export default function ReimbursementManagementPage() {
   const [searchText, setSearchText] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [status, setStatus] = useState("pending");
-  const [userId, setUserId] = useState("");
+  const [userId, setUserId] = useState("all");
   const [date, setDate] = useState("");
 
   // Selection
@@ -64,9 +64,17 @@ export default function ReimbursementManagementPage() {
   // Build filters
   const filters = {
     description: debouncedSearch || undefined,
-    amount: /^\d+$/.test(debouncedSearch) ? Number(debouncedSearch) : undefined,
+    amount:
+        debouncedSearch !== ""
+          ? Number(
+              String(debouncedSearch)
+                .replace(/[^0-9.-]+/g, "")
+                .replace(/^\.+/, "")
+                .replace(/\.$/, "")
+            )
+          : undefined,
     status: status === "all" ? undefined : status,
-    user: userId || undefined,
+    user: userId === "all" ? undefined : userId,
     date: date || undefined,
     isDeleted: "false" as const,
   };
@@ -210,7 +218,7 @@ export default function ReimbursementManagementPage() {
                   <SelectValue placeholder="User" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="">All Users</SelectItem>
+                  <SelectItem value="all">All Users</SelectItem>
                   {Array.from(userMap.entries()).map(([id, name]) => (
                     <SelectItem key={id} value={id}>
                       {name} ({id.slice(-6)})

@@ -58,7 +58,7 @@ export const useProfile = () => {
     queryKey: ["user", "sessions"],
     queryFn: getSessions,
     retry: 3,
-    staleTime: 1000 * 60,
+    refetchOnWindowFocus: true,
   });
 
   const revokeSessionMutation = useMutation({

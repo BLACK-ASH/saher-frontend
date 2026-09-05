@@ -170,7 +170,7 @@ function ProfileInfo({ account }: Props) {
             <FieldLabel>Profile Image</FieldLabel>
             <ImageUpload
               altName={account.user.id}
-              url={account.user.image.src}
+              url={account.user.image?.src}
               onUploadSuccess={(data) => {
                 setImage(data.id);
               }}

@@ -24,16 +24,21 @@ import { combineDateAndTimeToIso, isoToIstInput } from "@/lib/date";
 type ProgramSel = Pick<ProgramsT, "id" | "title">;
 type WorkshopSel = Pick<WorkshopT, "id" | "title">;
 
-const sessionCreateSchema = z.object({
-  program: z.string().min(1, "Program is required."),
-  workshop: z.string().min(1, "Workshop is required."),
-  title: z.string().min(3, "Title must be at least 3 characters."),
-  description: z.string().min(5, "Description is required."),
-  date: z.string().min(1, "Date is required."),
-  startTime: z.string().min(1, "Start time is required."),
-  endTime: z.string().min(1, "End time is required."),
-  speaker: z.array(z.any()).min(1, "Atleast one speaker is required."),
-});
+const sessionCreateSchema = z
+  .object({
+    program: z.string().min(1, "Program is required."),
+    workshop: z.string().min(1, "Workshop is required."),
+    title: z.string().min(3, "Title must be at least 3 characters."),
+    description: z.string().min(5, "Description is required."),
+    date: z.string().min(1, "Date is required."),
+    startTime: z.string().min(1, "Start time is required."),
+    endTime: z.string().min(1, "End time is required."),
+    speaker: z.array(z.any()).min(1, "Atleast one speaker is required."),
+  })
+  .refine((data) => data.endTime > data.startTime, {
+    message: "End time must be after start time.",
+    path: ["endTime"],
+  });
 
 const SessionEditor = ({
   setVisble,

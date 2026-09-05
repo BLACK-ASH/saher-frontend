@@ -38,8 +38,8 @@ export function ChangePasswordForm({
 
   const changePasswordSchema = z
     .object({
-      password: z.string().min(4, "Minimum 4 Characters Required."),
-      confirmPassword: z.string().min(4, "Minimum 4 Characters Required."),
+      password: z.string().min(8, "Minimum 8 Characters Required."),
+      confirmPassword: z.string().min(8, "Minimum 8 Characters Required."),
       token: z.string(),
     })
     .refine((data) => data.password === data.confirmPassword, {

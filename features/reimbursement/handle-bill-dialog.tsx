@@ -45,7 +45,7 @@ export default function HandleBillDialog({
 
     defaultValues: {
       status: initialStatus,
-      reason: "",
+      reason: initialStatus === "reject" ? "reason not provided" : undefined,
     },
   });
 
@@ -138,7 +138,7 @@ export default function HandleBillDialog({
 
                 <Textarea
                   {...field}
-                  placeholder="Enter notes (min 5 characters)..."
+                  placeholder="Enter notes..."
                   rows={4}
                   aria-invalid={fieldState.invalid}
                 />

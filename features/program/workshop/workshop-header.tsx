@@ -30,7 +30,7 @@ function WorkshopHeader() {
   };
   const refresh = () => {
     queryClient.invalidateQueries({
-      queryKey: ["worshops"],
+      queryKey: ["workshops"],
     });
   };
 

@@ -3,7 +3,7 @@ import { z } from "zod";
 
 // Mirrors backend notice.schema.ts / notice.model.ts exactly (D-20).
 export const noticeSchema = z.object({
-  _id: z.string(),
+  id: z.string(),
   title: z.string(),
   description: z.string(),
   expiresAt: z.string(),

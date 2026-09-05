@@ -38,7 +38,7 @@ export function LoginForm({
 
   const loginFromSchema = z.object({
     email: z.email(),
-    password: z.string().min(4, "Minimun 4 Characters Required."),
+    password: z.string().min(8, "Minimum 8 Characters Required."),
   });
 
   const form = useForm<z.infer<typeof loginFromSchema>>({

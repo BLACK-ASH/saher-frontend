@@ -38,7 +38,7 @@ export const attendanceCorrectionCreateSchema = z.object({
   attendanceId: z.string(),
   message: z
     .string()
-    .min(10, "Message is Required. Atleast 10 Characters")
+    .min(3, "Message is Required. Atleast 3 Characters")
     .max(300, "Max Limit Is 300 Characters."),
   proof: z.string().optional(),
   upload: z.string().optional(),

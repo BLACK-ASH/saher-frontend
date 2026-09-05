@@ -78,7 +78,7 @@ export default function ApplyLeaveDialog({
 
         reason: leave.reason,
 
-        proof: leave.proof || undefined,
+        proof: leave.proof?.id || undefined,
       });
     } else {
       form.reset({
@@ -263,7 +263,7 @@ export default function ApplyLeaveDialog({
 
                 <ImageUpload
                   altName="leave-proof"
-                  url={field.value}
+                  url={leave?.proof?.src ?? field.value}
                   onUploadSuccess={(file) => field.onChange(file.id)}
                 />
               </Field>

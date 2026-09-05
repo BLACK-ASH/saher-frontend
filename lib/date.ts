@@ -124,11 +124,23 @@ export const dateInputToIso = (value: string): string => {
   return `${value}T00:00:00+05:30`;
 };
 
+const toDateOnly = (value: string): string => {
+  if (/^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return value;
+  const p = istParts(d, {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  return `${p.year}-${p.month}-${p.day}`;
+};
+
 export const combineDateAndTimeToIso = (
   date: string,
   time: string,
 ): string => {
-  return `${date}T${time}:00+05:30`;
+  return `${toDateOnly(date)}T${time}:00+05:30`;
 };
 
 // ========================
@@ -159,8 +171,10 @@ export const calculateWorkHours = (
 // DATE-ONLY BOUNDARY HELPERS
 // ========================
 
-export const dateToIstDateOnly = (d: Date): string => {
-  const p = istParts(d, {
+export const dateToIstDateOnly = (d: Date | string): string => {
+  const date = typeof d === "string" ? new Date(d) : d;
+  if (Number.isNaN(date.getTime())) return "";
+  const p = istParts(date, {
     year: "numeric",
     month: "2-digit",
     day: "2-digit",

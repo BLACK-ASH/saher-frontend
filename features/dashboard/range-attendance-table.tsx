@@ -127,7 +127,7 @@ export function RangeAttendanceTable({
     });
     const res = await changeAttendanceStatus(payload);
     queryClient.invalidateQueries({
-      queryKey: ["attendance", "today", "list"],
+      queryKey: ["attendance"],
     });
     toast.info(res.message);
   };

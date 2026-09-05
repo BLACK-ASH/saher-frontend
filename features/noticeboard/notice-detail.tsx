@@ -24,7 +24,7 @@ export function NoticeDetail({ noticeId }: { noticeId: string }) {
   const { data: user } = useMe();
   const canEdit = can(user?.role ?? "user", "update", "notice");
 
-  const notice = (notices.data ?? []).find((n) => n._id === noticeId);
+  const notice = (notices.data ?? []).find((n) => n.id === noticeId);
 
   if (notices.isLoading) {
     return <DefaultLoader className="min-h-[50vh]" />;

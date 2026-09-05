@@ -13,6 +13,7 @@ import {
 } from "../ui/breadcrumb";
 import { Home } from "lucide-react";
 import { ModeToggle } from "../theme-toggle";
+import { NotificationBell } from "@/features/notification/notification-bell";
 
 export function SiteHeader() {
   const path = usePathname();
@@ -61,6 +62,7 @@ export function SiteHeader() {
         </Breadcrumb>
         <div className="ml-auto flex items-center gap-2">
           <p className="text-base font-medium">{user?.displayName}</p>
+          <NotificationBell />
           <ModeToggle />
         </div>
       </div>

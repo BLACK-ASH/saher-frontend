@@ -13,7 +13,7 @@ export function NoticeEdit({ noticeId }: { noticeId: string }) {
     return <DefaultLoader className="min-h-[50vh]" />;
   }
 
-  const n = (notices.data ?? []).find((x) => x._id === noticeId);
+  const n = (notices.data ?? []).find((x) => x.id === noticeId);
 
   if (!n) {
     return (
@@ -32,7 +32,7 @@ export function NoticeEdit({ noticeId }: { noticeId: string }) {
       <NoticeForm
         mode="edit"
         initialData={{
-          id: n._id,
+          id: n.id,
           title: n.title,
           description: n.description,
           expiresAt: n.expiresAt,

@@ -40,7 +40,7 @@ export default function UserActions({ user }: { user: UserT }) {
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({
-        queryKey: ["user", "list"],
+        queryKey: ["admin"],
       });
     },
     onError: (error) => {
@@ -57,7 +57,7 @@ export default function UserActions({ user }: { user: UserT }) {
     onSuccess: (data) => {
       toast.success(data.message);
       queryClient.invalidateQueries({
-        queryKey: ["user", "list"],
+        queryKey: ["admin"],
       });
     },
     onError: (error) => {

@@ -28,7 +28,7 @@ const attendanceCorrectionSchema = z.object({
   }),
   message: z.string(),
   reason: z.string(),
-  proof: z.object({ src: z.string(), alt: z.string() }).optional(),
+  proof: z.object({ id: z.string(), src: z.string(), alt: z.string() }).optional(),
   status: z.enum(["reject", "pending", "approve", "on-hold"]),
 });
 

@@ -29,3 +29,14 @@ export const getNotification = async (): Promise<NotificationResponseT[]> => {
   });
   return res.data ?? [];
 };
+
+export const getUnseenCount = async (): Promise<number> => {
+  const res = await apiFetch<NotificationResponseT[]>("/api/notification/un-seen", {
+    method: "GET",
+  });
+  return res.meta?.count ?? 0;
+};
+
+export const markNotificationSeen = async (id: string): Promise<void> => {
+  await apiFetch(`/api/notification/${id}`, { method: "PATCH" });
+};

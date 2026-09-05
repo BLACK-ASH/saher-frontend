@@ -254,7 +254,7 @@ export default function ProfilePage() {
                         <div className="space-y-3">
                           {sessions.data.map((session) => (
                             <div
-                              key={session.id}
+                              key={session.sessionId}
                               className="flex items-center justify-between p-3 rounded-lg border border-border"
                             >
                               <div className="flex items-center gap-3">
@@ -275,7 +275,7 @@ export default function ProfilePage() {
                               </div>
                               <div className="flex items-center gap-2">
                                 <span className="text-xs text-muted-foreground">
-                                  {formatIstDateTime(session.lastActive)}
+                                  {formatIstDateTime(new Date(session.updatedAt))}
                                 </span>
                                 {!session.current && (
                                   <AlertDialog>
@@ -300,7 +300,7 @@ export default function ProfilePage() {
                                       <AlertDialogFooter>
                                         <AlertDialogCancel>Cancel</AlertDialogCancel>
                                         <AlertDialogAction
-                                          onClick={() => revokeSession.mutate(session.id)}
+                                          onClick={() => revokeSession.mutate(session.sessionId)}
                                           disabled={revokeSession.isPending}
                                         >
                                           {revokeSession.isPending ? (

@@ -150,15 +150,15 @@ export default function LeaveDetailsDialog({
 
               <div className="relative overflow-hidden rounded-lg border aspect-video">
                 <Image
-                  src={leave.proof}
-                  alt="Leave Proof"
+                  src={leave.proof.src}
+                  alt={leave.proof.alt || "Leave Proof"}
                   fill
                   className="object-cover"
                 />
               </div>
 
               <Button asChild variant="outline">
-                <a href={leave.proof} target="_blank" rel="noopener noreferrer">
+                <a href={leave.proof.src} target="_blank" rel="noopener noreferrer">
                   View Original
                 </a>
               </Button>

@@ -70,7 +70,7 @@ export function NoticeFeed() {
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {pageItems.map((notice) => (
               <NoticeCard
-                key={notice._id}
+                key={notice.id}
                 notice={notice}
                 onDelete={canDelete ? () => setDeleteTarget(notice) : undefined}
               />
@@ -102,7 +102,7 @@ export function NoticeFeed() {
               variant="destructive"
               disabled={removeNotice.isPending}
               onClick={() =>
-                removeNotice.mutate(deleteTarget!._id, {
+                  removeNotice.mutate(deleteTarget!.id, {
                   onSuccess: () => {
                     toast.success("Notice deleted");
                     setDeleteTarget(null);

@@ -50,12 +50,12 @@ const BankDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="account-holder-name">
+                <FieldLabel htmlFor="account-number">
                   Account Number
                 </FieldLabel>
                 <Input
                   {...field}
-                  id="account-holder-name"
+                  id="account-number"
                   aria-invalid={fieldState.invalid}
                   placeholder="Enter Account Number"
                   autoComplete="off"
@@ -96,7 +96,7 @@ const BankDetail = ({ form }: { form: UseFormReturn<RegisterFormData> }) => {
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="phone-number">Branch Name</FieldLabel>
+                <FieldLabel htmlFor="branch-name">Branch Name</FieldLabel>
                 <Input
                   {...field}
                   id="branch-name"

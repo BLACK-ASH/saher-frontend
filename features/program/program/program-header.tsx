@@ -31,7 +31,7 @@ function ProgramHeader() {
   };
   const refresh = () => {
     queryClient.invalidateQueries({
-      queryKey: ["program"],
+      queryKey: ["programs"],
     });
   };
 

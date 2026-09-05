@@ -7,7 +7,7 @@ export const userField = z.object({
   name: z.string(),
   displayName: z.string(),
   email: z.string(),
-  role: z.enum(["user", "manager", "admin"]),
+  role: z.enum(["user", "manager", "admin", "intern"]),
   image: z.object({ id: z.string(), src: z.string(), alt: z.string() }),
 });
 

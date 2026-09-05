@@ -2,11 +2,14 @@ import { apiFetch } from "@/lib/api-wrapper";
 import { z } from "zod";
 
 export const sessionSchema = z.object({
-  id: z.string(),
+  sessionId: z.string(),
   device: z.string(),
   ip: z.string(),
-  lastActive: z.string(),
+  browser: z.string(),
+  os: z.string(),
   current: z.boolean(),
+  createdAt: z.number(),
+  updatedAt: z.number(),
 });
 
 export type SessionT = z.infer<typeof sessionSchema>;
@@ -19,8 +22,8 @@ export const getSessions = async () => {
 };
 
 export const revokeSession = async (sessionId: string) => {
-  const res = await apiFetch(`/api/auth/sessions/${sessionId}`, {
-    method: "DELETE",
+  const res = await apiFetch(`/api/auth/sessions/revoke/${sessionId}`, {
+    method: "GET",
   });
   return res.data;
 };

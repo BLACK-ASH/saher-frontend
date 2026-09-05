@@ -9,19 +9,25 @@ import { z } from "zod";
 
 export const createLeaveTypeSchema = z
   .object({
-    name: z.string().min(2),
+    name: z.string().trim().min(2).max(50),
 
-    code: z.string().min(2),
+    code: z
+      .string()
+      .trim()
+      .toUpperCase()
+      .min(2)
+      .max(10)
+      .regex(/^[A-Z0-9_]+$/, "Code must be uppercase alphanumeric with underscores"),
 
-    allocatedDays: z.number().min(0),
+    allocatedDays: z.number().int().min(1).max(365),
 
-    maxCarryForwardDays: z.number().min(0),
+    maxCarryForwardDays: z.number().int().min(0).max(365),
 
     requiresProof: z.boolean(),
 
     minDaysNotice: z.number().min(0),
 
-    description: z.string().optional(),
+    description: z.string().max(400).optional(),
 
     isActive: z.boolean(),
   })
@@ -48,7 +54,7 @@ export const applyLeaveSchema = z
       .min(5, "Reason must contain at least 5 characters")
       .max(400, "Reason cannot exceed 400 characters"),
 
-    proof: z.string().optional(),
+    proof: z.string().trim().optional(),
   })
   .refine((data) => data.endDate >= data.startDate, {
     message: "End date cannot be before start date",
@@ -64,7 +70,7 @@ export type ApplyLeaveType = z.infer<typeof applyLeaveSchema>;
 export const reviewLeaveSchema = z.object({
   status: z.enum(["approved", "rejected"]),
 
-  managerComment: z.string().optional(),
+  managerComment: z.string().max(400).optional(),
 });
 
 export type ReviewLeaveType = z.infer<typeof reviewLeaveSchema>;
@@ -96,7 +102,9 @@ export const leaveApplicationSchema = z.object({
   reason: z.string(),
   type: z.object({ name: z.string(), code: z.string() }),
   status: z.enum(["pending", "approved", "rejected", "cancelled"]),
-  proof: z.string().optional(),
+  proof: z
+    .object({ id: z.string(), src: z.string(), alt: z.string() })
+    .nullish(),
   approvedBy: z.string().optional(),
   managerComment: z.string().optional(),
 });
@@ -145,7 +153,7 @@ export type LeaveT = {
     code: string;
   };
   status: LeaveStatus;
-  proof?: string;
+  proof?: { id: string; src: string; alt: string } | null;
   approvedBy?: string;
   managerComment?: string;
 };

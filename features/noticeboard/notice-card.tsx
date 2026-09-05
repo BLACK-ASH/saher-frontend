@@ -33,7 +33,7 @@ export function NoticeCard({
   return (
     <Card
       className="cursor-pointer transition-all hover:border-primary hover:shadow-md"
-      onClick={() => router.push(`/noticeboard/${notice._id}`)}
+      onClick={() => router.push(`/noticeboard/${notice.id}`)}
     >
       <CardHeader>
         <CardTitle>{notice.title}</CardTitle>

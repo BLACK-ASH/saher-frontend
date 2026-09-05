@@ -62,7 +62,7 @@ export function NoticeTrash() {
           </TableHeader>
           <TableBody>
             {items.map((notice) => (
-              <TableRow key={notice._id}>
+              <TableRow key={notice.id}>
                 <TableCell className="max-w-[240px] truncate">
                   {notice.title}
                 </TableCell>
@@ -110,7 +110,7 @@ export function NoticeTrash() {
             <AlertDialogAction
               disabled={restore.isPending}
               onClick={() =>
-                restore.mutate(restoreTarget!._id, {
+                restore.mutate(restoreTarget!.id, {
                   onSuccess: () => {
                     toast.success("Notice restored");
                     setRestoreTarget(null);
@@ -143,7 +143,7 @@ export function NoticeTrash() {
               variant="destructive"
               disabled={permanentRemove.isPending}
               onClick={() =>
-                permanentRemove.mutate(deleteTarget!._id, {
+                permanentRemove.mutate(deleteTarget!.id, {
                   onSuccess: () => {
                     toast.success("Notice permanently deleted");
                     setDeleteTarget(null);
