@@ -26,7 +26,7 @@ type Props = {
 
 export default function BulkImageUpload({
   onUploadSuccess,
-  maxFiles = 10,
+  maxFiles = 50,
 }: Props) {
   const [files, setFiles] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);

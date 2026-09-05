@@ -101,6 +101,7 @@ export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) 
               render={({ field }) => (
                 <>
                   <BulkImageUpload
+                    maxFiles={10}
                     onUploadSuccess={(imgList) =>
                       field.onChange([
                         ...field.value,

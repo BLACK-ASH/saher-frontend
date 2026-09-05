@@ -395,9 +395,12 @@ const SessionEditor = ({
               <Field>
                 <FieldLabel htmlFor="date">Date</FieldLabel>
                 <Input {...field} id="date" type="date" />
-                <p className="text-xs text-muted-foreground">
-                  Sessions are future-dated only.
-                </p>
+                {!isEdit && (
+                  <p className="text-xs text-muted-foreground">
+                    Sessions are future-dated only. Past sessions are editable
+                    for review and images.
+                  </p>
+                )}
                 {fieldState.error && (
                   <p className="text-sm text-destructive">
                     {fieldState.error.message}
