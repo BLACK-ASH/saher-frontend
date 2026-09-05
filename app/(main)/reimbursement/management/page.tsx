@@ -9,6 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { RefreshButton } from "@/components/refresh-button";
 import { Download, HandCoins } from "lucide-react";
 
 import { useReimbursement, useSearchBills, type HandleStatus } from "@/hooks/use-reimbursement";
@@ -259,6 +260,11 @@ export default function ReimbursementManagementPage() {
                 <Download className="h-4 w-4" />
                 Export
               </Button>
+
+              <RefreshButton
+                onClick={() => searchQuery.refetch()}
+                refreshing={searchQuery.isFetching}
+              />
             </div>
 
             <FinanceBillTable

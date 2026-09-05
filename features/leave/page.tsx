@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 
 import { Plus } from "lucide-react";
 
+import { RefreshButton } from "@/components/refresh-button";
+
 import { useLeave } from "@/hooks/use-leave";
 import { LeaveT } from "@/services/leave.api";
 import LeaveBalanceCard from "./leave-balance-card";
@@ -43,10 +45,19 @@ export default function LeavePage() {
           </p>
         </div>
 
-        <Button onClick={() => setDialogOpen(true)} className="gap-2">
-          <Plus className="h-4 w-4" />
-          Apply Leave
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button onClick={() => setDialogOpen(true)} className="gap-2">
+            <Plus className="h-4 w-4" />
+            Apply Leave
+          </Button>
+          <RefreshButton
+            onClick={() => {
+              applications.refetch();
+              balance.refetch();
+            }}
+            refreshing={applications.isFetching || balance.isFetching}
+          />
+        </div>
       </div>
 
       {/* Balance */}

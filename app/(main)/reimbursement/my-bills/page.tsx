@@ -8,6 +8,7 @@ import { BillDetailDialog } from "@/features/reimbursement/bill-detail-dialog";
 import { useReimbursement } from "@/hooks/use-reimbursement";
 import { BillResponse } from "@/services/reimbursement.api";
 import { Button } from "@/components/ui/button";
+import { RefreshButton } from "@/components/refresh-button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { toast } from "sonner";
 
@@ -31,7 +32,10 @@ export default function MyBillsPage() {
   return (
     <div className="p-4 space-y-4">
       <BalanceCard />
-      <Button onClick={() => setIsCreateOpen(true)}>New Bill</Button>
+      <div className="flex gap-2">
+        <Button onClick={() => setIsCreateOpen(true)}>New Bill</Button>
+        <RefreshButton onClick={() => bills.refetch()} refreshing={bills.isFetching} />
+      </div>
       <BillTable
         bills={bills.data ?? []}
         onView={(bill) => setDetailBill(bill)}
