@@ -2,7 +2,11 @@
 
 FROM node:24-alpine AS base
 WORKDIR /app
-RUN corepack enable
+# pnpm is not bundled; corepack's own fetch of the pnpm tarball is flaky in
+# build-stage DNS, so install the pinned version directly via npm (matching
+# package.json "packageManager": "pnpm@11.22.0")
+RUN npm install -g pnpm@11.22.0
+ENV COREPACK_ENABLE_DOWNLOAD_PROMPT=0
 
 # --------- 2. Dependencies ---------
 
@@ -14,9 +18,8 @@ RUN pnpm ci
 
 # --------- 3. Build ---------
 
-FROM base AS builder
+FROM deps AS builder
 
-COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
 ARG NEXT_PUBLIC_VAPID_PUBLIC_KEY
@@ -32,7 +35,7 @@ ENV NODE_ENV=production
 ARG NEXT_PUBLIC_VAPID_PUBLIC_KEY
 ENV NEXT_PUBLIC_VAPID_PUBLIC_KEY=$NEXT_PUBLIC_VAPID_PUBLIC_KEY
 
-RUN corepack enable
+RUN npm install -g pnpm@11.22.0
 RUN apk add --no-cache curl
 
 # Copy only needed files
