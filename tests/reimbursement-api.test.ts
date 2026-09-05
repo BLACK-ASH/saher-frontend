@@ -103,11 +103,9 @@ describe("searchBills", () => {
     expect(page.totalPages).toBe(2);
   });
 
-  // Step-0 verdict: search-bill.controller.ts guards on
-  // `!description && !amount && !date && !user` — isDeleted does NOT count
-  // toward the "≥1 search param" rule, so cleared filters must still emit a
-  // benign `description=` param (Quirk-10 runtime-400 protection).
-  it("always emits isDeleted=false plus a benign description= when every filter is cleared", async () => {
+  // search-bill.controller.ts no longer guards on empty filters (view-all is
+  // a legit query), so cleared filters emit no benign description= param.
+  it("emits isDeleted only when every filter is cleared", async () => {
     let url: URL | undefined;
     server.use(
       http.get("/api/reimbursement/", ({ request }) => {
@@ -119,7 +117,7 @@ describe("searchBills", () => {
     await searchBills({});
 
     expect(url?.searchParams.get("isDeleted")).toBe("false");
-    expect(url?.searchParams.has("description")).toBe(true);
+    expect(url?.searchParams.has("description")).toBe(false);
   });
 });
 

@@ -251,11 +251,8 @@ export const getRecycleBills = async (): Promise<BillResponse[]> => {
   return res.data;
 };
 
-// GET / — paginated search. ALWAYS emits isDeleted=false: the controller 400s
-// unless ≥1 search param is present and isDeleted does NOT count toward that
-// rule (verified against search-bill.controller.ts). When every filter is
-// cleared we append a benign `description=` so the querystring never trips the
-// empty-query guard (Quirk 10).
+// GET / — paginated search. Always emits isDeleted=false (default view). An
+// empty filter set is valid now: the backend returns all non-deleted bills.
 export const searchBills = async (
   filters: SearchBillsFilters = {},
   page = 1,
@@ -269,16 +266,6 @@ export const searchBills = async (
   if (filters.date !== undefined) params.set("date", filters.date);
   if (filters.user !== undefined) params.set("user", filters.user);
   if (filters.status !== undefined) params.set("status", filters.status);
-
-  if (
-    filters.description === undefined &&
-    filters.amount === undefined &&
-    filters.date === undefined &&
-    filters.user === undefined &&
-    filters.status === undefined
-  ) {
-    params.set("description", "");
-  }
 
   params.set("page", String(page));
   params.set("limit", String(limit));
