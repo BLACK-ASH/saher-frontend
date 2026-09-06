@@ -191,10 +191,12 @@ export function NavItem() {
         <SidebarGroupLabel>User</SidebarGroupLabel>
         <SidebarGroupContent>
           <SidebarMenu>
+            {/* Bill Management + Books of Account are reserved for admin/manager */}
             {userRoutes
               .filter((item) =>
                 !["/reimbursement/management", "/reimbursement/account"].includes(item.url) ||
-                can(user.role, "read", "preReimbursement")
+                user.role === "admin" ||
+                user.role === "manager"
               )
               .map((item) => (
               <SidebarMenuItem key={item.url}>
