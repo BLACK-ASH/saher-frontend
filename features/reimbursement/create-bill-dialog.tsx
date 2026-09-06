@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { X } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -18,8 +21,13 @@ interface CreateBillDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+// server-returned receipts keep their src so the form can preview what's attached
+type AttachedReceipt = { id: string; src: string };
+
 export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) {
   const { createBill } = useReimbursement();
+
+  const [attached, setAttached] = useState<AttachedReceipt[]>([]);
 
   const form = useForm<UserBillCreateInput>({
     resolver: zodResolver(userBillCreateSchema),
@@ -31,12 +39,19 @@ export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) 
     },
   });
 
-  const attachedImages = form.watch("images") ?? [];
+  const detachReceipt = (id: string) => {
+    setAttached((prev) => prev.filter((r) => r.id !== id));
+    form.setValue(
+      "images",
+      (form.getValues("images") ?? []).filter((i) => i !== id),
+    );
+  };
 
   const onSubmit = async (data: UserBillCreateInput) => {
     try {
       await createBill.mutateAsync(data);
       toast.success("Bill submitted");
+      setAttached([]);
       onOpenChange(false);
       form.reset();
     } catch (err) {
@@ -102,16 +117,40 @@ export function CreateBillDialog({ open, onOpenChange }: CreateBillDialogProps) 
                 <>
                   <BulkImageUpload
                     maxFiles={10}
-                    onUploadSuccess={(imgList) =>
+                    onUploadSuccess={(imgList) => {
+                      const receipts = imgList.map((img) => ({ id: img.id, src: img.src }));
+                      setAttached((prev) => [...prev, ...receipts]);
                       field.onChange([
                         ...field.value,
-                        ...imgList.map((img) => img.id),
-                      ])
-                    }
+                        ...receipts.map((r) => r.id),
+                      ]);
+                    }}
                   />
+
+                  {attached.length > 0 && (
+                    <div className="grid grid-cols-2 gap-3">
+                      {attached.map((r) => (
+                        <div
+                          key={r.id}
+                          className="relative aspect-video overflow-hidden rounded-lg border"
+                        >
+                          <Image src={r.src} alt="Receipt" fill className="object-cover" />
+                          <button
+                            type="button"
+                            aria-label="Remove receipt"
+                            className="absolute right-1 top-1 rounded-full bg-black/60 p-1 text-white"
+                            onClick={() => detachReceipt(r.id)}
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   <p className="text-xs text-muted-foreground">
-                    {attachedImages.length > 0
-                      ? `${attachedImages.length} receipt${attachedImages.length > 1 ? "s" : ""} attached`
+                    {attached.length > 0
+                      ? `${attached.length} receipt${attached.length > 1 ? "s" : ""} attached`
                       : "Upload at least one receipt"}
                   </p>
                 </>
