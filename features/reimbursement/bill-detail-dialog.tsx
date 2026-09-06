@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { FileDown, FileSpreadsheet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BillResponse, SettlementResponse, getSettlementByBill, exportReport } from "@/services/reimbursement.api";
+import { BillResponse, getSettlementByBill, exportReport } from "@/services/reimbursement.api";
 import { toastExportMessage } from "@/lib/export-message";
 import { LifecycleTimeline } from "./lifecycle-timeline";
 import { SettleDialog } from "./settle-dialog";
@@ -19,8 +19,6 @@ interface BillDetailDialogProps {
   onOpenChange: (open: boolean) => void;
   viewerCanAudit?: boolean;
 }
-
-const AUDIT_PAGE_SIZE = 5;
 
 export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = false }: BillDetailDialogProps) {
   const [settleOpen, setSettleOpen] = useState(false);
