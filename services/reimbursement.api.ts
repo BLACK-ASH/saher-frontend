@@ -293,12 +293,19 @@ export const getAuditLog = async (page = 1, limit = 10) => {
 };
 
 // GET /export/report?format= — returns res.data untouched (job descriptor or
-// processing message); delivery happens via notifications (Pitfall 7).
+// processing message); delivery happens via notifications (Pitfall 7). Filters
+// mirror the backend report schema (user/status/bill + from/to).
 export const exportReport = async (
   format: "pdf" | "xlsx",
+  filters: { user?: string; status?: string; bill?: string } = {},
 ): Promise<ExportReportResult> => {
+  const params = new URLSearchParams({ format });
+  if (filters.user) params.set("user", filters.user);
+  if (filters.status) params.set("status", filters.status);
+  if (filters.bill) params.set("bill", filters.bill);
+
   const res = await apiFetch<ExportReportResult>(
-    `/api/reimbursement/export/report?format=${format}`,
+    `/api/reimbursement/export/report?${params.toString()}`,
     { method: "GET" },
   );
   return res.data;

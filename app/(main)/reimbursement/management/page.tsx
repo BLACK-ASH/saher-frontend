@@ -168,7 +168,10 @@ export default function ReimbursementManagementPage() {
 
   const handleExport = async () => {
     try {
-      await exportReport("xlsx");
+      await exportReport("xlsx", {
+        user: userId === "all" ? undefined : userId,
+        status: status === "all" ? undefined : status,
+      });
       toast.success("Report generation started — check notifications for download");
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to start report generation";

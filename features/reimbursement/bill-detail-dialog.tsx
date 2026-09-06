@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { FileDown, FileSpreadsheet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BillResponse, SettlementResponse, getSettlementByBill, getAuditLog } from "@/services/reimbursement.api";
+import { BillResponse, SettlementResponse, getSettlementByBill, getAuditLog, exportReport } from "@/services/reimbursement.api";
 import { LifecycleTimeline } from "./lifecycle-timeline";
 import { SettleDialog } from "./settle-dialog";
 import { formatIstDate, formatIstDateTime } from "@/lib/date";
@@ -40,6 +42,16 @@ export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = fa
 
   if (!bill) return null;
 
+  const handleSingleExport = async (format: "pdf" | "xlsx") => {
+    try {
+      await exportReport(format, { bill: bill.id });
+      toast.success("Report generation started — check notifications for download");
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Failed to start report generation";
+      toast.error(message);
+    }
+  };
+
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
@@ -47,6 +59,17 @@ export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = fa
           <DialogHeader>
             <DialogTitle>Bill Details — {bill.id.slice(-6)}</DialogTitle>
           </DialogHeader>
+
+          {viewerCanAudit && (
+            <div className="flex justify-end gap-2">
+              <Button variant="outline" size="sm" onClick={() => handleSingleExport("pdf")}>
+                <FileDown className="h-4 w-4 mr-1" /> Export PDF
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => handleSingleExport("xlsx")}>
+                <FileSpreadsheet className="h-4 w-4 mr-1" /> Export Excel
+              </Button>
+            </div>
+          )}
 
           <div className="space-y-6">
             <div className="grid grid-cols-2 gap-4 text-sm">
