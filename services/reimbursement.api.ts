@@ -292,13 +292,13 @@ export const getAuditLog = async (page = 1, limit = 10) => {
   return normalizeList<AuditLogEntry>(res);
 };
 
-// GET /export/report?format= — returns res.data untouched (job descriptor or
-// processing message); delivery happens via notifications (Pitfall 7). Filters
-// mirror the backend report schema (user/status/bill + from/to).
+// GET /export/report?format= — returns the queue's status message + job data
+// (delivery happens via notifications). Filters mirror the backend report schema
+// (user/status/bill + from/to).
 export const exportReport = async (
   format: "pdf" | "xlsx",
   filters: { user?: string; status?: string; bill?: string } = {},
-): Promise<ExportReportResult> => {
+): Promise<{ message: string; data: ExportReportResult }> => {
   const params = new URLSearchParams({ format });
   if (filters.user) params.set("user", filters.user);
   if (filters.status) params.set("status", filters.status);
@@ -308,7 +308,7 @@ export const exportReport = async (
     `/api/reimbursement/export/report?${params.toString()}`,
     { method: "GET" },
   );
-  return res.data;
+  return { message: res.message, data: res.data };
 };
 
 // GET /:billId — ⚠ Quirk 1 naming trap: despite living on the bill router this

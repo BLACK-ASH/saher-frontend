@@ -7,6 +7,7 @@ import { FileDown, FileSpreadsheet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { BillResponse, SettlementResponse, getSettlementByBill, getAuditLog, exportReport } from "@/services/reimbursement.api";
+import { toastExportMessage } from "@/lib/export-message";
 import { LifecycleTimeline } from "./lifecycle-timeline";
 import { SettleDialog } from "./settle-dialog";
 import { formatIstDate, formatIstDateTime } from "@/lib/date";
@@ -44,8 +45,8 @@ export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = fa
 
   const handleSingleExport = async (format: "pdf" | "xlsx") => {
     try {
-      await exportReport(format, { bill: bill.id });
-      toast.success("Report generation started — check notifications for download");
+      const { message } = await exportReport(format, { bill: bill.id });
+      toastExportMessage(message, toast);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to start report generation";
       toast.error(message);

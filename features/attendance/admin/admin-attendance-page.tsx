@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { Check, Download, Loader2 } from "lucide-react";
 import { toast } from "sonner";
+import { toastExportMessage } from "@/lib/export-message";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -93,7 +94,7 @@ export function AdminAttendancePage() {
         { method: "GET" },
       );
       if (!res.success) toast.error(res.message);
-      else toast.success("Report generation started — check notifications for the download.");
+      else toastExportMessage(res.message, toast);
     } catch (err) {
       if (err instanceof Error) toast.error(err.message);
     } finally {

@@ -25,6 +25,7 @@ import { BillDetailDialog } from "@/features/reimbursement/bill-detail-dialog";
 import { AdvanceBillDialog } from "@/features/reimbursement/advance-bill-dialog";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import { exportReport } from "@/services/reimbursement.api";
+import { toastExportMessage } from "@/lib/export-message";
 import { toast } from "sonner";
 
 const DEBOUNCE_MS = 300;
@@ -168,11 +169,11 @@ export default function ReimbursementManagementPage() {
 
   const handleExport = async () => {
     try {
-      await exportReport("xlsx", {
+      const { message } = await exportReport("xlsx", {
         user: userId === "all" ? undefined : userId,
         status: status === "all" ? undefined : status,
       });
-      toast.success("Report generation started — check notifications for download");
+      toastExportMessage(message, toast);
     } catch (err) {
       const message = err instanceof Error ? err.message : "Failed to start report generation";
       toast.error(message);
