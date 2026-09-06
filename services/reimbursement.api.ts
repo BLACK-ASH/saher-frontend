@@ -18,6 +18,7 @@ export const billSchema = z.object({
   status: z.enum(["pending", "accept", "reject", "on-hold"]),
   reason: z.string().optional(),
   isDeleted: z.boolean(),
+  settlementStatus: z.enum(["pending", "settle", "expired", "on-hold"]).nullable().optional(),
 });
 
 export type BillResponse = z.infer<typeof billSchema>;

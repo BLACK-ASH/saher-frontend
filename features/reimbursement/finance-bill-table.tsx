@@ -8,7 +8,7 @@ import { CheckCircle2, XCircle, PauseCircle, Eye, Pencil, Trash2 } from "lucide-
 import { DefaultLoader } from "@/components/loading";
 import { NoData } from "@/components/no-data";
 import { BillResponse } from "@/services/reimbursement.api";
-import { BillStatusBadge } from "./bill-status-badge";
+import { BillStatusBadge, SettlementStatusBadge } from "./bill-status-badge";
 import { BillDetailDialog } from "./bill-detail-dialog";
 import { formatIstDate } from "@/lib/date";
 import { NormalizedList } from "@/lib/normalize-list";
@@ -70,12 +70,13 @@ export function FinanceBillTable({
             <TableHead>Advance ₹</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Settlement</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell colSpan={8} className="py-10 text-center"><DefaultLoader /></TableCell>
+            <TableCell colSpan={9} className="py-10 text-center"><DefaultLoader /></TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -94,12 +95,13 @@ export function FinanceBillTable({
             <TableHead>Advance ₹</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Settlement</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           <TableRow>
-            <TableCell colSpan={8} className="py-10 text-center"><NoData title="No bills" description="No bills found for the selected filters." /></TableCell>
+            <TableCell colSpan={9} className="py-10 text-center"><NoData title="No bills" description="No bills found for the selected filters." /></TableCell>
           </TableRow>
         </TableBody>
       </Table>
@@ -118,6 +120,7 @@ export function FinanceBillTable({
             <TableHead>Advance ₹</TableHead>
             <TableHead>Date</TableHead>
             <TableHead>Status</TableHead>
+            <TableHead>Settlement</TableHead>
             <TableHead className="text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
@@ -142,6 +145,7 @@ export function FinanceBillTable({
               </TableCell>
               <TableCell>{formatIstDate(bill.date)}</TableCell>
               <TableCell><BillStatusBadge status={bill.status} /></TableCell>
+              <TableCell><SettlementStatusBadge status={bill.settlementStatus ?? null} /></TableCell>
               <TableCell className="text-right">
                 <div className="flex justify-end gap-1">
                   <Button
