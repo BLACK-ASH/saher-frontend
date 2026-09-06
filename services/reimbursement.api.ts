@@ -293,6 +293,19 @@ export const getAuditLog = async (page = 1, limit = 10) => {
   return normalizeList<AuditLogEntry>(res);
 };
 
+// GET /export/audit-log-report — books-of-account ledger export; delivery via
+// the notification download action (same pattern as exportReport).
+export const exportAuditLogReport = async (
+  format: "pdf" | "xlsx" = "xlsx",
+): Promise<{ message: string; data: ExportReportResult }> => {
+  const params = new URLSearchParams({ format });
+  const res = await apiFetch<ExportReportResult>(
+    `/api/reimbursement/export/audit-log-report?${params.toString()}`,
+    { method: "GET" },
+  );
+  return { message: res.message, data: res.data };
+};
+
 // GET /export/report?format= — returns the queue's status message + job data
 // (delivery happens via notifications). Filters mirror the backend report schema
 // (user/status/bill + from/to).

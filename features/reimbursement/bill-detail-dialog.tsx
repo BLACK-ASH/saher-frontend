@@ -6,13 +6,11 @@ import { toast } from "sonner";
 import { FileDown, FileSpreadsheet } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { BillResponse, SettlementResponse, getSettlementByBill, getAuditLog, exportReport } from "@/services/reimbursement.api";
+import { BillResponse, SettlementResponse, getSettlementByBill, exportReport } from "@/services/reimbursement.api";
 import { toastExportMessage } from "@/lib/export-message";
 import { LifecycleTimeline } from "./lifecycle-timeline";
 import { SettleDialog } from "./settle-dialog";
-import { formatIstDate, formatIstDateTime } from "@/lib/date";
-import { PaginationFooter } from "@/components/pagination-footer";
-import { DefaultLoader } from "@/components/loading";
+import { formatIstDate } from "@/lib/date";
 import { useUserMap } from "@/hooks/use-user-map";
 
 interface BillDetailDialogProps {
@@ -26,18 +24,11 @@ const AUDIT_PAGE_SIZE = 5;
 
 export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = false }: BillDetailDialogProps) {
   const [settleOpen, setSettleOpen] = useState(false);
-  const [auditPage, setAuditPage] = useState(1);
   const { resolveName } = useUserMap();
 
   const { data: settlement, isLoading: loadingSettlement } = useQuery({
     queryKey: ["bills", "detail", bill?.id],
     queryFn: () => getSettlementByBill(bill!.id),
-    enabled: viewerCanAudit && open && !!bill,
-  });
-
-  const { data: audit, isLoading: loadingAudit } = useQuery({
-    queryKey: ["audit-log", auditPage],
-    queryFn: () => getAuditLog(auditPage, AUDIT_PAGE_SIZE),
     enabled: viewerCanAudit && open && !!bill,
   });
 
@@ -134,40 +125,6 @@ export function BillDetailDialog({ bill, open, onOpenChange, viewerCanAudit = fa
                   </div>
                 ) : (
                   <p className="text-sm text-destructive">Settlement record missing</p>
-                )}
-              </div>
-            )}
-
-            {viewerCanAudit && (
-              <div className="pt-4 border-t">
-                <h4 className="font-medium text-sm mb-2">Audit Log</h4>
-                {loadingAudit ? (
-                  <DefaultLoader />
-                ) : !audit?.items.length ? (
-                  <p className="text-sm text-muted-foreground">No audit entries.</p>
-                ) : (
-                  <>
-                    <ul className="space-y-2 text-sm">
-                      {audit!.items.map((entry) => (
-                        <li key={entry.id} className="border rounded-md p-2">
-                          <div className="flex justify-between">
-                            <span className="font-medium">₹{entry.amount.toLocaleString("en-IN")}</span>
-                            <span className="text-muted-foreground">{formatIstDateTime(entry.date)}</span>
-                          </div>
-                          <p className="text-xs text-muted-foreground truncate">{entry.description}</p>
-                        </li>
-                      ))}
-                    </ul>
-                    {(audit?.totalPages ?? 1) > 1 && (
-                      <div className="flex justify-end pt-2">
-                        <PaginationFooter
-                          page={auditPage}
-                          totalPages={audit?.totalPages ?? 1}
-                          onPageChange={setAuditPage}
-                        />
-                      </div>
-                    )}
-                  </>
                 )}
               </div>
             )}

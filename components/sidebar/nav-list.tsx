@@ -13,6 +13,7 @@ import { can } from "@/lib/permissions";
 import type { UserRole } from "@/lib/permissions";
 import {
   Bell,
+  BookOpen,
   Calendar,
   CalendarCheck,
   ClipboardCheck,
@@ -80,6 +81,11 @@ const userRoutes = [
     label: "Bill Management",
     url: "/reimbursement/management",
     icon: ReceiptText,
+  },
+  {
+    label: "Books of Account",
+    url: "/reimbursement/account",
+    icon: BookOpen,
   },
 ];
 
@@ -186,7 +192,10 @@ export function NavItem() {
         <SidebarGroupContent>
           <SidebarMenu>
             {userRoutes
-              .filter((item) => item.url !== "/reimbursement/management" || can(user.role, "read", "preReimbursement"))
+              .filter((item) =>
+                !["/reimbursement/management", "/reimbursement/account"].includes(item.url) ||
+                can(user.role, "read", "preReimbursement")
+              )
               .map((item) => (
               <SidebarMenuItem key={item.url}>
                 <SidebarMenuButton
