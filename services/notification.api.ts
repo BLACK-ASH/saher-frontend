@@ -23,26 +23,21 @@ export const notificationSchema = z.object({
 
 export type NotificationResponseT = z.infer<typeof notificationSchema>;
 
-// Backend paginates (GET /api/notification/?page&limit, cap 50) but caches the
-// full list server-side; loop pages until we've collected everything so the
-// notification box isn't stuck on the newest 10.
-export const getNotification = async (): Promise<NotificationResponseT[]> => {
-  const all: NotificationResponseT[] = [];
-  const limit = 50;
-
-  for (let page = 1; ; page++) {
-    const res = await apiFetch<NotificationResponseT[]>(
-      `/api/notification/?page=${page}&limit=${limit}`,
-      { method: "GET" },
-    );
-    const items = res.data ?? [];
-    all.push(...items);
-
-    const total = typeof res.meta?.count === "number" ? res.meta.count : Infinity;
-    if (all.length >= total || items.length < limit) break;
-  }
-
-  return all;
+// Backend paginates (GET /api/notification/?page&limit, cap 50). The UI opens
+// with the newest page and "Load more" pulls the rest page-by-page.
+export const getNotification = async (
+  page = 1,
+  limit = 10,
+): Promise<{ items: NotificationResponseT[]; total: number }> => {
+  const res = await apiFetch<NotificationResponseT[]>(
+    `/api/notification/?page=${page}&limit=${limit}`,
+    { method: "GET" },
+  );
+  const items = res.data ?? [];
+  return {
+    items,
+    total: typeof res.meta?.count === "number" ? res.meta.count : items.length,
+  };
 };
 
 export const getUnseenCount = async (): Promise<number> => {

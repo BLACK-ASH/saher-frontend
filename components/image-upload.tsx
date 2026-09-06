@@ -15,6 +15,7 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Button } from "@/components/ui/button";
 import { apiFetch } from "@/lib/api-wrapper";
+import { compressImage } from "@/lib/compress-image";
 import { toast } from "sonner";
 
 // Matches ../saher-backend uploadImageController response envelope data
@@ -107,9 +108,9 @@ export default function ImageUpload({ altName, url, onUploadSuccess }: Props) {
     canvas.toBlob(async (blob) => {
       if (!blob) return;
 
-      const file = new File([blob], "cropped.png", {
-        type: "image/png",
-      });
+      const file = await compressImage(
+        new File([blob], "cropped.png", { type: "image/png" }),
+      );
 
       const previewUrl = URL.createObjectURL(file);
       setPreview(previewUrl);

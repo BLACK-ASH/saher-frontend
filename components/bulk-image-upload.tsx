@@ -6,6 +6,7 @@ import { useDropzone } from "react-dropzone";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { apiFetch } from "@/lib/api-wrapper";
+import { compressImage } from "@/lib/compress-image";
 import { toast } from "sonner";
 import { UploadCloud, X } from "lucide-react";
 
@@ -66,7 +67,9 @@ export default function BulkImageUpload({
     setUploading(true);
     try {
       const formData = new FormData();
-      files.forEach((file) => formData.append("images", file));
+      for (const file of files) {
+        formData.append("images", await compressImage(file));
+      }
 
       const res = await apiFetch<UploadedImage[]>("/api/upload/images", {
         method: "POST",
@@ -79,7 +82,14 @@ export default function BulkImageUpload({
         reset();
       }
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Image upload failed");
+      // apiFetch already toasts the server's message for envelope errors; only
+      // add a hint when a proxy-level rejection (413/html) left the user blind.
+      const msg = err instanceof Error ? err.message : "";
+      if (msg === "Invalid server response") {
+        toast.error(
+          "Upload failed — images may be too large or unsupported. Try fewer or smaller files.",
+        );
+      }
     } finally {
       setUploading(false);
     }

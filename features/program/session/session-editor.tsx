@@ -27,7 +27,7 @@ type WorkshopSel = Pick<WorkshopT, "id" | "title">;
 const sessionCreateSchema = z
   .object({
     program: z.string().min(1, "Program is required."),
-    workshop: z.string().min(1, "Workshop is required."),
+    workshop: z.string().optional(),
     title: z.string().min(3, "Title must be at least 3 characters."),
     description: z.string().min(5, "Description is required."),
     date: z.string().min(1, "Date is required."),
@@ -96,7 +96,7 @@ const SessionEditor = ({
       title: values.title,
       description: values.description,
       program: values.program,
-      workshop: values.workshop,
+      ...(values.workshop ? { workshop: values.workshop } : {}),
       speaker: values.speaker.map((e: MailUser) => e.id.toString()),
       date: values.date,
       startTime: new Date(combineDateAndTimeToIso(values.date, values.startTime)),
@@ -235,7 +235,7 @@ const SessionEditor = ({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field>
-                <FieldLabel>Workshop</FieldLabel>
+                <FieldLabel>Workshop (optional)</FieldLabel>
 
                 {workshop ? (
                   <div className="flex items-center justify-between rounded-md border bg-muted/50 px-3 py-2">
@@ -289,7 +289,8 @@ const SessionEditor = ({
                         ))
                       ) : (
                         <div className="px-3 py-4 text-center text-sm text-muted-foreground">
-                          No workshops found in this program.
+                          No workshops found in this program — leave empty to
+                          auto-create one.
                         </div>
                       )}
                     </div>

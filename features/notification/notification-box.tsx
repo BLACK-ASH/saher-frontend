@@ -29,9 +29,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 const NotificationBox = () => {
-  const { list, unseen, markSeen } = useNotification();
-  const { data, isLoading, isError, refetch, isRefetching } = list;
-  const notifications = data ?? [];
+  const { list, notifications, unseen, markSeen } = useNotification();
+  const { isLoading, isError, refetch, isRefetching } = list;
+  const hasMore = list.hasNextPage && !list.isFetchingNextPage;
 
   if (isLoading) return <DefaultLoader />;
   if (isError)
@@ -85,6 +85,17 @@ const NotificationBox = () => {
               );
             })}
         </ScrollArea>
+        {hasMore && (
+          <div className="border-t p-2">
+            <Button
+              variant="ghost"
+              className="w-full"
+              onClick={() => list.fetchNextPage()}
+            >
+              {list.isFetchingNextPage ? "Loading…" : "Load more"}
+            </Button>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
